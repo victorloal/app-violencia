@@ -8,6 +8,7 @@ import AppText from "../components/UI/AppText";
 import StyledButton from "../components/UI/StyledButton";
 import { AdjustableSection } from "../components/UI/AdjustableSection";
 import { ToggleSection } from "../components/UI/ToggleSection";
+import { InputSection } from "../components/UI/InputSection";
 import { styles } from "../styles/SettingsStyles";
 import { adjustableConfig } from "../constants/settingsConfig";
 import { useSettings } from "../hooks/useSettings";
@@ -115,10 +116,6 @@ export default function SettingsScreen({ navigation }) {
     updateTempSetting("isVoiceOn", !tempSettings.isVoiceOn);
   };
 
-  const toggleCamouflage = () => {
-    updateTempSetting("isCamouflageOn", !tempSettings.isCamouflageOn);
-  };
-
   return (
     <MainLayout>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -155,13 +152,15 @@ export default function SettingsScreen({ navigation }) {
           iconOff="volume-mute"
         />
 
-        <ToggleSection
-          title="Modo Camuflaje"
-          value={tempSettings.isCamouflageOn}
-          onToggle={toggleCamouflage}
+        {/* Número de teléfono para mensajes */}
+        <InputSection
+          title="Ingresa un número de contacto para enviar mensaje rápido"
+          placeholder="Ej: +57 300 123 4567"
+          value={tempSettings.phoneNumber}
+          onChangeText={(value) => updateTempSetting("phoneNumber", value)}
           disabled={isSaving}
-          iconOn="eye"
-          iconOff="eye-off"
+          icon="phone-portrait"
+          keyboardType="phone-pad"
         />
 
         {/* Guardar / Cancelar */}
