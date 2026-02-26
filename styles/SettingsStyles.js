@@ -98,4 +98,28 @@ export const styles = StyleSheet.create({
     textAlign: "right",
     color: colors.lavender[900],
   },
+  inputRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.white,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.lavender[200],
+    paddingHorizontal: 12,
+    width: "100%",
+  },
+  inputIcon: {
+    paddingRight: 10,
+  },
+  textInput: {
+    flex: 1,
+    height: 48,
+    fontSize: 16,
+    color: colors.lavender[900],
+    paddingHorizontal: 8,
+  },
+  disabledInput: {
+    backgroundColor: colors.lavender[50],
+    color: colors.lavender[400],
+  },
 });

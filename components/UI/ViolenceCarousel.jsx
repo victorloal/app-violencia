@@ -1,4 +1,4 @@
-// components/Carousel/ViolenceCarousel.jsx
+// components/UI/ViolenceCarousel.jsx
 import { useState, useRef, useEffect } from "react";
 import {
   View,
@@ -12,34 +12,29 @@ import ViolenceTypeCard from "./ViolenceTypeCard";
 import { Ionicons } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
-const CARD_WIDTH = width - 60; // Espacio para los lados
+const CARD_WIDTH = width - 60;
 
 export default function ViolenceCarousel({ data, navigation }) {
-  // Recibimos navigation como prop
   const [currentIndex, setCurrentIndex] = useState(0);
   const [infiniteData, setInfiniteData] = useState([]);
   const flatListRef = useRef(null);
 
-  // Preparamos los datos para el carrusel infinito
   useEffect(() => {
-    // Duplicamos los datos para crear el efecto infinito
     const duplicatedData = [...data, ...data, ...data];
     setInfiniteData(duplicatedData);
-    setCurrentIndex(data.length); // Inicializamos en el medio para un deslizamiento fluido
+    setCurrentIndex(data.length);
   }, [data]);
 
-  // Desplazamiento a la card deseada
   const scrollToIndex = (index, animated = true) => {
     if (flatListRef.current) {
       flatListRef.current.scrollToIndex({
         index,
         animated,
-        viewPosition: 0.5, // Centra la card
+        viewPosition: 0.5,
       });
     }
   };
 
-  // Control para los botones de navegación
   const handleNext = () => {
     const nextIndex = currentIndex + 1;
     scrollToIndex(nextIndex);
@@ -52,18 +47,15 @@ export default function ViolenceCarousel({ data, navigation }) {
     setCurrentIndex(prevIndex);
   };
 
-  // Cuando el usuario haga scroll, actualizamos el índice
   const handleScrollEnd = (event) => {
     const scrollPosition = event.nativeEvent.contentOffset.x;
     const index = Math.floor(scrollPosition / CARD_WIDTH);
     setCurrentIndex(index);
   };
 
-  // Reposicionamiento para efecto infinito
   const handleMomentumScrollEnd = () => {
     if (infiniteData.length > 0) {
       if (currentIndex >= data.length * 2) {
-        // Si estamos cerca del final, volvemos al inicio
         const newIndex = currentIndex - data.length;
         flatListRef.current?.scrollToIndex({
           index: newIndex,
@@ -72,7 +64,6 @@ export default function ViolenceCarousel({ data, navigation }) {
         });
         setCurrentIndex(newIndex);
       } else if (currentIndex < data.length) {
-        // Si estamos cerca del inicio, vamos hacia el final
         const newIndex = currentIndex + data.length;
         flatListRef.current?.scrollToIndex({
           index: newIndex,
@@ -90,15 +81,12 @@ export default function ViolenceCarousel({ data, navigation }) {
     index,
   });
 
-  // Función para obtener el elemento original (sin duplicados)
   const getOriginalItem = (index) => {
     const originalIndex = index % data.length;
     return data[originalIndex];
   };
 
-  // Función para navegar a FormAyuda
   const navigateToFormAyuda = (item) => {
-    console.log("Navegando a Services con:", item.title);
     navigation.navigate("Services", {
       violenceType: item,
       title: item.title,
@@ -123,7 +111,7 @@ export default function ViolenceCarousel({ data, navigation }) {
         onMomentumScrollEnd={handleMomentumScrollEnd}
         scrollEventThrottle={16}
         getItemLayout={getItemLayout}
-        initialScrollIndex={data.length} // Comenzamos en medio del arreglo duplicado
+        initialScrollIndex={data.length}
         renderItem={({ item, index }) => {
           const originalItem = getOriginalItem(index);
           return (
@@ -131,11 +119,11 @@ export default function ViolenceCarousel({ data, navigation }) {
               <ViolenceTypeCard
                 title={item.title}
                 description={item.description}
+                // Clonamos el icono con tamaño mayor para la card
                 icon={item.icon}
                 onPressServices={() => navigateToFormAyuda(originalItem)}
-                onPressInfo={() =>
-                  console.log("Ver información para:", originalItem.title)
-                }
+                // onPressInfo está manejado internamente por ViolenceTypeCard (modal)
+                onPressInfo={() => {}}
               />
             </View>
           );
@@ -143,24 +131,18 @@ export default function ViolenceCarousel({ data, navigation }) {
         keyExtractor={(item, index) => `${item.id}-${index}`}
       />
 
-      {/* Indicadores y controles del carrusel */}
+      {/* Indicadores y controles */}
       <View style={styles.indicatorsContainer}>
         <TouchableOpacity style={styles.controlButton} onPress={handlePrev}>
-          <Ionicons
-            name="chevron-back"
-            size={24}
-            color={colors.lavender[700]}
-          />
+          <Ionicons name="chevron-back" size={24} color={colors.lavender[700]} />
         </TouchableOpacity>
 
         {data.map((_, index) => {
-          // Calculamos el índice real para los indicadores
           const realIndex = currentIndex % data.length;
           return (
             <TouchableOpacity
               key={index}
               onPress={() => {
-                // Navegamos al índice correspondiente en la sección central
                 const targetIndex = data.length + index;
                 scrollToIndex(targetIndex);
                 setCurrentIndex(targetIndex);
@@ -177,11 +159,7 @@ export default function ViolenceCarousel({ data, navigation }) {
         })}
 
         <TouchableOpacity style={styles.controlButton} onPress={handleNext}>
-          <Ionicons
-            name="chevron-forward"
-            size={24}
-            color={colors.lavender[700]}
-          />
+          <Ionicons name="chevron-forward" size={24} color={colors.lavender[700]} />
         </TouchableOpacity>
       </View>
     </View>

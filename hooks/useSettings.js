@@ -8,6 +8,7 @@ const STORAGE_KEYS = {
   BRIGHTNESS: "brightness",
   VOICE: "isVoiceOn",
   CAMOUFLAGE: "isCamouflageOn",
+  PHONE_NUMBER: "phoneNumber",
 };
 
 const DEFAULT_VALUES = {
@@ -16,6 +17,7 @@ const DEFAULT_VALUES = {
   brightness: 100,
   isVoiceOn: false,
   isCamouflageOn: false,
+  phoneNumber: "",
 };
 
 export const useSettings = () => {
@@ -37,6 +39,7 @@ export const useSettings = () => {
       );
       const voice = await AsyncStorage.getItem(STORAGE_KEYS.VOICE);
       const camo = await AsyncStorage.getItem(STORAGE_KEYS.CAMOUFLAGE);
+      const phone = await AsyncStorage.getItem(STORAGE_KEYS.PHONE_NUMBER);
 
       const newSettings = { ...DEFAULT_VALUES };
 
@@ -45,6 +48,7 @@ export const useSettings = () => {
       if (savedBrightness) newSettings.brightness = Number(savedBrightness);
       if (voice !== null) newSettings.isVoiceOn = voice === "true";
       if (camo !== null) newSettings.isCamouflageOn = camo === "true";
+      if (phone) newSettings.phoneNumber = phone;
 
       setSettings(newSettings);
       setTempSettings(newSettings);
@@ -75,6 +79,7 @@ export const useSettings = () => {
     await saveValue(STORAGE_KEYS.BRIGHTNESS, tempSettings.brightness);
     await saveValue(STORAGE_KEYS.VOICE, tempSettings.isVoiceOn);
     await saveValue(STORAGE_KEYS.CAMOUFLAGE, tempSettings.isCamouflageOn);
+    await saveValue(STORAGE_KEYS.PHONE_NUMBER, tempSettings.phoneNumber);
 
     setSettings({ ...tempSettings });
   };
@@ -89,7 +94,8 @@ export const useSettings = () => {
       tempSettings.contrast !== settings.contrast ||
       tempSettings.brightness !== settings.brightness ||
       tempSettings.isVoiceOn !== settings.isVoiceOn ||
-      tempSettings.isCamouflageOn !== settings.isCamouflageOn
+      tempSettings.isCamouflageOn !== settings.isCamouflageOn ||
+      tempSettings.phoneNumber !== settings.phoneNumber
     );
   };
 

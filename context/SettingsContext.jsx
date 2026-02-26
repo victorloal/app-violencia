@@ -10,6 +10,7 @@ export function SettingsProvider({ children }) {
   const [brightness, setBrightness] = useState(100);
   const [isVoiceOn, setIsVoiceOn] = useState(false);
   const [isCamouflageOn, setIsCamouflageOn] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   // Cargar valores guardados
   useEffect(() => {
@@ -19,12 +20,14 @@ export function SettingsProvider({ children }) {
       const b = await AsyncStorage.getItem("brightness");
       const v = await AsyncStorage.getItem("isVoiceOn");
       const m = await AsyncStorage.getItem("isCamouflageOn");
+      const p = await AsyncStorage.getItem("phoneNumber");
 
       if (f) setFontSize(Number(f));
       if (c) setContrast(Number(c));
       if (b) setBrightness(Number(b));
       if (v) setIsVoiceOn(v === "true");
       if (m) setIsCamouflageOn(m === "true");
+      if (p) setPhoneNumber(p);
     };
     loadSettings();
   }, []);
@@ -60,6 +63,11 @@ export function SettingsProvider({ children }) {
         setIsCamouflageOn: (val) => {
           setIsCamouflageOn(val);
           saveSetting("isCamouflageOn", val);
+        },
+        phoneNumber,
+        setPhoneNumber: (val) => {
+          setPhoneNumber(val);
+          saveSetting("phoneNumber", val);
         },
       }}
     >
