@@ -105,6 +105,12 @@ export default function FormScreen({ navigation }) {
     } else {
       await AsyncStorage.setItem("userData", JSON.stringify(updatedData));
       await AsyncStorage.setItem("formCompleted", "true");
+
+      // Enviar al backend (no bloquea la navegación)
+      import("../services/apiService").then(({ enviarPerfil }) => {
+        enviarPerfil(updatedData);
+      });
+
       navigation.replace("Message");
     }
   };
