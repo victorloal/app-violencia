@@ -305,6 +305,17 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.lavender[50],
   },
+  questionHeader: {
+    alignItems: "center",
+    justifyContent: "center",
+    alignContent: "center",
+    alignSelf: "center",
+    marginBottom: 16,
+  },
+  questionIcon: {
+    marginRight: 12,
+    alignItems: "center",
+  },
   slide: {
     width,
     height,
@@ -324,13 +335,11 @@ const styles = StyleSheet.create({
     shadowRadius: 20,
     elevation: 10,
   },
-  questionIconContainer: {
-    alignItems: "center",
-    marginBottom: 16,
-  },
   question: {
     marginBottom: 32,
     color: colors.lavender[900],
+    alignSelf: "center",
+    textAlign: "center",
   },
   optionsContainer: {
     width: "100%",

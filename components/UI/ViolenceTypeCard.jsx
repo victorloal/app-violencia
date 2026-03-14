@@ -7,10 +7,18 @@ import {
   Modal,
   TouchableOpacity,
 } from "react-native";
-import styles from "../../styles";
 import AppText from "../UI/AppText";
 import Button from "./Button";
 import { Ionicons } from "@expo/vector-icons";
+import { components } from "../../styles/components";
+import {
+  spacing,
+  borderRadius,
+  borderWidth,
+  semanticColors,
+  zIndex,
+  shadow,
+} from "../../styles/tokens";
 
 export default function ViolenceTypeCard({
   title,
@@ -28,14 +36,16 @@ export default function ViolenceTypeCard({
 
   return (
     <>
-      <View style={cardStyles.card}>
+      <View style={[components.card, cardStyles.card]}>
         {/* Título */}
         <AppText variant="h2" style={cardStyles.title}>
           {title}
         </AppText>
 
         {/* Icono grande centrado */}
-        <View style={cardStyles.iconContainer}>{icon}</View>
+        <View style={[components.iconContainerLarge, cardStyles.iconContainer]}>
+          {icon}
+        </View>
 
         {/* Descripción con scroll */}
         <ScrollView
@@ -50,21 +60,20 @@ export default function ViolenceTypeCard({
         {/* ── Botones inferiores ── */}
         <View style={cardStyles.buttonsContainer}>
           <Button
-            type="outline"
-            size="small"
+            type="primaryGhost"
+            variant="circle"
+            size="xs"
             onPress={handleInfoPress}
             iconLeft={
               <Ionicons
                 name="information-circle-outline"
                 size={20}
-                color={styles.semanticColors.primary}
+                color={semanticColors.primary}
               />
             }
-          >
-            Información
-          </Button>
+          ></Button>
 
-          <Button type="primary" size="medium" onPress={onPressServices}>
+          <Button type="primary" size="xl" onPress={onPressServices}>
             ¿Necesitas Atención?
           </Button>
         </View>
@@ -86,7 +95,7 @@ export default function ViolenceTypeCard({
           />
 
           {/* Card — hermano del backdrop */}
-          <View style={cardStyles.modalCard}>
+          <View style={[components.card, cardStyles.modalCard]}>
             <View style={cardStyles.dragIndicator} />
 
             <TouchableOpacity
@@ -97,19 +106,26 @@ export default function ViolenceTypeCard({
               <Ionicons
                 name="close-circle"
                 size={30}
-                color={styles.semanticColors.text.muted}
+                color={semanticColors.text.tertiary}
               />
             </TouchableOpacity>
 
             {/* Encabezado */}
             <View style={cardStyles.modalHeader}>
-              <View style={cardStyles.modalIconContainer}>{icon}</View>
+              <View
+                style={[
+                  components.iconContainerLarge,
+                  cardStyles.modalIconContainer,
+                ]}
+              >
+                {icon}
+              </View>
               <AppText variant="h2" style={cardStyles.modalTitle}>
                 {title}
               </AppText>
             </View>
 
-            <View style={cardStyles.modalDivider} />
+            <View style={components.divider} />
 
             {/* Contenido scrollable */}
             <ScrollView
@@ -127,7 +143,7 @@ export default function ViolenceTypeCard({
                   <Ionicons
                     name="alert-circle-outline"
                     size={22}
-                    color={styles.semanticColors.warning}
+                    color={semanticColors.warning}
                   />
                   <AppText variant="h3" style={cardStyles.modalSectionTitle}>
                     Señales de alerta
@@ -144,7 +160,7 @@ export default function ViolenceTypeCard({
                   <Ionicons
                     name="hand-left-outline"
                     size={22}
-                    color={styles.semanticColors.info}
+                    color={semanticColors.info}
                   />
                   <AppText variant="h3" style={cardStyles.modalSectionTitle}>
                     ¿Qué puedes hacer?
@@ -162,7 +178,7 @@ export default function ViolenceTypeCard({
             <View style={cardStyles.modalFooter}>
               <Button
                 type="primary"
-                size="large"
+                size="lg"
                 onPress={() => {
                   setModalVisible(false);
                   onPressServices();
@@ -181,44 +197,39 @@ export default function ViolenceTypeCard({
 const cardStyles = StyleSheet.create({
   // ── Card principal ──
   card: {
-    backgroundColor: styles.semanticColors.primaryLight,
-    borderRadius: styles.borderRadius.xl,
-    padding: styles.spacing.lg,
-    width: "95%",
-    height: "100%",
-    ...styles.shadow.md,
-    alignSelf: "center",
+    padding: spacing.lg,
+    ...shadow.md,
+    width: "100%",
+    flex: 1,
   },
   title: {
     textAlign: "center",
-    marginBottom: styles.spacing.md,
-    marginTop: styles.spacing.xs,
-    color: styles.semanticColors.text.primary,
+    marginBottom: spacing.md,
+    color: semanticColors.text.primary,
   },
   iconContainer: {
-    ...styles.utilities.center,
-    backgroundColor: styles.semanticColors.surface,
-    width: 110,
-    height: 110,
-    borderRadius: 55,
+    width: 70,
+    height: 70,
+    borderRadius: 50,
     alignSelf: "center",
-    marginBottom: styles.spacing.lg,
-    borderWidth: styles.borderWidth.lg,
-    borderColor: styles.semanticColors.primaryLight,
-    ...styles.shadow.sm,
+    marginBottom: spacing.lg,
+    borderWidth: borderWidth.thick,
+    borderColor: semanticColors.primaryLight,
+    ...shadow.sm,
   },
   descriptionContainer: {
     flex: 1,
-    marginBottom: styles.spacing.md,
   },
   description: {
     textAlign: "center",
-    color: styles.semanticColors.text.secondary,
+    color: semanticColors.text.secondary,
+    paddingHorizontal: spacing.xs,
   },
 
   // ── Botones inferiores ──
   buttonsContainer: {
-    gap: styles.spacing.sm,
+    marginTop: spacing.sm,
+    gap: spacing.sm,
   },
 
   // ── Modal overlay ──
@@ -228,96 +239,80 @@ const cardStyles = StyleSheet.create({
   },
   modalBackdrop: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: styles.semanticColors.overlay,
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
 
   // ── Modal card (bottom-sheet) ──
   modalCard: {
-    backgroundColor: styles.semanticColors.surface,
-    borderTopLeftRadius: styles.borderRadius.xxl,
-    borderTopRightRadius: styles.borderRadius.xxl,
-    paddingTop: styles.spacing.md,
-    paddingHorizontal: styles.spacing.xl,
-    paddingBottom: styles.spacing.xxl,
-    maxHeight: "88%",
-    ...styles.shadow.xl,
+    paddingHorizontal: spacing.xl,
+    ...shadow.lg,
   },
   dragIndicator: {
     width: 44,
     height: 4,
-    borderRadius: styles.borderRadius.sm,
-    backgroundColor: styles.semanticColors.border.light,
+    borderRadius: borderRadius.xs,
+    backgroundColor: semanticColors.border.light,
     alignSelf: "center",
-    marginBottom: styles.spacing.md,
   },
   modalCloseButton: {
     position: "absolute",
-    top: styles.spacing.md,
-    right: styles.spacing.lg,
-    zIndex: styles.zIndex.modal,
+    top: spacing.md,
+    right: spacing.lg,
+    zIndex: zIndex.modal,
   },
   modalHeader: {
     alignItems: "center",
-    marginBottom: styles.spacing.lg,
-    marginTop: styles.spacing.xs,
+    marginBottom: spacing.lg,
+    marginTop: spacing.xs,
   },
   modalIconContainer: {
-    backgroundColor: styles.semanticColors.primaryLight,
     width: 80,
     height: 80,
     borderRadius: 40,
-    ...styles.utilities.center,
-    marginBottom: styles.spacing.sm,
-    borderWidth: styles.borderWidth.md,
-    borderColor: styles.semanticColors.border.light,
+    marginBottom: spacing.sm,
+    borderWidth: borderWidth.md,
+    borderColor: semanticColors.border.light,
   },
   modalTitle: {
     textAlign: "center",
-    color: styles.semanticColors.text.primary,
-  },
-  modalDivider: {
-    height: 1,
-    backgroundColor: styles.semanticColors.border.light,
-    marginBottom: styles.spacing.lg,
+    color: semanticColors.text.primary,
   },
   modalScrollView: {
-    flexGrow: 0,
+    flexGrow: 1,
   },
   modalScrollContent: {
-    paddingBottom: styles.spacing.sm,
+    paddingBottom: spacing.sm,
   },
   modalDescription: {
-    color: styles.semanticColors.text.secondary,
-    marginBottom: styles.spacing.xl,
+    color: semanticColors.text.secondary,
+    marginBottom: spacing.xl,
     textAlign: "justify",
   },
   modalSection: {
-    backgroundColor: styles.semanticColors.backgroundAlt,
-    borderRadius: styles.borderRadius.lg,
-    padding: styles.spacing.md,
-    marginBottom: styles.spacing.md,
-    borderLeftWidth: styles.borderWidth.xl,
-    borderLeftColor: styles.semanticColors.primary,
+    backgroundColor: semanticColors.primaryLight,
+    borderRadius: borderRadius.lg,
+    padding: spacing.md,
+    marginBottom: spacing.md,
+    borderLeftWidth: borderWidth.thick,
+    borderLeftColor: semanticColors.primary,
   },
   modalSectionHeader: {
     flexDirection: "row",
     alignItems: "center",
-    gap: styles.spacing.sm,
-    marginBottom: styles.spacing.xs,
+    gap: spacing.sm,
+    marginBottom: spacing.xs,
   },
   modalSectionTitle: {
-    color: styles.semanticColors.text.primary,
+    color: semanticColors.text.primary,
     flex: 1,
   },
   modalSectionText: {
-    color: styles.semanticColors.text.secondary,
+    color: semanticColors.text.secondary,
   },
 
   // ── Modal footer ──
   modalFooter: {
-    paddingTop: styles.spacing.md,
-    borderTopWidth: styles.borderWidth.thin,
-    borderTopColor: styles.semanticColors.border.light,
-    marginTop: styles.spacing.sm,
+    borderTopWidth: borderWidth.thin,
+    borderTopColor: semanticColors.border.light,
   },
 });

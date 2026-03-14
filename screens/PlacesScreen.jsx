@@ -8,11 +8,12 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { colors } from "../thema/colors";
+import { Ionicons } from "@expo/vector-icons";
 import MainLayout from "../components/Layout/MainLayout";
 import AppText from "../components/UI/AppText";
-import StyledButton from "../components/UI/Button";
-import { Ionicons } from "@expo/vector-icons";
+import Button from "../components/UI/Button";
+import { colors } from "../thema/colors";
+import { spacing, borderRadius, borderWidth, shadow } from "../styles/tokens";
 
 // ── Números de emergencia ───────────────────────────────────────
 const emergencyNumbers = [
@@ -24,7 +25,7 @@ const emergencyNumbers = [
     descripcion: "Atención especializada a víctimas de violencia de género.",
     tipo: "emergencia",
     prioridad: true,
-    icon: "woman",
+    icon: "woman-outline",
   },
   {
     id: "e-2",
@@ -35,7 +36,7 @@ const emergencyNumbers = [
       "Orientación y activación de rutas de atención en violencia intrafamiliar.",
     tipo: "emergencia",
     prioridad: true,
-    icon: "home",
+    icon: "home-outline",
   },
   {
     id: "e-4",
@@ -46,7 +47,7 @@ const emergencyNumbers = [
       "Protección policial para menores en situación de riesgo o abuso.",
     tipo: "emergencia",
     prioridad: false,
-    icon: "shield-checkmark",
+    icon: "shield-checkmark-outline",
   },
   {
     id: "e-3",
@@ -57,7 +58,7 @@ const emergencyNumbers = [
       "Protección de niñas, niños y adolescentes víctimas de violencia.",
     tipo: "emergencia",
     prioridad: true,
-    icon: "people",
+    icon: "people-outline",
   },
   {
     id: "e-5",
@@ -68,7 +69,7 @@ const emergencyNumbers = [
       "Denuncia de delitos, incluidos los de violencia sexual y de género.",
     tipo: "emergencia",
     prioridad: false,
-    icon: "scale",
+    icon: "scale-outline",
   },
   {
     id: "e-6",
@@ -79,7 +80,7 @@ const emergencyNumbers = [
       "Atención inmediata ante crímenes, amenazas o peligro inminente.",
     tipo: "emergencia",
     prioridad: false,
-    icon: "alert-circle",
+    icon: "alert-circle-outline",
   },
   {
     id: "e-7",
@@ -89,7 +90,7 @@ const emergencyNumbers = [
     descripcion: "Gestión de desastres y emergencias civiles.",
     tipo: "emergencia",
     prioridad: false,
-    icon: "construct",
+    icon: "construct-outline",
   },
   {
     id: "e-8",
@@ -99,7 +100,7 @@ const emergencyNumbers = [
     descripcion: "Atención médica y emergencias humanitarias.",
     tipo: "emergencia",
     prioridad: false,
-    icon: "medkit",
+    icon: "medkit-outline",
   },
   {
     id: "e-9",
@@ -109,7 +110,7 @@ const emergencyNumbers = [
     descripcion: "Atención de incendios y emergencias.",
     tipo: "emergencia",
     prioridad: false,
-    icon: "flame",
+    icon: "flame-outline",
   },
   {
     id: "e-10",
@@ -119,7 +120,7 @@ const emergencyNumbers = [
     descripcion: "Apoyo psicológico en crisis y prevención del suicidio.",
     tipo: "emergencia",
     prioridad: false,
-    icon: "heart",
+    icon: "heart-outline",
   },
 ];
 
@@ -226,17 +227,17 @@ const placesData = {
 const getIconByType = (t) => {
   switch (t) {
     case "salud":
-      return "medical";
+      return "medkit-outline";
     case "proteccion":
-      return "shield";
+      return "shield-outline";
     case "legal":
-      return "scale";
+      return "scale-outline";
     case "psicologico":
-      return "heart";
+      return "heart-outline";
     case "emergencia":
-      return "alert-circle";
+      return "alert-circle-outline";
     default:
-      return "location";
+      return "location-outline";
   }
 };
 
@@ -277,7 +278,7 @@ function EmergencyCard({ place }) {
           ]}
         >
           <Ionicons
-            name={place.icon || "call"}
+            name={place.icon || "call-outline"}
             size={22}
             color={
               place.prioridad ? colors.lavender[700] : colors.lavender[600]
@@ -286,59 +287,39 @@ function EmergencyCard({ place }) {
         </View>
         <View style={styles.emergencyTopText}>
           <AppText
-            style={[
-              styles.emergencyName,
-              place.prioridad && styles.emergencyNamePriority,
-            ]}
+            variant="h4"
+            color={place.prioridad ? "primary" : "secondary"}
+            style={place.prioridad && styles.emergencyNamePriority}
           >
             {place.nombre}
           </AppText>
-          <AppText
-            style={[
-              styles.emergencyDesc,
-              place.prioridad && styles.emergencyDescPriority,
-            ]}
-          >
+          <AppText variant="caption" color="tertiary">
             {place.descripcion}
           </AppText>
         </View>
       </View>
 
       {/* Divisor */}
-      <View
-        style={[
-          styles.emergencyDivider,
-          place.prioridad && styles.emergencyDividerPriority,
-        ]}
-      />
+      <View style={styles.emergencyDivider} />
 
       {/* Fila inferior: número grande + botón llamar */}
       <View style={styles.emergencyBottom}>
         <AppText
-          style={[
-            styles.emergencyNumber,
-            place.prioridad && styles.emergencyNumberPriority,
-          ]}
+          variant="h1"
+          color={place.prioridad ? "primary" : "secondary"}
+          style={styles.emergencyNumber}
         >
           {place.numero}
         </AppText>
-        <View
-          style={[styles.callPill, place.prioridad && styles.callPillPriority]}
+        <Button
+          type={place.prioridad ? "primary" : "primaryGhost"}
+          variant="pill"
+          size="small"
+          onPress={() => Linking.openURL(`tel:${place.numero}`)}
+          iconLeft={<Ionicons name="call" size={16} color={colors.white} />}
         >
-          <Ionicons
-            name="call"
-            size={16}
-            color={place.prioridad ? colors.white : colors.lavender[700]}
-          />
-          <AppText
-            style={[
-              styles.callPillText,
-              place.prioridad && styles.callPillTextPriority,
-            ]}
-          >
-            Llamar ahora
-          </AppText>
-        </View>
+          Llamar ahora
+        </Button>
       </View>
     </TouchableOpacity>
   );
@@ -357,9 +338,11 @@ function PlaceCard({ place, onMaps }) {
           />
         </View>
         <View style={styles.placeTitleContainer}>
-          <AppText style={styles.placeName}>{place.nombre}</AppText>
+          <AppText variant="h4" color="primary">
+            {place.nombre}
+          </AppText>
           <View style={styles.placeTypePill}>
-            <AppText style={styles.placeTypeText}>
+            <AppText variant="caption" color="secondary">
               {place.tipo.charAt(0).toUpperCase() + place.tipo.slice(1)}
             </AppText>
           </View>
@@ -373,7 +356,9 @@ function PlaceCard({ place, onMaps }) {
             size={16}
             color={colors.lavender[500]}
           />
-          <AppText style={styles.detailText}>{place.horario}</AppText>
+          <AppText variant="body" color="secondary">
+            {place.horario}
+          </AppText>
         </View>
         <View style={styles.detailRow}>
           <Ionicons
@@ -381,7 +366,9 @@ function PlaceCard({ place, onMaps }) {
             size={16}
             color={colors.lavender[500]}
           />
-          <AppText style={styles.detailText}>{place.direccion}</AppText>
+          <AppText variant="body" color="secondary">
+            {place.direccion}
+          </AppText>
         </View>
         <View style={styles.detailRow}>
           <Ionicons
@@ -389,29 +376,42 @@ function PlaceCard({ place, onMaps }) {
             size={16}
             color={colors.lavender[500]}
           />
-          <AppText style={styles.detailText}>{place.telefono}</AppText>
+          <AppText variant="body" color="secondary">
+            {place.telefono}
+          </AppText>
         </View>
         <View style={styles.descriptionBox}>
-          <AppText style={styles.descriptionText}>{place.descripcion}</AppText>
+          <AppText
+            variant="body"
+            color="tertiary"
+            style={styles.descriptionText}
+          >
+            {place.descripcion}
+          </AppText>
         </View>
       </View>
 
       <View style={styles.placeActions}>
-        <TouchableOpacity
-          style={styles.callButton}
+        <Button
+          type="primaryGhost"
+          variant="pill"
+          size="flex"
           onPress={() => Linking.openURL(`tel:${place.telefono}`)}
+          iconLeft={
+            <Ionicons name="call" size={18} color={colors.lavender[700]} />
+          }
         >
-          <Ionicons name="call" size={18} color={colors.lavender[700]} />
-          <AppText style={styles.callButtonText}>Llamar</AppText>
-        </TouchableOpacity>
-        <StyledButton
-          title="Cómo llegar"
-          size="small"
-          tone="dark"
+          Llamar
+        </Button>
+        <Button
+          type="primary"
+          variant="pill"
+          size="flex"
           onPress={() => onMaps(place.latitud, place.longitud, place.direccion)}
-          icon={<Ionicons name="map" size={16} color={colors.white} />}
-          iconPosition="left"
-        />
+          iconLeft={<Ionicons name="map" size={18} color={colors.white} />}
+        >
+          Cómo llegar
+        </Button>
       </View>
     </View>
   );
@@ -453,7 +453,9 @@ export default function PlaceScreen({ route, navigation }) {
               color={colors.lavender[700]}
             />
           </TouchableOpacity>
-          <AppText style={styles.headerTitle}>{getTitleByType(tipo)}</AppText>
+          <AppText variant="h2" style={styles.headerTitle}>
+            {getTitleByType(tipo)}
+          </AppText>
           <View style={styles.placeholder} />
         </View>
 
@@ -480,10 +482,8 @@ export default function PlaceScreen({ route, navigation }) {
                   color={tipo === tf ? colors.white : colors.lavender[700]}
                 />
                 <AppText
-                  style={[
-                    styles.filterText,
-                    tipo === tf && styles.filterTextActive,
-                  ]}
+                  variant="caption"
+                  color={tipo === tf ? "light" : "secondary"}
                 >
                   {tf.charAt(0).toUpperCase() + tf.slice(1)}
                 </AppText>
@@ -505,7 +505,7 @@ export default function PlaceScreen({ route, navigation }) {
                 size={18}
                 color={colors.lavender[700]}
               />
-              <AppText style={styles.backToServicesText}>
+              <AppText variant="body" color="primary">
                 Volver a servicios
               </AppText>
             </TouchableOpacity>
@@ -519,7 +519,11 @@ export default function PlaceScreen({ route, navigation }) {
                   size={16}
                   color={colors.lavender[700]}
                 />
-                <AppText style={styles.sectionHeaderText}>
+                <AppText
+                  variant="caption"
+                  color="primary"
+                  style={styles.sectionHeaderText}
+                >
                   Violencia de género
                 </AppText>
               </View>
@@ -531,15 +535,18 @@ export default function PlaceScreen({ route, navigation }) {
             ))}
 
             {/* Sección general */}
-            <View style={[styles.sectionHeader, { marginTop: 8 }]}>
+            <View style={[styles.sectionHeader, { marginTop: spacing.sm }]}>
               <View style={styles.sectionHeaderLine} />
               <View style={styles.sectionHeaderLabel}>
-                <Ionicons name="call" size={16} color={colors.lavender[500]} />
+                <Ionicons
+                  name="call-outline"
+                  size={16}
+                  color={colors.lavender[500]}
+                />
                 <AppText
-                  style={[
-                    styles.sectionHeaderText,
-                    { color: colors.lavender[500] },
-                  ]}
+                  variant="caption"
+                  color="secondary"
+                  style={styles.sectionHeaderText}
                 >
                   Otras emergencias
                 </AppText>
@@ -564,8 +571,12 @@ export default function PlaceScreen({ route, navigation }) {
 
         {/* Pie */}
         <View style={styles.helpMessage}>
-          <Ionicons name="help-buoy" size={20} color={colors.lavender[600]} />
-          <AppText style={styles.helpText}>
+          <Ionicons
+            name="help-buoy-outline"
+            size={20}
+            color={colors.lavender[600]}
+          />
+          <AppText variant="body" color="secondary" style={styles.helpText}>
             Si necesitas ayuda inmediata, llama al 155 o al 123
           </AppText>
         </View>
@@ -586,20 +597,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.lg,
     backgroundColor: colors.white,
-    borderBottomWidth: 1,
+    borderBottomWidth: borderWidth.thin,
     borderBottomColor: colors.lavender[100],
   },
   backButton: {
-    padding: 8,
-    borderRadius: 20,
+    padding: spacing.sm,
+    borderRadius: borderRadius.xl,
     backgroundColor: colors.lavender[50],
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
     color: colors.lavender[800],
   },
   placeholder: { width: 40 },
@@ -607,62 +620,50 @@ const styles = StyleSheet.create({
   // Filtros
   filtersBar: {
     backgroundColor: colors.white,
-    paddingVertical: 10,
+    paddingVertical: spacing.sm,
   },
   filtersContent: {
-    paddingHorizontal: 20,
-    gap: 10,
+    paddingHorizontal: spacing.xl,
+    gap: spacing.sm,
   },
   filterChip: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: colors.lavender[50],
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 25,
-    gap: 6,
-    borderWidth: 1,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.pill,
+    gap: spacing.xs,
+    borderWidth: borderWidth.thin,
     borderColor: colors.lavender[200],
   },
   filterChipActive: {
     backgroundColor: colors.lavender[600],
     borderColor: colors.lavender[600],
   },
-  filterText: {
-    color: colors.lavender[700],
-    fontSize: 14,
-  },
-  filterTextActive: {
-    color: colors.white,
-    fontWeight: "600",
-  },
 
   // Lista
   listContainer: {
-    padding: 16,
-    gap: 12,
+    padding: spacing.lg,
+    gap: spacing.md,
   },
   backToServicesButton: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: colors.lavender[100],
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 12,
-    gap: 8,
-    marginBottom: 4,
-  },
-  backToServicesText: {
-    color: colors.lavender[800],
-    fontSize: 15,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.md,
+    gap: spacing.sm,
+    marginBottom: spacing.xxs,
   },
 
   // Separador de sección
   sectionHeader: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
-    marginVertical: 6,
+    gap: spacing.sm,
+    marginVertical: spacing.xs,
   },
   sectionHeaderLine: {
     flex: 1,
@@ -672,48 +673,43 @@ const styles = StyleSheet.create({
   sectionHeaderLabel: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 6,
+    gap: spacing.xs,
     backgroundColor: colors.lavender[100],
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 20,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xxs,
+    borderRadius: borderRadius.pill,
   },
   sectionHeaderText: {
     fontSize: 13,
-    fontWeight: "700",
-    color: colors.lavender[700],
+    fontWeight: "600",
   },
 
   // ── Tarjeta de emergencia ─────────────────────────────────────
   emergencyCard: {
     backgroundColor: colors.white,
-    borderRadius: 20,
-    padding: 18,
-    gap: 14,
-    shadowColor: colors.lavender[900],
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 4,
-    borderWidth: 1.5,
+    borderRadius: borderRadius.xl,
+    padding: spacing.lg,
+    gap: spacing.md,
+    ...shadow.md,
+    borderWidth: borderWidth.normal,
     borderColor: colors.lavender[100],
   },
   emergencyCardPriority: {
     backgroundColor: colors.lavender[50],
     borderColor: colors.lavender[300],
-    borderWidth: 1.5,
+    borderWidth: borderWidth.normal,
   },
 
   // Fila superior
   emergencyTop: {
     flexDirection: "row",
     alignItems: "flex-start",
-    gap: 12,
+    gap: spacing.md,
   },
   emergencyIconBox: {
     width: 44,
     height: 44,
-    borderRadius: 14,
+    borderRadius: borderRadius.md,
     backgroundColor: colors.lavender[100],
     alignItems: "center",
     justifyContent: "center",
@@ -724,25 +720,10 @@ const styles = StyleSheet.create({
   },
   emergencyTopText: {
     flex: 1,
-    gap: 4,
-  },
-  emergencyName: {
-    fontSize: 17,
-    fontWeight: "700",
-    color: colors.lavender[900],
-    lineHeight: 22,
+    gap: spacing.xxs,
   },
   emergencyNamePriority: {
-    color: colors.lavender[900],
     fontSize: 18,
-  },
-  emergencyDesc: {
-    fontSize: 13,
-    color: colors.lavender[500],
-    lineHeight: 18,
-  },
-  emergencyDescPriority: {
-    color: colors.lavender[700],
   },
 
   // Divisor
@@ -750,11 +731,8 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: colors.lavender[100],
   },
-  emergencyDividerPriority: {
-    backgroundColor: colors.lavender[200],
-  },
 
-  // Fila inferior: número + botón
+  // Fila inferior
   emergencyBottom: {
     flexDirection: "row",
     alignItems: "center",
@@ -762,117 +740,69 @@ const styles = StyleSheet.create({
   },
   emergencyNumber: {
     fontSize: 38,
-    fontWeight: "800",
-    color: colors.lavender[700],
     letterSpacing: -1,
-  },
-  emergencyNumberPriority: {
-    fontSize: 42,
-    color: colors.lavender[800],
-  },
-  callPill: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    backgroundColor: colors.lavender[100],
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 30,
-    borderWidth: 1.5,
-    borderColor: colors.lavender[300],
-  },
-  callPillPriority: {
-    backgroundColor: colors.lavender[700],
-    borderColor: colors.lavender[700],
-  },
-  callPillText: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: colors.lavender[700],
-  },
-  callPillTextPriority: {
-    color: colors.white,
   },
 
   // ── Tarjeta lugar normal ──────────────────────────────────────
   placeCard: {
     backgroundColor: colors.white,
-    borderRadius: 16,
-    padding: 16,
-    shadowColor: colors.lavender[900],
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
+    borderRadius: borderRadius.lg,
+    padding: spacing.lg,
+    ...shadow.sm,
+    borderWidth: borderWidth.thin,
+    borderColor: colors.lavender[100],
   },
   placeHeader: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 12,
-    gap: 12,
+    marginBottom: spacing.md,
+    gap: spacing.md,
   },
   placeIconBox: {
     width: 48,
     height: 48,
-    borderRadius: 14,
+    borderRadius: borderRadius.md,
     backgroundColor: colors.lavender[100],
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
+    borderWidth: borderWidth.thin,
     borderColor: colors.lavender[200],
   },
-  placeTitleContainer: { flex: 1, gap: 4 },
-  placeName: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: colors.lavender[900],
+  placeTitleContainer: {
+    flex: 1,
+    gap: spacing.xxs,
   },
   placeTypePill: {
     backgroundColor: colors.lavender[100],
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 12,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xxs,
+    borderRadius: borderRadius.pill,
     alignSelf: "flex-start",
   },
-  placeTypeText: { fontSize: 11, color: colors.lavender[600] },
 
-  placeDetails: { gap: 8, marginBottom: 14 },
-  detailRow: { flexDirection: "row", alignItems: "center", gap: 8 },
-  detailText: { flex: 1, fontSize: 14, color: colors.lavender[800] },
+  placeDetails: {
+    gap: spacing.sm,
+    marginBottom: spacing.md,
+  },
+  detailRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+  },
   descriptionBox: {
-    marginTop: 6,
-    paddingTop: 8,
-    borderTopWidth: 1,
+    marginTop: spacing.xs,
+    paddingTop: spacing.sm,
+    borderTopWidth: borderWidth.thin,
     borderTopColor: colors.lavender[100],
   },
   descriptionText: {
-    color: colors.lavender[500],
     fontStyle: "italic",
-    fontSize: 13,
-    lineHeight: 18,
   },
 
   placeActions: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
-  },
-  callButton: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.lavender[100],
-    paddingVertical: 11,
-    borderRadius: 25,
-    gap: 6,
-    borderWidth: 1.5,
-    borderColor: colors.lavender[300],
-  },
-  callButtonText: {
-    color: colors.lavender[700],
-    fontWeight: "700",
-    fontSize: 15,
+    gap: spacing.sm,
   },
 
   // Pie
@@ -880,16 +810,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: colors.lavender[100],
-    marginHorizontal: 16,
-    marginBottom: 24,
-    marginTop: 4,
-    padding: 14,
-    borderRadius: 12,
-    gap: 10,
+    marginHorizontal: spacing.lg,
+    marginBottom: spacing.xl,
+    marginTop: spacing.xxs,
+    padding: spacing.md,
+    borderRadius: borderRadius.md,
+    gap: spacing.sm,
   },
   helpText: {
-    color: colors.lavender[800],
-    fontSize: 14,
     flex: 1,
   },
 });

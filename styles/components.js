@@ -183,10 +183,7 @@ export const components = StyleSheet.create({
     borderColor: colors.lavender[200],
   },
   iconContainerSmall: {
-    width: 32,
-    height: 32,
     borderRadius: borderRadius.sm,
-    backgroundColor: colors.lavender[100],
     ...layout.center,
   },
 

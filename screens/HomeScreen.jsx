@@ -59,7 +59,7 @@ export default function HomeScreen({ navigation }) {
     <View style={styles.container}>
       <MainLayout>
         <View style={styles.header}>
-          <AppText variant="title" style={styles.mainTitle}>
+          <AppText variant="h1" style={styles.mainTitle}>
             Tipos de Violencia
           </AppText>
         </View>
@@ -79,12 +79,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    padding: 20,
-    paddingBottom: 0,
+    paddingBottom: 5,
   },
   mainTitle: {
     textAlign: "center",
-    marginBottom: 10,
   },
   subtitle: {
     textAlign: "center",

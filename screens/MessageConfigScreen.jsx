@@ -1,101 +1,99 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AppText from "../components/UI/AppText";
 import Button from "../components/UI/Button";
-import SvgComponent from "../assets/icons/logo.jsx";
-import { colors } from "../thema/colors";
 import SafeLayout from "../components/Layout/SafeLayout";
+import { components } from "../styles/components";
+import { colors } from "../thema/colors";
+import { spacing } from "../styles/tokens";
 
 export default function MessageConfigScreen({ navigation }) {
-  const handleContinue = () => {
-    navigation.navigate("Config");
-  };
-
-  const handleSkip = () => {
+  const handleConfigure = () => {
     navigation.replace("Config");
   };
 
   return (
     <SafeLayout>
       <View style={styles.container}>
-        {/* Logo */}
-        <View style={styles.logoContainer}>
-          <SvgComponent width={100} height={100} />
-          <AppText variant="h2" style={styles.appName}>
-            Violencia Cero
-          </AppText>
-        </View>
-
-        {/* Contenido principal */}
         <View style={styles.contentContainer}>
-          <View style={styles.iconCircle}>
-            <Ionicons name="heart" size={50} color={colors.lavender[600]} />
+          <View style={[components.iconContainerLarge, styles.iconCircle]}>
+            <AppText variant="h1">⚙️</AppText>
           </View>
-
           <AppText variant="h1" style={styles.title}>
-            💜 Nos tomará solo un momento
+            Configuremos tu experiencia
+          </AppText>
+          <AppText variant="body" color="secondary" style={styles.message}>
+            Te invitamos a configurar tu experiencia en la app
           </AppText>
 
-          <AppText variant="body" style={styles.message}>
-            Estas preguntas son solo para tu primer ingreso y nos ayudan a
-            mejorar la aplicación.
-          </AppText>
-
-          <AppText variant="body" style={styles.submessage}>
-            No solicitaremos datos personales.
-          </AppText>
-
-          <View style={styles.bulletPoints}>
-            <View style={styles.bulletItem}>
-              <Ionicons
-                name="checkmark-circle"
-                size={24}
-                color={colors.lavender[600]}
-              />
-              <AppText variant="body" style={styles.bulletText}>
-                Totalmente anónimo
-              </AppText>
+          {/* Cards usando los estilos de components.js */}
+          <View style={styles.cardsContainer}>
+            {/* Card Tamaño de letra */}
+            <View style={[components.card, styles.featureCard]}>
+              <View style={components.iconContainerSmall}>
+                <Ionicons name="text" size={24} color={colors.lavender[600]} />
+              </View>
+              <View style={styles.cardContent}>
+                <AppText variant="h4" style={styles.cardTitle}>
+                  Tamaño de letra
+                </AppText>
+                <AppText variant="body" color="secondary">
+                  Ajusta el texto para una mejor lectura
+                </AppText>
+              </View>
             </View>
-            <View style={styles.bulletItem}>
-              <Ionicons
-                name="checkmark-circle"
-                size={24}
-                color={colors.lavender[600]}
-              />
-              <AppText variant="body" style={styles.bulletText}>
-                Menos de 2 minutos
-              </AppText>
+
+            {/* Card Contacto de confianza */}
+            <View style={[components.card, styles.featureCard]}>
+              <View style={components.iconContainerSmall}>
+                <Ionicons
+                  name="shield"
+                  size={24}
+                  color={colors.lavender[600]}
+                />
+              </View>
+              <View style={styles.cardContent}>
+                <AppText variant="h4" style={styles.cardTitle}>
+                  Contacto de confianza
+                </AppText>
+                <AppText variant="body" color="secondary">
+                  Guarda un número para emergencias
+                </AppText>
+              </View>
             </View>
-            <View style={styles.bulletItem}>
-              <Ionicons
-                name="checkmark-circle"
-                size={24}
-                color={colors.lavender[600]}
-              />
-              <AppText variant="body" style={styles.bulletText}>
-                Puedes cambiarlo después
-              </AppText>
+
+            {/* Card Accesibilidad */}
+            <View style={[components.card, styles.featureCard]}>
+              <View style={components.iconContainerSmall}>
+                <Ionicons
+                  name="accessibility"
+                  size={24}
+                  color={colors.lavender[600]}
+                />
+              </View>
+              <View style={styles.cardContent}>
+                <AppText variant="h4" style={styles.cardTitle}>
+                  Accesibilidad
+                </AppText>
+                <AppText variant="body" color="secondary">
+                  Configura TalkBack/VoiceOver
+                </AppText>
+              </View>
             </View>
           </View>
         </View>
 
-        {/* Botones */}
+        {/* Botón */}
         <View style={styles.buttonContainer}>
           <Button
             type="primary"
             size="large"
-            onPress={handleContinue}
+            onPress={handleConfigure}
             style={styles.continueButton}
           >
-            Continuar
+            Ir a Configuración
           </Button>
-
-          <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
-            <AppText variant="body" color="tertiary">
-              Omitir
-            </AppText>
-          </TouchableOpacity>
         </View>
       </View>
     </SafeLayout>
@@ -106,73 +104,76 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-between",
-    paddingVertical: 40,
-    paddingHorizontal: 20,
-  },
-  logoContainer: {
-    alignItems: "center",
-    marginTop: 20,
-  },
-  appName: {
-    marginTop: 10,
-    color: colors.lavender[800],
+    paddingVertical: spacing.xxxl,
+    paddingHorizontal: spacing.xl,
   },
   contentContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 10,
   },
   iconCircle: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: colors.lavender[50],
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 30,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginBottom: spacing.lg,
     borderWidth: 2,
     borderColor: colors.lavender[200],
   },
   title: {
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: spacing.md,
     color: colors.lavender[800],
   },
   message: {
-    textAlign: "center",
-    marginBottom: 15,
+    marginBottom: spacing.xl,
     lineHeight: 24,
+    paddingHorizontal: spacing.sm,
   },
-  submessage: {
-    textAlign: "center",
-    color: colors.lavender[600],
-    fontWeight: "600",
-    marginBottom: 30,
-  },
-  bulletPoints: {
-    width: "100%",
-    marginTop: 10,
-  },
-  bulletItem: {
+  // Mensaje principal destacado
+  principalMessage: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 15,
+    backgroundColor: colors.lavender[100],
+    padding: spacing.lg,
+    borderRadius: spacing.md,
+    marginBottom: spacing.xl,
+    borderWidth: 2,
+    borderColor: colors.lavender[400],
+    gap: spacing.md,
+    width: "100%",
   },
-  bulletText: {
-    marginLeft: 12,
+  principalMessageText: {
     flex: 1,
+    textAlign: "center",
+    color: colors.lavender[800],
+  },
+  // Contenedor de cards
+  cardsContainer: {
+    width: "100%",
+    gap: spacing.md,
+    marginBottom: spacing.md,
+  },
+  // Card de característica
+  featureCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: spacing.lg,
+    marginBottom: 0, // Usamos gap del contenedor
+  },
+  cardContent: {
+    flex: 1,
+    marginLeft: spacing.md,
+  },
+  cardTitle: {
+    marginBottom: spacing.xxs,
   },
   buttonContainer: {
     width: "100%",
     alignItems: "center",
-    marginBottom: 20,
+    marginTop: spacing.md,
   },
   continueButton: {
     width: "100%",
-    marginBottom: 15,
-  },
-  skipButton: {
-    padding: 10,
   },
 });
