@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AppText from "./AppText";
-import StyledButton from "./StyledButton";
+import StyledButton from "./Button";
 import { colors } from "../../thema/colors";
 import { styles } from "../../styles/SettingsStyles";
 

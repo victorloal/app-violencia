@@ -2,10 +2,10 @@
 
 import { View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import styles from "../../styles";
 import AppText from "../UI/AppText";
-import StyledButton from "../UI/StyledButton";
-import { colors } from "../../thema/colors";
-import { styles } from "../../styles/SettingsStyles";
+import Button from "./Button";
+const { forms, semanticColors } = styles;
 
 export const ToggleSection = ({
   title,
@@ -16,27 +16,27 @@ export const ToggleSection = ({
   iconOff,
 }) => {
   return (
-    <View style={styles.formContainer}>
-      <AppText variant="title" style={styles.sectionTitle}>
+    <View style={forms.container}>
+      <AppText variant="title" style={forms.label}>
         {title}
       </AppText>
-      <View style={styles.actionRow}>
-        <StyledButton
-          iconPosition="top"
-          title={value ? "Apagar" : "Encender"}
-          tone="dark"
+      <View style={forms.inputContainer}>
+        <Button
+          type={value ? "success" : "primary"}
           size="small"
-          shape="pill"
-          icon={
+          variant="pill"
+          iconLeft={
             <Ionicons
               name={value ? iconOff : iconOn}
               size={24}
-              color={colors.white}
+              color={semanticColors.text.inverse}
             />
           }
           onPress={onToggle}
           disabled={disabled}
-        />
+        >
+          {value ? "Apagar" : "Encender"}
+        </Button>
       </View>
     </View>
   );

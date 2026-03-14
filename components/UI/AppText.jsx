@@ -1,52 +1,100 @@
+// components/common/AppText.js
+import React, { useContext } from "react";
 import { Text } from "react-native";
-import { colors } from "../../thema/colors";
-import { useContext } from "react";
+import { typography } from "../../styles/typography";
 import { SettingsContext } from "../../context/SettingsContext";
 
-export default function AppText({
+const AppText = ({
   children,
   variant = "body",
-  tone = "normal",
-  align = "left",
-  weight,
+  color = "primary",
   style,
-  ...props
-}) {
-  const { fontSize: globalFontSize } = useContext(SettingsContext);
+  bold,
+  semiBold,
+  italic,
+  underline,
+  center,
+  right,
+  uppercase,
+  capitalize,
+  scale: propScale,
 
-  const baseFontSize = {
-    title: 26,
-    subtitle: 20,
-    body: 16,
-    caption: 13,
-    button: 16,
+  // Parámetros de accesibilidad
+  accessibilityLabel, // Texto personalizado para el lector de pantalla
+  accessibilityHint, // Descripción de lo que hace este texto
+  accessibilityRole, // Rol semántico (header, text, button, link, etc.)
+  accessibilityState, // Estado (disabled, selected, etc.)
+  accessibilityLiveRegion, // "polite", "assertive" para actualizaciones
+  importantForAccessibility, // "auto", "yes", "no", "no-hide-descendants"
+
+  ...props
+}) => {
+  const { fontScale: contextScale } = useContext(SettingsContext);
+  const fontScale = propScale ?? contextScale;
+
+  const variantStyle = typography[variant] || typography.body;
+  const colorStyle = typography[color] || typography.primary;
+
+  const modifiers = [
+    bold && typography.bold,
+    semiBold && typography.semiBold,
+    italic && typography.italic,
+    underline && typography.underline,
+    center && typography.center,
+    right && typography.right,
+    uppercase && typography.uppercase,
+    capitalize && typography.capitalize,
+  ].filter(Boolean);
+
+  const scaledStyle = {
+    ...variantStyle,
+    fontSize: variantStyle.fontSize * fontScale,
+    lineHeight: variantStyle.lineHeight
+      ? variantStyle.lineHeight * fontScale
+      : undefined,
   };
 
-  const textStyle = [
-    { fontSize: baseFontSize[variant] * (globalFontSize / 18) }, // Escalamos según ajuste global
-    styles[variant],
-    styles[tone],
-    { textAlign: align },
-    weight && { fontWeight: weight },
-    style,
-  ];
+  // Determinar el rol de accesibilidad basado en la variante si no se especifica
+  const getAccessibilityRole = () => {
+    if (accessibilityRole) return accessibilityRole;
+
+    switch (variant) {
+      case "h1":
+      case "h2":
+      case "h3":
+      case "h4":
+        return "header";
+      case "button":
+        return "button";
+      default:
+        return "text";
+    }
+  };
+
+  // Generar texto de accesibilidad por defecto si no se proporciona
+  const getDefaultAccessibilityLabel = () => {
+    if (typeof children === "string") {
+      return children;
+    }
+    return undefined;
+  };
 
   return (
-    <Text style={textStyle} {...props}>
+    <Text
+      style={[scaledStyle, colorStyle, ...modifiers, style]}
+      // Propiedades de accesibilidad
+      accessible={true}
+      accessibilityLabel={accessibilityLabel || getDefaultAccessibilityLabel()}
+      accessibilityHint={accessibilityHint}
+      accessibilityRole={getAccessibilityRole()}
+      accessibilityState={accessibilityState}
+      accessibilityLiveRegion={accessibilityLiveRegion}
+      importantForAccessibility={importantForAccessibility}
+      {...props}
+    >
       {children}
     </Text>
   );
-}
-
-const styles = {
-  title: { fontWeight: "700" },
-  subtitle: { fontWeight: "600" },
-  body: { fontWeight: "400" },
-  caption: { fontWeight: "400" },
-  button: { fontWeight: "600", textTransform: "uppercase" },
-
-  normal: { color: colors.neutral[900] },
-  muted: { color: colors.neutral[500] },
-  light: { color: colors.white },
-  danger: { color: colors.red[600] },
 };
+
+export default AppText;

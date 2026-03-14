@@ -16,11 +16,11 @@ const { width: W, height: H } = Dimensions.get("window");
 
 // El teclado ocupa ~60% del alto de pantalla
 // 5 filas con GAP entre ellas → calculamos BTN dinámicamente
-const KEYBOARD_HEIGHT = H * 0.60;
-const ROWS  = 5;
-const COLS  = 4;
-const GAP   = W * 0.03;  // ~3% del ancho
-const PAD_H = W * 0.04;  // padding horizontal del teclado
+const KEYBOARD_HEIGHT = H * 0.6;
+const ROWS = 5;
+const COLS = 4;
+const GAP = W * 0.03; // ~3% del ancho
+const PAD_H = W * 0.04; // padding horizontal del teclado
 
 // BTN = (ancho disponible - gaps entre 4 cols - padding) / 4
 const BTN = (W - PAD_H * 2 - GAP * (COLS - 1)) / COLS;
@@ -33,43 +33,48 @@ const SZ = Math.min(BTN, ROW_H);
 
 // ── Paleta ──────────────────────────────────────────────────────
 const C = {
-  bg:          "#1c1c1e",
-  topBtn:      "#a5a5a5",
-  topBtnText:  "#000000",
-  opBtn:       "#ff9f0a",
-  opBtnText:   "#ffffff",
-  opActive:    "#ffffff",
+  bg: "#1c1c1e",
+  topBtn: "#a5a5a5",
+  topBtnText: "#000000",
+  opBtn: "#ff9f0a",
+  opBtnText: "#ffffff",
+  opActive: "#ffffff",
   opActiveTxt: "#ff9f0a",
-  numBtn:      "#333335",
-  numBtnText:  "#ffffff",
-  eqBtn:       "#ff9f0a",
-  eqBtnText:   "#ffffff",
-  hint:        "rgba(255,255,255,0.18)",
+  numBtn: "#333335",
+  numBtnText: "#ffffff",
+  eqBtn: "#ff9f0a",
+  eqBtnText: "#ffffff",
+  hint: "rgba(255,255,255,0.18)",
 };
 
 const BUTTONS = [
   ["AC", "+/-", "%", "÷"],
-  ["7",  "8",  "9", "×"],
-  ["4",  "5",  "6", "−"],
-  ["1",  "2",  "3", "+"],
-  ["0",        ".", "="],
+  ["7", "8", "9", "×"],
+  ["4", "5", "6", "−"],
+  ["1", "2", "3", "+"],
+  ["0", ".", "="],
 ];
 
 export default function CalculatorScreen({ onUnlock }) {
-  const [display,     setDisplay]     = useState("0");
-  const [expression,  setExpression]  = useState("");
-  const [operand,     setOperand]     = useState(null);
-  const [operator,    setOperator]    = useState(null);
+  const [display, setDisplay] = useState("0");
+  const [expression, setExpression] = useState("");
+  const [operand, setOperand] = useState(null);
+  const [operator, setOperator] = useState(null);
   const [waitingNext, setWaitingNext] = useState(false);
-  const [activeOp,    setActiveOp]    = useState(null);
+  const [activeOp, setActiveOp] = useState(null);
 
   const calculate = (a, b, op) => {
     switch (op) {
-      case "÷": return b === 0 ? "Error" : a / b;
-      case "×": return a * b;
-      case "−": return a - b;
-      case "+": return a + b;
-      default:  return b;
+      case "÷":
+        return b === 0 ? "Error" : a / b;
+      case "×":
+        return a * b;
+      case "−":
+        return a - b;
+      case "+":
+        return a + b;
+      default:
+        return b;
     }
   };
 
@@ -80,72 +85,89 @@ export default function CalculatorScreen({ onUnlock }) {
     return s;
   };
 
-  const handlePress = useCallback((btn) => {
-    Vibration.vibrate(25);
+  const handlePress = useCallback(
+    (btn) => {
+      Vibration.vibrate(25);
 
-    if ("0123456789".includes(btn)) {
-      if (waitingNext) {
-        setDisplay(btn === "0" ? "0" : btn);
+      if ("0123456789".includes(btn)) {
+        if (waitingNext) {
+          setDisplay(btn === "0" ? "0" : btn);
+          setWaitingNext(false);
+        } else {
+          setDisplay((prev) =>
+            prev === "0" ? btn : prev.length < 12 ? prev + btn : prev,
+          );
+        }
+        return;
+      }
+
+      if (btn === ".") {
+        if (waitingNext) {
+          setDisplay("0.");
+          setWaitingNext(false);
+          return;
+        }
+        if (!display.includes(".")) setDisplay((d) => d + ".");
+        return;
+      }
+
+      if (btn === "AC") {
+        setDisplay("0");
+        setExpression("");
+        setOperand(null);
+        setOperator(null);
         setWaitingNext(false);
-      } else {
-        setDisplay(prev =>
-          prev === "0" ? btn : prev.length < 12 ? prev + btn : prev
+        setActiveOp(null);
+        return;
+      }
+
+      if (btn === "+/-") {
+        setDisplay((d) =>
+          d.startsWith("-") ? d.slice(1) : d === "0" ? "0" : "-" + d,
         );
+        return;
       }
-      return;
-    }
 
-    if (btn === ".") {
-      if (waitingNext) { setDisplay("0."); setWaitingNext(false); return; }
-      if (!display.includes(".")) setDisplay(d => d + ".");
-      return;
-    }
-
-    if (btn === "AC") {
-      setDisplay("0"); setExpression(""); setOperand(null);
-      setOperator(null); setWaitingNext(false); setActiveOp(null);
-      return;
-    }
-
-    if (btn === "+/-") {
-      setDisplay(d => d.startsWith("-") ? d.slice(1) : d === "0" ? "0" : "-" + d);
-      return;
-    }
-
-    if (btn === "%") {
-      setDisplay(formatResult(parseFloat(display) / 100));
-      setWaitingNext(true);
-      return;
-    }
-
-    if (["÷", "×", "−", "+"].includes(btn)) {
-      const current = parseFloat(display);
-      if (operand !== null && !waitingNext) {
-        const result    = calculate(operand, current, operator);
-        const formatted = formatResult(result);
-        setDisplay(formatted);
-        setOperand(parseFloat(formatted));
-        setExpression(formatted + " " + btn);
-      } else {
-        setOperand(current);
-        setExpression(display + " " + btn);
-      }
-      setOperator(btn); setActiveOp(btn); setWaitingNext(true);
-      return;
-    }
-
-    if (btn === "=") {
-      if (operator && operand !== null) {
-        const current   = parseFloat(display);
-        const result    = calculate(operand, current, operator);
-        const formatted = formatResult(result);
-        setExpression(expression + " " + display + " =");
-        setDisplay(formatted);
-        setOperand(null); setOperator(null); setActiveOp(null);
+      if (btn === "%") {
+        setDisplay(formatResult(parseFloat(display) / 100));
         setWaitingNext(true);
+        return;
       }
-    }
-  }, [display, operand, operator, waitingNext, expression]);
+
+      if (["÷", "×", "−", "+"].includes(btn)) {
+        const current = parseFloat(display);
+        if (operand !== null && !waitingNext) {
+          const result = calculate(operand, current, operator);
+          const formatted = formatResult(result);
+          setDisplay(formatted);
+          setOperand(parseFloat(formatted));
+          setExpression(formatted + " " + btn);
+        } else {
+          setOperand(current);
+          setExpression(display + " " + btn);
+        }
+        setOperator(btn);
+        setActiveOp(btn);
+        setWaitingNext(true);
+        return;
+      }
+
+      if (btn === "=") {
+        if (operator && operand !== null) {
+          const current = parseFloat(display);
+          const result = calculate(operand, current, operator);
+          const formatted = formatResult(result);
+          setExpression(expression + " " + display + " =");
+          setDisplay(formatted);
+          setOperand(null);
+          setOperator(null);
+          setActiveOp(null);
+          setWaitingNext(true);
+        }
+      }
+    },
+    [display, operand, operator, waitingNext, expression],
+  );
 
   const handleEqualLongPress = () => {
     Vibration.vibrate([0, 60, 40, 80]);
@@ -153,21 +175,21 @@ export default function CalculatorScreen({ onUnlock }) {
   };
 
   // ── Helpers de estilo por botón ─────────────────────────────
-  const isOp     = (b) => ["÷", "×", "−", "+"].includes(b);
-  const isTop    = (b) => ["AC", "+/-", "%"].includes(b);
-  const isZero   = (b) => b === "0";
-  const isEq     = (b) => b === "=";
+  const isOp = (b) => ["÷", "×", "−", "+"].includes(b);
+  const isTop = (b) => ["AC", "+/-", "%"].includes(b);
+  const isZero = (b) => b === "0";
+  const isEq = (b) => b === "=";
 
   const btnBg = (btn) => {
-    if (isOp(btn))  return activeOp === btn ? C.opActive  : C.opBtn;
-    if (isEq(btn))  return C.eqBtn;
+    if (isOp(btn)) return activeOp === btn ? C.opActive : C.opBtn;
+    if (isEq(btn)) return C.eqBtn;
     if (isTop(btn)) return C.topBtn;
     return C.numBtn;
   };
 
   const btnColor = (btn) => {
-    if (isOp(btn))  return activeOp === btn ? C.opActiveTxt : C.opBtnText;
-    if (isEq(btn))  return C.eqBtnText;
+    if (isOp(btn)) return activeOp === btn ? C.opActiveTxt : C.opBtnText;
+    if (isEq(btn)) return C.eqBtnText;
     if (isTop(btn)) return C.topBtnText;
     return C.numBtnText;
   };
@@ -211,25 +233,25 @@ export default function CalculatorScreen({ onUnlock }) {
         {BUTTONS.map((row, ri) => (
           <View key={ri} style={[styles.row, { gap: GAP }]}>
             {row.map((btn) => {
-              const wide  = isZero(btn);
-              const btnW  = wide ? SZ * 2 + GAP : SZ;
-              const bg    = btnBg(btn);
+              const wide = isZero(btn);
+              const btnW = wide ? SZ * 2 + GAP : SZ;
+              const bg = btnBg(btn);
               const color = btnColor(btn);
-              const fs    = isTop(btn) ? FONT_SMALL : FONT_SIZE;
+              const fs = isTop(btn) ? FONT_SMALL : FONT_SIZE;
 
               const btnStyle = {
-                width:           btnW,
-                height:          SZ,
-                borderRadius:    SZ / 2,
+                width: btnW,
+                height: SZ,
+                borderRadius: SZ / 2,
                 backgroundColor: bg,
-                alignItems:      wide ? "flex-start" : "center",
-                justifyContent:  "center",
-                paddingLeft:     wide ? SZ * 0.32 : 0,
+                alignItems: wide ? "flex-start" : "center",
+                justifyContent: "center",
+                paddingLeft: wide ? SZ * 0.32 : 0,
               };
               const textStyle = {
-                fontSize:   fs,
+                fontSize: fs,
                 fontWeight: "400",
-                color:      color,
+                color: color,
               };
 
               if (btn === "=") {

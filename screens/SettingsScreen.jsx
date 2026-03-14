@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import MainLayout from "../components/Layout/MainLayout";
 import AppText from "../components/UI/AppText";
-import StyledButton from "../components/UI/StyledButton";
+import StyledButton from "../components/UI/Button";
 import { AdjustableSection } from "../components/UI/AdjustableSection";
 import { ToggleSection } from "../components/UI/ToggleSection";
 import { InputSection } from "../components/UI/InputSection";

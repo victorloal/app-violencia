@@ -3,8 +3,9 @@
 import { View, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AppText from "./AppText";
-import { colors } from "../../thema/colors";
-import { styles } from "../../styles/SettingsStyles";
+import styles from "../../styles";
+const formStyles = styles.forms;
+const { semanticColors } = styles;
 
 export const InputSection = ({
   title,
@@ -16,32 +17,28 @@ export const InputSection = ({
   keyboardType = "default",
 }) => {
   return (
-    <View style={styles.formContainer}>
-      <AppText variant="title" style={styles.sectionTitle}>
+    <View style={formStyles.container}>
+      <AppText variant="title" style={formStyles.label}>
         {title}
       </AppText>
-      <View style={styles.inputRow}>
+      <View style={formStyles.inputContainer}>
         {icon && (
-          <View style={styles.inputIcon}>
+          <View style={formStyles.iconContainer}>
             {typeof icon === "string" ? (
-              <Ionicons
-                name={icon}
-                size={24}
-                color={colors.lavender[600]}
-              />
+              <Ionicons name={icon} size={24} color={semanticColors.primary} />
             ) : (
               icon
             )}
           </View>
         )}
         <TextInput
-          style={[styles.textInput, disabled && styles.disabledInput]}
+          style={[formStyles.input, disabled && formStyles.inputDisabled]}
           placeholder={placeholder}
           value={value}
           onChangeText={onChangeText}
           editable={!disabled}
           keyboardType={keyboardType}
-          placeholderTextColor={colors.lavender[300]}
+          placeholderTextColor={semanticColors.text.muted}
         />
       </View>
     </View>

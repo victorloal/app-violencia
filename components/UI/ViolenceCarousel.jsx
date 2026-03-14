@@ -7,10 +7,9 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import { colors } from "../../thema/colors";
+import globalStyles from "../../styles";
 import ViolenceTypeCard from "./ViolenceTypeCard";
 import { Ionicons } from "@expo/vector-icons";
-
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width - 60;
 
@@ -97,7 +96,7 @@ export default function ViolenceCarousel({ data, navigation }) {
   if (infiniteData.length === 0) return null;
 
   return (
-    <View style={styles.container}>
+    <View style={carouselStyles.container}>
       <FlatList
         ref={flatListRef}
         data={infiniteData}
@@ -115,7 +114,7 @@ export default function ViolenceCarousel({ data, navigation }) {
         renderItem={({ item, index }) => {
           const originalItem = getOriginalItem(index);
           return (
-            <View style={[styles.cardWrapper, { width: CARD_WIDTH }]}>
+            <View style={[carouselStyles.cardWrapper, { width: CARD_WIDTH }]}>
               <ViolenceTypeCard
                 title={item.title}
                 description={item.description}
@@ -132,9 +131,16 @@ export default function ViolenceCarousel({ data, navigation }) {
       />
 
       {/* Indicadores y controles */}
-      <View style={styles.indicatorsContainer}>
-        <TouchableOpacity style={styles.controlButton} onPress={handlePrev}>
-          <Ionicons name="chevron-back" size={24} color={colors.lavender[700]} />
+      <View style={carouselStyles.indicatorsContainer}>
+        <TouchableOpacity
+          style={carouselStyles.controlButton}
+          onPress={handlePrev}
+        >
+          <Ionicons
+            name="chevron-back"
+            size={24}
+            color={globalStyles.semanticColors.text.primary}
+          />
         </TouchableOpacity>
 
         {data.map((_, index) => {
@@ -150,51 +156,56 @@ export default function ViolenceCarousel({ data, navigation }) {
             >
               <View
                 style={[
-                  styles.indicator,
-                  index === realIndex && styles.activeIndicator,
+                  carouselStyles.indicator,
+                  index === realIndex && carouselStyles.activeIndicator,
                 ]}
               />
             </TouchableOpacity>
           );
         })}
 
-        <TouchableOpacity style={styles.controlButton} onPress={handleNext}>
-          <Ionicons name="chevron-forward" size={24} color={colors.lavender[700]} />
+        <TouchableOpacity
+          style={carouselStyles.controlButton}
+          onPress={handleNext}
+        >
+          <Ionicons
+            name="chevron-forward"
+            size={24}
+            color={globalStyles.semanticColors.text.primary}
+          />
         </TouchableOpacity>
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const carouselStyles = StyleSheet.create({
   container: {
-    marginVertical: 20,
+    marginVertical: globalStyles.spacing.xl,
     flex: 1,
   },
   cardWrapper: {
-    justifyContent: "center",
-    alignItems: "center",
+    ...globalStyles.utilities.center,
   },
   indicatorsContainer: {
     flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 20,
-    gap: 8,
+    ...globalStyles.utilities.center,
+    marginTop: globalStyles.spacing.xl,
+    gap: globalStyles.spacing.sm,
   },
   indicator: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: colors.lavender[300],
+    backgroundColor: globalStyles.semanticColors.border.dark,
   },
   activeIndicator: {
     width: 20,
-    backgroundColor: colors.lavender[700],
+    backgroundColor: globalStyles.semanticColors.primary,
   },
   controlButton: {
-    padding: 10,
-    borderRadius: 25,
-    backgroundColor: colors.lavender[200],
+    padding: globalStyles.spacing.sm,
+    borderRadius: globalStyles.borderRadius.circle,
+    backgroundColor: globalStyles.semanticColors.primaryLight,
   },
 });

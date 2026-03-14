@@ -1,18 +1,16 @@
-import { useState } from "react";
-import { View, StyleSheet, Alert, Modal } from "react-native";
+import React, { useState, useContext } from "react";
+import { View, StyleSheet, Alert, Modal, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import AnimatedStyledButton from "../UI/StyledButton";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { colors } from "../../thema/colors";
+import Button from "../UI/Button";
+import SafeLayout from "./SafeLayout";
+import styles from "../../styles";
 import AppNavbar from "./AppNavbar";
-import { useContext } from "react";
 import { SettingsContext } from "../../context/SettingsContext";
 import { useNavigation } from "@react-navigation/native";
 import { Linking } from "react-native";
 import CalculatorScreen from "../../screens/CalculatorScreen";
 
 export default function MainLayout({ children }) {
-  const insets = useSafeAreaInsets();
   const { setIsCamouflageOn, phoneNumber } = useContext(SettingsContext);
   const navigation = useNavigation();
   const [calcVisible, setCalcVisible] = useState(false);
@@ -58,72 +56,71 @@ export default function MainLayout({ children }) {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-        paddingLeft: insets.left,
-        paddingRight: insets.right,
-      }}
-    >
-      <View style={styles.container}>
+    <SafeLayout backgroundColor={styles.semanticColors.background}>
+      <View style={layoutStyles.container}>
         {/* Navbar superior */}
         <AppNavbar />
 
         {/* Contenido dinámico */}
-        <View style={styles.content}>{children}</View>
+        <ScrollView
+          style={layoutStyles.content}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={layoutStyles.scrollContent}
+        >
+          {children}
+        </ScrollView>
 
         {/* Barra inferior fija */}
-        <View style={styles.bottomBar}>
-          <AnimatedStyledButton
-            title="Mensaje"
+        <View style={layoutStyles.bottomBar}>
+          <Button
+            type="light"
             size="flex"
-            icon={
+            iconLeft={
               <Ionicons
                 name="mail-open-outline"
                 size={30}
-                color={colors.lavender[800]}
+                color={styles.semanticColors.primary}
               />
             }
-            iconPosition="top"
-            tone="light"
             onPress={handleMessageButtonPress}
-          />
+          >
+            Mensaje
+          </Button>
 
-          <AnimatedStyledButton
-            title="Llamada"
+          <Button
+            type="primary"
             size="flex"
-            icon={
+            variant="pill"
+            iconLeft={
               <Ionicons
                 name="call-outline"
                 size={40}
-                color={colors.lavender[200]}
+                color={styles.semanticColors.text.inverse}
               />
             }
-            iconPosition="top"
-            shape="pill"
-            tone="dark"
             onPress={handleCallButtonPress}
-          />
+          >
+            Llamada
+          </Button>
 
           {/* Botón Salir → abre calculadora (camuflaje) */}
-          <AnimatedStyledButton
-            title="Salir"
+          <Button
+            type="light"
             size="flex"
-            icon={
+            iconLeft={
               <Ionicons
                 name="calculator-outline"
                 size={30}
-                color={colors.lavender[800]}
+                color={styles.semanticColors.primary}
               />
             }
-            iconPosition="top"
-            tone="light"
             onPress={handleExitCamouflage}
-          />
+          >
+            Salir
+          </Button>
         </View>
       </View>
+
       {/* ── Calculadora en Modal de pantalla completa ── */}
       <Modal
         visible={calcVisible}
@@ -134,22 +131,28 @@ export default function MainLayout({ children }) {
       >
         <CalculatorScreen onUnlock={handleUnlock} />
       </Modal>
-    </View>
+    </SafeLayout>
   );
 }
 
-const styles = StyleSheet.create({
+const layoutStyles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: colors.white,
+    ...styles.utilities.flex1,
+    backgroundColor: styles.semanticColors.surface,
   },
   content: {
-    flex: 1,
+    ...styles.utilities.flex1,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   bottomBar: {
     flexDirection: "row",
     width: "100%",
     height: "15%",
-    backgroundColor: colors.lavender[200],
+    backgroundColor: styles.semanticColors.primaryLight,
+    paddingHorizontal: styles.spacing.md,
+    ...styles.utilities.center,
+    gap: styles.spacing.sm,
   },
 });

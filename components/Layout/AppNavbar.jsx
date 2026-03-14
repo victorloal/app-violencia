@@ -1,6 +1,6 @@
 import { View, StyleSheet, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import StyledButton from "../UI/StyledButton";
+import StyledButton from "../UI/Button";
 import AppText from "../UI/AppText";
 import { colors } from "../../thema/colors";
 import { useState, useEffect, useRef } from "react";

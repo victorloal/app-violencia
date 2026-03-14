@@ -1,57 +1,71 @@
 import React, { useRef, useState } from "react";
-import {
-  View,
-  FlatList,
-  TouchableOpacity,
-  Dimensions,
-  StyleSheet,
-  TextInput,
-} from "react-native";
+import { View, FlatList, Dimensions, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import AppText from "../components/UI/AppText";
-import StyledButton from "../components/UI/StyledButton";
+import Button from "../components/UI/Button";
 import { colors } from "../thema/colors";
+import AppTextInput from "../components/UI/AppTextInput";
 
 const { width, height } = Dimensions.get("window");
 
+// Configuración de iconos para cada pregunta y opción
 const questions = [
   {
     id: "1",
-    question: "¿En qué región te encuentras?",
-    options: ["Tumaco", "Buenaventura"],
+    question: "¿En qué distrito te encuentras?",
+    options: [
+      { label: "Tumaco", icon: "location" },
+      { label: "Buenaventura", icon: "location" },
+    ],
     key: "region",
+    icon: "map-outline", // Icono para la pregunta
   },
   {
     id: "2",
-    question: "Zona",
-    options: ["Rural", "Urbana"],
+    question: "Seleccione su zona",
+    options: [
+      { label: "Rural", icon: "leaf" },
+      { label: "Urbana", icon: "business" },
+    ],
     key: "zona",
+    icon: "home-outline",
   },
   {
     id: "3",
-    question: "Grupo étnico",
-    options: ["Indígena", "Afrodescendiente", "Mestizo", "Otro"],
+    question: "Seleccione su grupo étnico",
+    options: [
+      { label: "Indígena", icon: "people" },
+      { label: "Afrodescendiente", icon: "people" },
+      { label: "Mestizo", icon: "people" },
+      { label: "Otro", icon: "ellipsis-horizontal-circle-outline" },
+    ],
     key: "etnia",
-    multiple: true,
+    icon: "globe-outline",
   },
   {
     id: "4",
-    question: "Rango de edad",
-    options: ["18-25", "26-35", "36-50", "50+"],
+    question: "¿En que rango de edad se encuentra?",
+    options: [
+      { label: "Menor de edad (menos de 18)", value: "menor", icon: "school" },
+      { label: "Joven (18 - 28)", value: "joven", icon: "happy" },
+      { label: "Adulto (29 - 59)", value: "adulto", icon: "person" },
+      { label: "Adulto mayor (60+)", value: "adulto_mayor", icon: "walk" },
+    ],
     key: "edad",
+    icon: "calendar-outline",
   },
   {
     id: "5",
-    question: "Situación laboral",
-    options: ["Empleado", "Desempleado", "Estudiante", "Independiente"],
+    question: "¿En que situación laboral se encuentra?",
+    options: [
+      { label: "Empleado", icon: "briefcase" },
+      { label: "Desempleado", icon: "remove-circle" },
+      { label: "Estudiante", icon: "school" },
+      { label: "Independiente", icon: "construct" },
+    ],
     key: "laboral",
-  },
-  {
-    id: "6",
-    question: "Orientación sexual",
-    options: ["Heterosexual", "Homosexual", "Bisexual", "Otro"],
-    key: "orientacion",
+    icon: "cash-outline",
   },
 ];
 
@@ -111,7 +125,7 @@ export default function FormScreen({ navigation }) {
         enviarPerfil(updatedData);
       });
 
-      navigation.replace("Message");
+      navigation.replace("Home");
     }
   };
 
@@ -121,75 +135,132 @@ export default function FormScreen({ navigation }) {
     return (
       <View style={styles.slide}>
         <View style={styles.card}>
-          <AppText variant="title" align="center" style={styles.question}>
-            {item.question}
-          </AppText>
+          {/* Header pregunta */}
+          <View style={styles.questionHeader}>
+            <View style={styles.questionIcon}>
+              <Ionicons
+                name={item.icon}
+                size={28}
+                color={colors.lavender[600]}
+              />
+            </View>
 
+            <AppText variant="h2" align="center" style={styles.question}>
+              {item.question}
+            </AppText>
+          </View>
+
+          {/* Opciones */}
           <View style={styles.optionsContainer}>
             {item.options.map((option) => {
               const isSelected = item.multiple
                 ? Array.isArray(formData[item.key]) &&
-                  formData[item.key].includes(option)
-                : formData[item.key] === option;
+                  formData[item.key].includes(option.label)
+                : formData[item.key] === option.label;
 
               return (
-                <TouchableOpacity
-                  key={option}
-                  activeOpacity={0.7}
+                <Button
+                  key={option.label}
+                  type="primaryOutline"
+                  size="xl"
+                  variant="default"
+                  textVariant="bold"
                   style={[styles.option, isSelected && styles.selected]}
-                  onPress={() => handleSelect(item.key, option, item.multiple)}
+                  onPress={() =>
+                    handleSelect(item.key, option.label, item.multiple)
+                  }
                 >
-                  <AppText
-                    variant="body"
-                    tone={isSelected ? "normal" : "muted"}
-                    style={isSelected && styles.selectedText}
-                  >
-                    {option}
-                  </AppText>
-                  {isSelected && (
+                  <View style={styles.optionContent}>
                     <Ionicons
-                      name="checkmark-circle"
-                      size={24}
-                      color={colors.lavender[600]}
+                      name={option.icon}
+                      size={22}
+                      color={
+                        isSelected ? colors.lavender[600] : colors.neutral[500]
+                      }
                     />
-                  )}
-                </TouchableOpacity>
+
+                    <AppText variant="h4">{option.label}</AppText>
+
+                    {isSelected && (
+                      <Ionicons
+                        name="checkmark-circle"
+                        style={{ alignItems: "flex-end" }}
+                        size={22}
+                        color={colors.lavender[600]}
+                      />
+                    )}
+                  </View>
+                </Button>
               );
             })}
           </View>
 
+          {/* Input para "Otro" */}
           {(item.multiple
             ? Array.isArray(formData[item.key]) &&
               formData[item.key].includes("Otro")
             : formData[item.key] === "Otro") && (
-            <TextInput
-              placeholder="Especifica aquí..."
-              placeholderTextColor={colors.neutral[400]}
-              style={styles.input}
-              onChangeText={setOtherText}
-              value={otherText}
-            />
+            <View style={styles.otherContainer}>
+              <AppTextInput
+                placeholder="Especifica aquí..."
+                type="default"
+                variant="default"
+                size="large"
+                keyboardType="default"
+                bold
+                state="focused"
+                onChangeText={setOtherText}
+                value={otherText}
+                leftIcon={
+                  <Ionicons
+                    name="create"
+                    size={18}
+                    color={colors.lavender[500]}
+                    style={styles.otherIcon}
+                  />
+                }
+              ></AppTextInput>
+            </View>
           )}
 
+          {/* Footer */}
           <View style={styles.footer}>
-            {/* Indicador de progreso */}
+            {/* progreso */}
             <View style={styles.progressContainer}>
-              {questions.map((_, index) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.dot,
-                    index === currentIndex && styles.activeDot,
-                    index < currentIndex && styles.completedDot,
-                  ]}
-                />
-              ))}
+              {questions.map((q, index) => {
+                const isPast = index < currentIndex;
+                const isCurrent = index === currentIndex;
+
+                return (
+                  <View
+                    key={index}
+                    style={[
+                      styles.progressItem,
+                      isPast && styles.progressPast,
+                      isCurrent && styles.progressCurrent,
+                    ]}
+                  >
+                    <Ionicons
+                      name={q.icon}
+                      size={isCurrent ? 18 : 14}
+                      color={
+                        isCurrent
+                          ? colors.white
+                          : isPast
+                            ? colors.white
+                            : colors.neutral[600]
+                      }
+                    />
+                  </View>
+                );
+              })}
             </View>
 
-            <StyledButton
-              title={isLastQuestion ? "Finalizar" : "Siguiente"}
-              tone="dark"
-              size="large"
+            {/* botón siguiente */}
+            <Button
+              type="primary"
+              size="xl"
+              textVariant="bold"
               onPress={handleNext}
               disabled={
                 item.multiple
@@ -207,13 +278,14 @@ export default function FormScreen({ navigation }) {
                 />
               }
               iconPosition="right"
-            />
+            >
+              {isLastQuestion ? "Finalizar" : "Siguiente"}
+            </Button>
           </View>
         </View>
       </View>
     );
   };
-
   return (
     <FlatList
       ref={flatListRef}
@@ -252,6 +324,10 @@ const styles = StyleSheet.create({
     shadowRadius: 20,
     elevation: 10,
   },
+  questionIconContainer: {
+    alignItems: "center",
+    marginBottom: 16,
+  },
   question: {
     marginBottom: 32,
     color: colors.lavender[900],
@@ -264,30 +340,53 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 18,
     borderWidth: 2,
-    borderColor: colors.neutral[100],
     borderRadius: 16,
     marginVertical: 6,
-    backgroundColor: colors.neutral[50],
+  },
+  optionContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+    gap: 12,
+  },
+  optionIcon: {
+    marginRight: 12,
   },
   selected: {
-    borderColor: colors.lavender[500],
-    backgroundColor: colors.lavender[50],
+    backgroundColor: colors.lavender[200],
   },
-  selectedText: {
-    fontWeight: "700",
-    color: colors.lavender[800],
-  },
-  input: {
+  inputContainer: {
+    flexDirection: "row",
+    flex: 1,
+    alignItems: "center",
     borderWidth: 2,
     borderColor: colors.neutral[200],
     borderRadius: 12,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+    backgroundColor: colors.neutral[50],
+  },
+  input: {
+    flex: 1,
     padding: 16,
-    marginBottom: 24,
     fontSize: 16,
     color: colors.neutral[900],
   },
+  otherContainer: {
+    marginBottom: 16,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  otherInputWrapper: {
+    backgroundColor: colors.lavender[500],
+  },
+
+  otherIcon: {
+    marginRight: 8,
+  },
+
   footer: {
     marginTop: 16,
     alignItems: "center",
@@ -295,19 +394,25 @@ const styles = StyleSheet.create({
   progressContainer: {
     flexDirection: "row",
     marginBottom: 32,
+    gap: 8,
   },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: colors.neutral[200],
-    marginHorizontal: 4,
+  progressItem: {
+    width: 32,
+    height: 32,
+    borderRadius: 90,
+    backgroundColor: colors.lavender[100],
+    justifyContent: "center",
+    alignItems: "center",
   },
-  activeDot: {
-    width: 24,
+  progressPast: {
     backgroundColor: colors.lavender[600],
   },
-  completedDot: {
-    backgroundColor: colors.lavender[300],
+  progressCurrent: {
+    width: 40,
+    height: 40,
+    backgroundColor: colors.lavender[700],
+  },
+  activeProgressItem: {
+    backgroundColor: colors.lavender[700],
   },
 });

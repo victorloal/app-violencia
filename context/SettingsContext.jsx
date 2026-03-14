@@ -1,34 +1,35 @@
 import { createContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Linking, Platform, AccessibilityInfo } from "react-native";
 
 export const SettingsContext = createContext();
 
 export function SettingsProvider({ children }) {
-  const [fontSize, setFontSize] = useState(18);
-  const [contrast, setContrast] = useState(100);
-  const [brightness, setBrightness] = useState(100);
-  const [isVoiceOn, setIsVoiceOn] = useState(false);
-  const [isCamouflageOn, setIsCamouflageOn] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [fontScale, setFontScaleState] = useState(1);
+
+  const [contrast, setContrastState] = useState(100);
+  const [brightness, setBrightnessState] = useState(100);
+  const [isVoiceOn, setIsVoiceOnState] = useState(false);
+  const [isCamouflageOn, setIsCamouflageOnState] = useState(false);
+  const [phoneNumber, setPhoneNumberState] = useState("");
 
   // Cargar valores guardados
   useEffect(() => {
     const loadSettings = async () => {
-      const f = await AsyncStorage.getItem("fontSize");
+      const f = await AsyncStorage.getItem("fontScale");
       const c = await AsyncStorage.getItem("contrast");
       const b = await AsyncStorage.getItem("brightness");
       const v = await AsyncStorage.getItem("isVoiceOn");
       const m = await AsyncStorage.getItem("isCamouflageOn");
       const p = await AsyncStorage.getItem("phoneNumber");
 
-      if (f) setFontSize(Number(f));
-      if (c) setContrast(Number(c));
-      if (b) setBrightness(Number(b));
-      if (v) setIsVoiceOn(v === "true");
-      if (m) setIsCamouflageOn(m === "true");
-      if (p) setPhoneNumber(p);
+      if (f) setFontScaleState(Number(f));
+      if (c) setContrastState(Number(c));
+      if (b) setBrightnessState(Number(b));
+      if (v) setIsVoiceOnState(v === "true");
+      if (m) setIsCamouflageOnState(m === "true");
+      if (p) setPhoneNumberState(p);
     };
+
     loadSettings();
   }, []);
 
@@ -36,39 +37,52 @@ export function SettingsProvider({ children }) {
     await AsyncStorage.setItem(key, value.toString());
   };
 
+  // setters persistentes
+  const setFontScale = (val) => {
+    setFontScaleState(val);
+    saveSetting("fontScale", val);
+  };
+
+  const setContrast = (val) => {
+    setContrastState(val);
+    saveSetting("contrast", val);
+  };
+
+  const setBrightness = (val) => {
+    setBrightnessState(val);
+    saveSetting("brightness", val);
+  };
+
+  const setIsVoiceOn = (val) => {
+    setIsVoiceOnState(val);
+    saveSetting("isVoiceOn", val);
+  };
+
+  const setIsCamouflageOn = (val) => {
+    setIsCamouflageOnState(val);
+    saveSetting("isCamouflageOn", val);
+  };
+
+  const setPhoneNumber = (val) => {
+    setPhoneNumberState(val);
+    saveSetting("phoneNumber", val);
+  };
+
   return (
     <SettingsContext.Provider
       value={{
-        fontSize,
-        setFontSize: (val) => {
-          setFontSize(val);
-          saveSetting("fontSize", val);
-        },
+        fontScale,
+        setFontScale,
         contrast,
-        setContrast: (val) => {
-          setContrast(val);
-          saveSetting("contrast", val);
-        },
+        setContrast,
         brightness,
-        setBrightness: (val) => {
-          setBrightness(val);
-          saveSetting("brightness", val);
-        },
+        setBrightness,
         isVoiceOn,
-        setIsVoiceOn: (val) => {
-          setIsVoiceOn(val);
-          saveSetting("isVoiceOn", val);
-        },
+        setIsVoiceOn,
         isCamouflageOn,
-        setIsCamouflageOn: (val) => {
-          setIsCamouflageOn(val);
-          saveSetting("isCamouflageOn", val);
-        },
+        setIsCamouflageOn,
         phoneNumber,
-        setPhoneNumber: (val) => {
-          setPhoneNumber(val);
-          saveSetting("phoneNumber", val);
-        },
+        setPhoneNumber,
       }}
     >
       {children}

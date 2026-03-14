@@ -6,13 +6,27 @@ import FormScreen from "../screens/FormScreen";
 import MessageScreen from "../screens/MessageScreen";
 import ServicesScreen from "../screens/ServicesScreen";
 import PlacesScreen from "../screens/PlacesScreen";
+import WelcomeScreen from "../screens/WelcomesScreen";
+import TermsScreen from "../screens/TermsScreen";
+import ConfigScreen from "../screens/ConfigScreen";
+import { useState } from "react";
+import MessageConfigScreen from "../screens/MessageConfigScreen";
+import MessageFormScreen from "../screens/MessageFormScreen";
 
 const Stack = createNativeStackNavigator();
 
 export default function AppStack() {
+  const [isFirstLaunch, setIsFirstLaunch] = useState(true);
+
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Welcome" component={WelcomeScreen} />
       {/* Primera vez: mostramos el formulario */}
+      <Stack.Screen name="Terms" component={TermsScreen} />
+      <Stack.Screen name="MessageConfig" component={MessageConfigScreen} />
+      <Stack.Screen name="Config" component={ConfigScreen} />
+
+      <Stack.Screen name="MessageForm" component={MessageFormScreen} />
       <Stack.Screen name="Form" component={FormScreen} />
 
       {/* Pantalla de mensaje después del formulario */}

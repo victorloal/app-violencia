@@ -25,6 +25,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "La app necesita tu ubicación para enviarla en emergencias."
+        }
+      ]
+    ]
   }
 }

@@ -10,7 +10,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import AppText from "../components/UI/AppText";
-import StyledButton from "../components/UI/StyledButton";
+import StyledButton from "../components/UI/Button";
 import { colors } from "../thema/colors";
 
 const { width, height } = Dimensions.get("window");

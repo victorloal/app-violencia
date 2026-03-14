@@ -2,10 +2,10 @@
 
 import { View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import styles from "../../styles";
 import AppText from "../UI/AppText";
-import StyledButton from "../UI/StyledButton";
-import { colors } from "../../thema/colors";
-import { styles } from "../../styles/SettingsStyles";
+import Button from "./Button";
+const { forms, semanticColors } = styles;
 
 export const AdjustableSection = ({
   section,
@@ -15,28 +15,40 @@ export const AdjustableSection = ({
   disabled,
 }) => {
   return (
-    <View style={styles.formContainer}>
-      <AppText variant="title" style={styles.sectionTitle}>
+    <View style={forms.container}>
+      <AppText variant="title" style={forms.label}>
         {section.name}
       </AppText>
-      <View style={styles.actionRow}>
-        <StyledButton
-          tone="dark"
+      <View style={forms.inputContainer}>
+        <Button
+          type="primary"
           size="small"
-          shape="pill"
-          icon={<Ionicons name="remove-sharp" size={24} color={colors.white} />}
+          variant="pill"
+          iconLeft={
+            <Ionicons
+              name="remove-sharp"
+              size={24}
+              color={semanticColors.text.inverse}
+            />
+          }
           onPress={onDecrease}
           disabled={value <= section.min || disabled}
         />
-        <AppText variant="title" style={styles.middleText}>
+        <AppText variant="h3" style={{ marginHorizontal: styles.spacing.md }}>
           {value}
           {section.unit}
         </AppText>
-        <StyledButton
-          tone="dark"
+        <Button
+          type="primary"
           size="small"
-          shape="pill"
-          icon={<Ionicons name="add-sharp" size={24} color={colors.white} />}
+          variant="pill"
+          iconLeft={
+            <Ionicons
+              name="add-sharp"
+              size={24}
+              color={semanticColors.text.inverse}
+            />
+          }
           onPress={onIncrease}
           disabled={value >= section.max || disabled}
         />

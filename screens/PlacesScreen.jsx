@@ -11,7 +11,7 @@ import {
 import { colors } from "../thema/colors";
 import MainLayout from "../components/Layout/MainLayout";
 import AppText from "../components/UI/AppText";
-import StyledButton from "../components/UI/StyledButton";
+import StyledButton from "../components/UI/Button";
 import { Ionicons } from "@expo/vector-icons";
 
 // ── Números de emergencia ───────────────────────────────────────
@@ -31,7 +31,8 @@ const emergencyNumbers = [
     nombre: "Línea Violencia Intrafamiliar",
     numero: "141",
     horario: "24 horas",
-    descripcion: "Orientación y activación de rutas de atención en violencia intrafamiliar.",
+    descripcion:
+      "Orientación y activación de rutas de atención en violencia intrafamiliar.",
     tipo: "emergencia",
     prioridad: true,
     icon: "home",
@@ -41,7 +42,8 @@ const emergencyNumbers = [
     nombre: "Policía Infancia y Adolescencia",
     numero: "145",
     horario: "24 horas",
-    descripcion: "Protección policial para menores en situación de riesgo o abuso.",
+    descripcion:
+      "Protección policial para menores en situación de riesgo o abuso.",
     tipo: "emergencia",
     prioridad: false,
     icon: "shield-checkmark",
@@ -51,7 +53,8 @@ const emergencyNumbers = [
     nombre: "ICBF – Bienestar Familiar",
     numero: "018000918080",
     horario: "24 horas",
-    descripcion: "Protección de niñas, niños y adolescentes víctimas de violencia.",
+    descripcion:
+      "Protección de niñas, niños y adolescentes víctimas de violencia.",
     tipo: "emergencia",
     prioridad: true,
     icon: "people",
@@ -61,7 +64,8 @@ const emergencyNumbers = [
     nombre: "Fiscalía General",
     numero: "122",
     horario: "24 horas",
-    descripcion: "Denuncia de delitos, incluidos los de violencia sexual y de género.",
+    descripcion:
+      "Denuncia de delitos, incluidos los de violencia sexual y de género.",
     tipo: "emergencia",
     prioridad: false,
     icon: "scale",
@@ -71,7 +75,8 @@ const emergencyNumbers = [
     nombre: "Emergencias Policía",
     numero: "123",
     horario: "24 horas",
-    descripcion: "Atención inmediata ante crímenes, amenazas o peligro inminente.",
+    descripcion:
+      "Atención inmediata ante crímenes, amenazas o peligro inminente.",
     tipo: "emergencia",
     prioridad: false,
     icon: "alert-circle",
@@ -121,42 +126,134 @@ const emergencyNumbers = [
 // ── Lugares por categoría ───────────────────────────────────────
 const placesData = {
   salud: [
-    { id: "1", nombre: "Hospital General", horario: "24 horas", direccion: "Av. Principal #123, Centro", telefono: "+57 1 555 1234", latitud: 19.4326, longitud: -99.1332, tipo: "salud", descripcion: "Atención médica de emergencia 24/7" },
-    { id: "2", nombre: "Clínica de Especialidades", horario: "Lun-Vie 8:00-20:00", direccion: "Calle Reforma #456", telefono: "+57 1 555 9876", latitud: 19.4285, longitud: -99.1276, tipo: "salud", descripcion: "Atención psicológica y médica" },
+    {
+      id: "1",
+      nombre: "Hospital General",
+      horario: "24 horas",
+      direccion: "Av. Principal #123, Centro",
+      telefono: "+57 1 555 1234",
+      latitud: 19.4326,
+      longitud: -99.1332,
+      tipo: "salud",
+      descripcion: "Atención médica de emergencia 24/7",
+    },
+    {
+      id: "2",
+      nombre: "Clínica de Especialidades",
+      horario: "Lun-Vie 8:00-20:00",
+      direccion: "Calle Reforma #456",
+      telefono: "+57 1 555 9876",
+      latitud: 19.4285,
+      longitud: -99.1276,
+      tipo: "salud",
+      descripcion: "Atención psicológica y médica",
+    },
   ],
   proteccion: [
-    { id: "3", nombre: "Centro de Atención a Víctimas", horario: "24 horas", direccion: "Boulevard Independencia #789", telefono: "+57 1 555 2468", latitud: 19.4354, longitud: -99.1412, tipo: "proteccion", descripcion: "Atención y protección a víctimas de violencia" },
-    { id: "4", nombre: "Refugio Temporal", horario: "24 horas", direccion: "Av. Insurgentes #1010", telefono: "+57 1 555 3692", latitud: 19.3936, longitud: -99.1733, tipo: "proteccion", descripcion: "Refugio seguro para mujeres y niños" },
+    {
+      id: "3",
+      nombre: "Centro de Atención a Víctimas",
+      horario: "24 horas",
+      direccion: "Boulevard Independencia #789",
+      telefono: "+57 1 555 2468",
+      latitud: 19.4354,
+      longitud: -99.1412,
+      tipo: "proteccion",
+      descripcion: "Atención y protección a víctimas de violencia",
+    },
+    {
+      id: "4",
+      nombre: "Refugio Temporal",
+      horario: "24 horas",
+      direccion: "Av. Insurgentes #1010",
+      telefono: "+57 1 555 3692",
+      latitud: 19.3936,
+      longitud: -99.1733,
+      tipo: "proteccion",
+      descripcion: "Refugio seguro para mujeres y niños",
+    },
   ],
   legal: [
-    { id: "5", nombre: "Bufete Jurídico Gratuito", horario: "Lun-Vie 9:00-18:00", direccion: "Calle de la Ley #234", telefono: "+57 1 555 1472", latitud: 19.4412, longitud: -99.1524, tipo: "legal", descripcion: "Asesoría legal gratuita" },
-    { id: "6", nombre: "Ministerio Público", horario: "24 horas", direccion: "Av. Universidad #567", telefono: "+57 1 555 7539", latitud: 19.3857, longitud: -99.1648, tipo: "legal", descripcion: "Atención para denuncias" },
+    {
+      id: "5",
+      nombre: "Bufete Jurídico Gratuito",
+      horario: "Lun-Vie 9:00-18:00",
+      direccion: "Calle de la Ley #234",
+      telefono: "+57 1 555 1472",
+      latitud: 19.4412,
+      longitud: -99.1524,
+      tipo: "legal",
+      descripcion: "Asesoría legal gratuita",
+    },
+    {
+      id: "6",
+      nombre: "Ministerio Público",
+      horario: "24 horas",
+      direccion: "Av. Universidad #567",
+      telefono: "+57 1 555 7539",
+      latitud: 19.3857,
+      longitud: -99.1648,
+      tipo: "legal",
+      descripcion: "Atención para denuncias",
+    },
   ],
   psicologico: [
-    { id: "7", nombre: "Centro de Apoyo Psicológico", horario: "Lun-Vie 8:00-20:00", direccion: "Calle Durango #345", telefono: "+57 1 555 9517", latitud: 19.4176, longitud: -99.1685, tipo: "psicologico", descripcion: "Atención psicológica especializada" },
-    { id: "8", nombre: "Línea de Crisis", horario: "24 horas", direccion: "Av. Chapultepec #678", telefono: "+57 1 555 8529", latitud: 19.4257, longitud: -99.1578, tipo: "psicologico", descripcion: "Atención en crisis emocional" },
+    {
+      id: "7",
+      nombre: "Centro de Apoyo Psicológico",
+      horario: "Lun-Vie 8:00-20:00",
+      direccion: "Calle Durango #345",
+      telefono: "+57 1 555 9517",
+      latitud: 19.4176,
+      longitud: -99.1685,
+      tipo: "psicologico",
+      descripcion: "Atención psicológica especializada",
+    },
+    {
+      id: "8",
+      nombre: "Línea de Crisis",
+      horario: "24 horas",
+      direccion: "Av. Chapultepec #678",
+      telefono: "+57 1 555 8529",
+      latitud: 19.4257,
+      longitud: -99.1578,
+      tipo: "psicologico",
+      descripcion: "Atención en crisis emocional",
+    },
   ],
 };
 
 const getIconByType = (t) => {
   switch (t) {
-    case "salud":       return "medical";
-    case "proteccion":  return "shield";
-    case "legal":       return "scale";
-    case "psicologico": return "heart";
-    case "emergencia":  return "alert-circle";
-    default:            return "location";
+    case "salud":
+      return "medical";
+    case "proteccion":
+      return "shield";
+    case "legal":
+      return "scale";
+    case "psicologico":
+      return "heart";
+    case "emergencia":
+      return "alert-circle";
+    default:
+      return "location";
   }
 };
 
 const getTitleByType = (t) => {
   switch (t) {
-    case "salud":       return "Centros de Salud";
-    case "proteccion":  return "Centros de Protección";
-    case "legal":       return "Asesoría Legal";
-    case "psicologico": return "Apoyo Psicológico";
-    case "emergencia":  return "Números de Emergencia";
-    default:            return "Lugares de Ayuda";
+    case "salud":
+      return "Centros de Salud";
+    case "proteccion":
+      return "Centros de Protección";
+    case "legal":
+      return "Asesoría Legal";
+    case "psicologico":
+      return "Apoyo Psicológico";
+    case "emergencia":
+      return "Números de Emergencia";
+    default:
+      return "Lugares de Ayuda";
   }
 };
 
@@ -164,40 +261,81 @@ const getTitleByType = (t) => {
 function EmergencyCard({ place }) {
   return (
     <TouchableOpacity
-      style={[styles.emergencyCard, place.prioridad && styles.emergencyCardPriority]}
+      style={[
+        styles.emergencyCard,
+        place.prioridad && styles.emergencyCardPriority,
+      ]}
       onPress={() => Linking.openURL(`tel:${place.numero}`)}
-      activeOpacity={0.80}
+      activeOpacity={0.8}
     >
       {/* Fila superior: icono + nombre + horario */}
       <View style={styles.emergencyTop}>
-        <View style={[styles.emergencyIconBox, place.prioridad && styles.emergencyIconBoxPriority]}>
+        <View
+          style={[
+            styles.emergencyIconBox,
+            place.prioridad && styles.emergencyIconBoxPriority,
+          ]}
+        >
           <Ionicons
             name={place.icon || "call"}
             size={22}
-            color={place.prioridad ? colors.lavender[700] : colors.lavender[600]}
+            color={
+              place.prioridad ? colors.lavender[700] : colors.lavender[600]
+            }
           />
         </View>
         <View style={styles.emergencyTopText}>
-          <AppText style={[styles.emergencyName, place.prioridad && styles.emergencyNamePriority]}>
+          <AppText
+            style={[
+              styles.emergencyName,
+              place.prioridad && styles.emergencyNamePriority,
+            ]}
+          >
             {place.nombre}
           </AppText>
-          <AppText style={[styles.emergencyDesc, place.prioridad && styles.emergencyDescPriority]}>
+          <AppText
+            style={[
+              styles.emergencyDesc,
+              place.prioridad && styles.emergencyDescPriority,
+            ]}
+          >
             {place.descripcion}
           </AppText>
         </View>
       </View>
 
       {/* Divisor */}
-      <View style={[styles.emergencyDivider, place.prioridad && styles.emergencyDividerPriority]} />
+      <View
+        style={[
+          styles.emergencyDivider,
+          place.prioridad && styles.emergencyDividerPriority,
+        ]}
+      />
 
       {/* Fila inferior: número grande + botón llamar */}
       <View style={styles.emergencyBottom}>
-        <AppText style={[styles.emergencyNumber, place.prioridad && styles.emergencyNumberPriority]}>
+        <AppText
+          style={[
+            styles.emergencyNumber,
+            place.prioridad && styles.emergencyNumberPriority,
+          ]}
+        >
           {place.numero}
         </AppText>
-        <View style={[styles.callPill, place.prioridad && styles.callPillPriority]}>
-          <Ionicons name="call" size={16} color={place.prioridad ? colors.white : colors.lavender[700]} />
-          <AppText style={[styles.callPillText, place.prioridad && styles.callPillTextPriority]}>
+        <View
+          style={[styles.callPill, place.prioridad && styles.callPillPriority]}
+        >
+          <Ionicons
+            name="call"
+            size={16}
+            color={place.prioridad ? colors.white : colors.lavender[700]}
+          />
+          <AppText
+            style={[
+              styles.callPillText,
+              place.prioridad && styles.callPillTextPriority,
+            ]}
+          >
             Llamar ahora
           </AppText>
         </View>
@@ -212,7 +350,11 @@ function PlaceCard({ place, onMaps }) {
     <View style={styles.placeCard}>
       <View style={styles.placeHeader}>
         <View style={styles.placeIconBox}>
-          <Ionicons name={getIconByType(place.tipo)} size={24} color={colors.lavender[700]} />
+          <Ionicons
+            name={getIconByType(place.tipo)}
+            size={24}
+            color={colors.lavender[700]}
+          />
         </View>
         <View style={styles.placeTitleContainer}>
           <AppText style={styles.placeName}>{place.nombre}</AppText>
@@ -226,15 +368,27 @@ function PlaceCard({ place, onMaps }) {
 
       <View style={styles.placeDetails}>
         <View style={styles.detailRow}>
-          <Ionicons name="time-outline" size={16} color={colors.lavender[500]} />
+          <Ionicons
+            name="time-outline"
+            size={16}
+            color={colors.lavender[500]}
+          />
           <AppText style={styles.detailText}>{place.horario}</AppText>
         </View>
         <View style={styles.detailRow}>
-          <Ionicons name="location-outline" size={16} color={colors.lavender[500]} />
+          <Ionicons
+            name="location-outline"
+            size={16}
+            color={colors.lavender[500]}
+          />
           <AppText style={styles.detailText}>{place.direccion}</AppText>
         </View>
         <View style={styles.detailRow}>
-          <Ionicons name="call-outline" size={16} color={colors.lavender[500]} />
+          <Ionicons
+            name="call-outline"
+            size={16}
+            color={colors.lavender[500]}
+          />
           <AppText style={styles.detailText}>{place.telefono}</AppText>
         </View>
         <View style={styles.descriptionBox}>
@@ -269,27 +423,35 @@ export default function PlaceScreen({ route, navigation }) {
 
   const openMaps = (lat, lng, dir) => {
     const url = Platform.select({
-      ios:     `maps:0,0?q=${dir}`,
+      ios: `maps:0,0?q=${dir}`,
       android: `geo:0,0?q=${lat},${lng}(${dir})`,
     });
     Linking.openURL(url).catch(() =>
-      Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`)
+      Linking.openURL(
+        `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`,
+      ),
     );
   };
 
-  const isEmergency  = tipo === "emergencia";
-  const priorityList = emergencyNumbers.filter(p => p.prioridad);
-  const generalList  = emergencyNumbers.filter(p => !p.prioridad);
-  const placesList   = placesData[tipo] || placesData.salud;
+  const isEmergency = tipo === "emergencia";
+  const priorityList = emergencyNumbers.filter((p) => p.prioridad);
+  const generalList = emergencyNumbers.filter((p) => !p.prioridad);
+  const placesList = placesData[tipo] || placesData.salud;
 
   return (
     <MainLayout>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={24} color={colors.lavender[700]} />
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons
+              name="arrow-back"
+              size={24}
+              color={colors.lavender[700]}
+            />
           </TouchableOpacity>
           <AppText style={styles.headerTitle}>{getTitleByType(tipo)}</AppText>
           <View style={styles.placeholder} />
@@ -306,11 +468,23 @@ export default function PlaceScreen({ route, navigation }) {
             {["salud", "proteccion", "legal", "psicologico"].map((tf) => (
               <TouchableOpacity
                 key={tf}
-                style={[styles.filterChip, tipo === tf && styles.filterChipActive]}
+                style={[
+                  styles.filterChip,
+                  tipo === tf && styles.filterChipActive,
+                ]}
                 onPress={() => navigation.setParams({ tipo: tf })}
               >
-                <Ionicons name={getIconByType(tf)} size={16} color={tipo === tf ? colors.white : colors.lavender[700]} />
-                <AppText style={[styles.filterText, tipo === tf && styles.filterTextActive]}>
+                <Ionicons
+                  name={getIconByType(tf)}
+                  size={16}
+                  color={tipo === tf ? colors.white : colors.lavender[700]}
+                />
+                <AppText
+                  style={[
+                    styles.filterText,
+                    tipo === tf && styles.filterTextActive,
+                  ]}
+                >
                   {tf.charAt(0).toUpperCase() + tf.slice(1)}
                 </AppText>
               </TouchableOpacity>
@@ -321,21 +495,30 @@ export default function PlaceScreen({ route, navigation }) {
         {/* ── Vista EMERGENCIA ── */}
         {isEmergency && (
           <View style={styles.listContainer}>
-
             {/* Volver */}
             <TouchableOpacity
               style={styles.backToServicesButton}
               onPress={() => navigation.setParams({ tipo: "salud" })}
             >
-              <Ionicons name="arrow-back" size={18} color={colors.lavender[700]} />
-              <AppText style={styles.backToServicesText}>Volver a servicios</AppText>
+              <Ionicons
+                name="arrow-back"
+                size={18}
+                color={colors.lavender[700]}
+              />
+              <AppText style={styles.backToServicesText}>
+                Volver a servicios
+              </AppText>
             </TouchableOpacity>
 
             {/* Sección prioritaria VBG */}
             <View style={styles.sectionHeader}>
               <View style={styles.sectionHeaderLine} />
               <View style={styles.sectionHeaderLabel}>
-                <Ionicons name="ribbon" size={16} color={colors.lavender[700]} />
+                <Ionicons
+                  name="ribbon"
+                  size={16}
+                  color={colors.lavender[700]}
+                />
                 <AppText style={styles.sectionHeaderText}>
                   Violencia de género
                 </AppText>
@@ -343,28 +526,37 @@ export default function PlaceScreen({ route, navigation }) {
               <View style={styles.sectionHeaderLine} />
             </View>
 
-            {priorityList.map(p => <EmergencyCard key={p.id} place={p} />)}
+            {priorityList.map((p) => (
+              <EmergencyCard key={p.id} place={p} />
+            ))}
 
             {/* Sección general */}
             <View style={[styles.sectionHeader, { marginTop: 8 }]}>
               <View style={styles.sectionHeaderLine} />
               <View style={styles.sectionHeaderLabel}>
                 <Ionicons name="call" size={16} color={colors.lavender[500]} />
-                <AppText style={[styles.sectionHeaderText, { color: colors.lavender[500] }]}>
+                <AppText
+                  style={[
+                    styles.sectionHeaderText,
+                    { color: colors.lavender[500] },
+                  ]}
+                >
                   Otras emergencias
                 </AppText>
               </View>
               <View style={styles.sectionHeaderLine} />
             </View>
 
-            {generalList.map(p => <EmergencyCard key={p.id} place={p} />)}
+            {generalList.map((p) => (
+              <EmergencyCard key={p.id} place={p} />
+            ))}
           </View>
         )}
 
         {/* ── Vista LUGARES ── */}
         {!isEmergency && (
           <View style={styles.listContainer}>
-            {placesList.map(p => (
+            {placesList.map((p) => (
               <PlaceCard key={p.id} place={p} onMaps={openMaps} />
             ))}
           </View>
@@ -377,7 +569,6 @@ export default function PlaceScreen({ route, navigation }) {
             Si necesitas ayuda inmediata, llama al 155 o al 123
           </AppText>
         </View>
-
       </ScrollView>
     </MainLayout>
   );
@@ -501,7 +692,7 @@ const styles = StyleSheet.create({
     gap: 14,
     shadowColor: colors.lavender[900],
     shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.10,
+    shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 4,
     borderWidth: 1.5,
