@@ -11,6 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AppText from "../components/UI/AppText";
 import Button from "../components/UI/Button";
 import { colors } from "../thema/colors";
+import { enviarSolicitud, registrarEvento } from "../services/apiService";
 import { spacing, borderRadius, shadow } from "../styles/tokens";
 
 const { width, height } = Dimensions.get("window");
@@ -105,6 +106,9 @@ export default function ServicesScreen({ navigation }) {
       console.log(`Redirigiendo a Place con tipo: ${placeType}`);
       await AsyncStorage.setItem("hasYesAnswer", "true");
 
+      enviarSolicitud(updatedData, placeType);
+      registrarEvento("solicitar_ayuda", placeType, "ServicesScreen");
+
       // Redirigir a Place con el tipo correspondiente
       navigation.replace("Places", { tipo: placeType });
       return;
@@ -116,6 +120,7 @@ export default function ServicesScreen({ navigation }) {
       setCurrentIndex(currentIndex + 1);
     } else {
       // Si llegó al final sin respuestas "Sí", guardar y redirigir a Message
+      enviarSolicitud(updatedData, "otro");
       await AsyncStorage.setItem("formCompleted", "true");
       navigation.replace("Places", { tipo: "otro" });
     }
