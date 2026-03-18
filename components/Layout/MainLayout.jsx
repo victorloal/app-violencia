@@ -1,13 +1,14 @@
 import React, { useState, useContext } from "react";
-import { View, StyleSheet, Alert, Modal, ScrollView } from "react-native";
+import { View, StyleSheet, Alert, Modal, Linking } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Button from "../UI/Button";
+import AppText from "../UI/AppText";
 import SafeLayout from "./SafeLayout";
 import styles from "../../styles";
 import AppNavbar from "./AppNavbar";
 import { SettingsContext } from "../../context/SettingsContext";
 import { useNavigation } from "@react-navigation/native";
-import { Linking } from "react-native";
+
 import CalculatorScreen from "../../screens/CalculatorScreen";
 
 export default function MainLayout({ children }) {
@@ -39,7 +40,7 @@ export default function MainLayout({ children }) {
         [
           {
             text: "Ir a Configuración",
-            onPress: () => navigation.navigate("Settings"),
+            onPress: () => navigation.replace("Config"),
           },
           { text: "Cancelar", style: "cancel" },
         ],
@@ -56,67 +57,88 @@ export default function MainLayout({ children }) {
   };
 
   return (
-    <SafeLayout backgroundColor={styles.semanticColors.background}>
+    <SafeLayout scrollable={false}>
       <View style={layoutStyles.container}>
         {/* Navbar superior */}
         <AppNavbar />
 
         {/* Contenido dinámico */}
-        <ScrollView
-          style={layoutStyles.content}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={layoutStyles.scrollContent}
-        >
-          {children}
-        </ScrollView>
+        <View style={layoutStyles.content}>{children}</View>
 
         {/* Barra inferior fija */}
         <View style={layoutStyles.bottomBar}>
+          {/* Botón Mensaje (izquierda) */}
           <Button
-            type="light"
+            type="primaryGhost"
             size="flex"
-            iconLeft={
+            onPress={handleMessageButtonPress}
+            accessibilityLabel="Enviar mensaje"
+            accessibilityHint="Abre la app de mensajes para enviar un SMS a tu contacto de confianza"
+          >
+            <View
+              style={{
+                alignItems: "center",
+                height: "100%",
+                width: "100%",
+                justifyContent: "center",
+                alignSelf: "center",
+              }}
+            >
               <Ionicons
-                name="mail-open-outline"
+                name="mail-outline"
                 size={30}
                 color={styles.semanticColors.primary}
               />
-            }
-            onPress={handleMessageButtonPress}
-          >
-            Mensaje
+              <AppText variant="caption" color="primary">
+                Mensaje
+              </AppText>
+            </View>
           </Button>
 
+          {/* Botón Llamada (centro - redondo) */}
           <Button
             type="primary"
             size="flex"
-            variant="pill"
+            variant="circle"
             iconLeft={
               <Ionicons
-                name="call-outline"
-                size={40}
+                name="call"
+                size={30}
                 color={styles.semanticColors.text.inverse}
               />
             }
             onPress={handleCallButtonPress}
-          >
-            Llamada
-          </Button>
+            style={{ height: "100%", width: "100%" }}
+            accessibilityLabel="Llamada de emergencia"
+            accessibilityHint="Ver lugares de emergencia para realizar una llamada"
+          />
 
-          {/* Botón Salir → abre calculadora (camuflaje) */}
+          {/* Botón Salir (derecha) */}
           <Button
-            type="light"
+            type="primaryGhost"
             size="flex"
-            iconLeft={
+            onPress={handleExitCamouflage}
+            accessibilityLabel="Salir con camuflaje"
+            accessibilityHint="Abre una calculadora para ocultar la aplicación"
+          >
+            <View
+              style={{
+                alignItems: "center",
+                height: "100%",
+                width: "100%",
+                justifyContent: "center",
+                alignSelf: "center",
+              }}
+            >
               <Ionicons
-                name="calculator-outline"
+                name="calculator"
                 size={30}
                 color={styles.semanticColors.primary}
               />
-            }
-            onPress={handleExitCamouflage}
-          >
-            Salir
+              <AppText variant="caption" color="primary">
+                Salir
+              </AppText>
+            </View>
           </Button>
         </View>
       </View>
@@ -137,22 +159,25 @@ export default function MainLayout({ children }) {
 
 const layoutStyles = StyleSheet.create({
   container: {
-    ...styles.utilities.flex1,
-    backgroundColor: styles.semanticColors.surface,
+    flex: 1,
   },
   content: {
-    ...styles.utilities.flex1,
-  },
-  scrollContent: {
-    flexGrow: 1,
+    flex: 1,
+    paddingBottom: "15%", // Espacio para la barra inferior fija
   },
   bottomBar: {
     flexDirection: "row",
     width: "100%",
     height: "15%",
-    backgroundColor: styles.semanticColors.primaryLight,
-    paddingHorizontal: styles.spacing.md,
-    ...styles.utilities.center,
-    gap: styles.spacing.sm,
+    backgroundColor: styles.semanticColors.primary,
+    alignItems: "center",
+    justifyContent: "space-around",
+    borderTopWidth: 1,
+    ...styles.shadow.md,
+  },
+  callButton: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
   },
 });

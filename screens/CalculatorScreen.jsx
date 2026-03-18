@@ -8,8 +8,9 @@ import {
   StatusBar,
   Vibration,
   Dimensions,
-  SafeAreaView,
 } from "react-native";
+
+import SafeLayout from "../components/Layout/SafeLayout";
 
 // ── Medidas responsive ──────────────────────────────────────────
 const { width: W, height: H } = Dimensions.get("window");
@@ -199,7 +200,7 @@ export default function CalculatorScreen({ onUnlock }) {
   const FONT_SMALL = SZ * 0.28; // para +/- y %
 
   return (
-    <SafeAreaView style={styles.root}>
+    <SafeLayout style={styles.root}>
       <StatusBar barStyle="light-content" backgroundColor={C.bg} />
 
       {/* ── Display ── */}
@@ -222,11 +223,6 @@ export default function CalculatorScreen({ onUnlock }) {
           {display}
         </Text>
       </View>
-
-      {/* Hint sutil */}
-      <Text style={[styles.hint, { fontSize: SZ * 0.13, marginBottom: GAP }]}>
-        Mantén presionado = para volver
-      </Text>
 
       {/* ── Teclado ── */}
       <View style={[styles.keyboard, { gap: GAP, paddingHorizontal: PAD_H }]}>
@@ -283,7 +279,7 @@ export default function CalculatorScreen({ onUnlock }) {
           </View>
         ))}
       </View>
-    </SafeAreaView>
+    </SafeLayout>
   );
 }
 
@@ -291,8 +287,6 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: C.bg,
-    justifyContent: "flex-end",
-    paddingBottom: H * 0.02,
   },
   displayArea: {
     flex: 1,

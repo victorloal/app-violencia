@@ -10,6 +10,7 @@ import {
 import globalStyles from "../../styles";
 import ViolenceTypeCard from "./ViolenceTypeCard";
 import { Ionicons } from "@expo/vector-icons";
+import styles from "../../styles";
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width - 60;
 
@@ -139,7 +140,7 @@ export default function ViolenceCarousel({ data, navigation }) {
           <Ionicons
             name="chevron-back"
             size={24}
-            color={globalStyles.semanticColors.text.primary}
+            color={styles.semanticColors.text.primary}
           />
         </TouchableOpacity>
 
@@ -171,7 +172,7 @@ export default function ViolenceCarousel({ data, navigation }) {
           <Ionicons
             name="chevron-forward"
             size={24}
-            color={globalStyles.semanticColors.text.primary}
+            color={styles.semanticColors.text.primary}
           />
         </TouchableOpacity>
       </View>
@@ -181,31 +182,36 @@ export default function ViolenceCarousel({ data, navigation }) {
 
 const carouselStyles = StyleSheet.create({
   container: {
-    marginVertical: globalStyles.spacing.xl,
     flex: 1,
+    height: "100%",
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
   },
   cardWrapper: {
-    ...globalStyles.utilities.center,
+    justifyContent: "center",
+    paddingHorizontal: styles.spacing.sm, // Separa los componentes que muestra el carrusel
   },
   indicatorsContainer: {
     flexDirection: "row",
-    ...globalStyles.utilities.center,
-    marginTop: globalStyles.spacing.xl,
-    gap: globalStyles.spacing.sm,
+    ...styles.utilities.center,
+    gap: styles.spacing.md, // Separa un poco más los botones entre sí
+    marginTop: styles.spacing.md, // Separa los botones del contenido de arriba
+    marginBottom: styles.spacing.sm, // Margen inferior
   },
   indicator: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: globalStyles.semanticColors.border.dark,
+    backgroundColor: styles.semanticColors.border.dark,
   },
   activeIndicator: {
     width: 20,
-    backgroundColor: globalStyles.semanticColors.primary,
+    backgroundColor: styles.semanticColors.primary,
   },
   controlButton: {
-    padding: globalStyles.spacing.sm,
-    borderRadius: globalStyles.borderRadius.circle,
-    backgroundColor: globalStyles.semanticColors.primaryLight,
+    padding: styles.spacing.sm,
+    borderRadius: styles.borderRadius.circle,
+    backgroundColor: styles.semanticColors.primaryLight,
   },
 });

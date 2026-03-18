@@ -5,66 +5,61 @@ import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
-  TextInput,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import AppText from "../components/UI/AppText";
-import StyledButton from "../components/UI/Button";
+import Button from "../components/UI/Button";
 import { colors } from "../thema/colors";
 import { enviarSolicitud, registrarEvento } from "../services/apiService";
+import { spacing, borderRadius, shadow } from "../styles/tokens";
 
 const { width, height } = Dimensions.get("window");
 
 const questions = [
   {
     id: "1",
-    question: "¿Necesitas atención médica?",
+    question: "¿Necesitas atención médica o psicológica urgente?",
     options: ["Sí", "No"],
     key: "atencion_medica",
-    placeType: "salud", // Tipo de lugar al que redirigir si responde Sí
+    placeType: "salud",
+    icon: "medkit-outline",
   },
   {
     id: "2",
-    question: "¿Te gustaría recibir apoyo psicológico?",
-    options: ["Sí", "No"],
-    key: "apoyo_psicologico",
-    placeType: "psicologico",
-  },
-  {
-    id: "3",
-    question: "¿Necesitas denunciar lo ocurrido?",
+    question:
+      "¿Quieres presentar una denuncia sobre la violencia que sufriste?",
     options: ["Sí", "No"],
     key: "denuncia",
     placeType: "legal",
+    icon: "alert-circle-outline",
+  },
+  {
+    id: "3",
+    question:
+      "¿La persona que te agredió es tu pareja, expareja o alguien de tu familia?",
+    options: ["Sí", "No"],
+    key: "agresor",
+    placeType: "legal",
+    icon: "alert-circle-outline",
   },
   {
     id: "4",
-    question: "¿Te gustaría hablar con la policía?",
+    question:
+      "¿La persona que te agrede ha utilizado a tu hijo o hija para lastimarte emocionalmente?",
     options: ["Sí", "No"],
-    key: "hablar_con_policia",
+    key: "amenaza_hijos",
     placeType: "proteccion",
+    icon: "shield-outline",
   },
   {
     id: "5",
-    question: "¿Sientes que necesitas protección?",
+    question:
+      "¿Consideras que tus derechos como víctima fueron vulnerados durante la atención de tu caso por una persona empleada, funcionaria o contratista?",
     options: ["Sí", "No"],
-    key: "proteccion",
+    key: "derechos_vulnerados",
     placeType: "proteccion",
-  },
-  {
-    id: "6",
-    question: "¿Te gustaría recibir asesoría legal?",
-    options: ["Sí", "No"],
-    key: "asesoria_legal",
-    placeType: "legal",
-  },
-  {
-    id: "7",
-    question: "¿Estás buscando apoyo para tus niños o niñas?",
-    options: ["Sí", "No"],
-    key: "apoyo_ninos",
-    placeType: "psicologico",
+    icon: "lock-closed-outline",
   },
 ];
 
@@ -72,11 +67,9 @@ export default function ServicesScreen({ navigation }) {
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [formData, setFormData] = useState({});
-  const [otherText, setOtherText] = useState("");
 
   // Función para obtener el tipo de lugar basado en la respuesta "Sí"
   const getPlaceTypeFromYesAnswer = () => {
-    // Buscamos la primera pregunta con respuesta "Sí"
     for (let i = 0; i <= currentIndex; i++) {
       const question = questions[i];
       if (formData[question.key] === "Sí") {
@@ -95,47 +88,14 @@ export default function ServicesScreen({ navigation }) {
     });
   };
 
-  const handleSelect = (key, value, multiple = false) => {
-    if (multiple) {
-      const currentValues = Array.isArray(formData[key]) ? formData[key] : [];
-      if (currentValues.includes(value)) {
-        setFormData({
-          ...formData,
-          [key]: currentValues.filter((v) => v !== value),
-        });
-      } else {
-        setFormData({ ...formData, [key]: [...currentValues, value] });
-      }
-    } else {
-      setFormData({ ...formData, [key]: value });
-
-      if (value === "Sí") {
-        console.log("Respuesta Sí detectada en:", key);
-      }
-    }
+  const handleSelect = (key, value) => {
+    setFormData({ ...formData, [key]: value });
   };
 
   const handleNext = async () => {
     const currentQuestion = questions[currentIndex];
     const currentKey = currentQuestion.key;
     let updatedData = { ...formData };
-
-    // Manejar la opción "Otro" (si existiera)
-    if (currentQuestion.multiple) {
-      const currentValues = Array.isArray(formData[currentKey])
-        ? formData[currentKey]
-        : [];
-      if (currentValues.includes("Otro") && otherText) {
-        updatedData[currentKey] = currentValues.map((v) =>
-          v === "Otro" ? otherText : v,
-        );
-      }
-    } else if (formData[currentKey] === "Otro" && otherText) {
-      updatedData[currentKey] = otherText;
-    }
-
-    setFormData(updatedData);
-    setOtherText("");
 
     // Guardar temporalmente los datos
     await AsyncStorage.setItem("userData", JSON.stringify(updatedData));
@@ -212,35 +172,35 @@ export default function ServicesScreen({ navigation }) {
     return (
       <View style={styles.slide}>
         <View style={styles.card}>
-          <AppText variant="title" align="center" style={styles.question}>
-            {item.question}
-          </AppText>
+          {/* Header pregunta con icono */}
+          <View style={styles.questionHeader}>
+            <View style={styles.iconContainer}>
+              <Ionicons
+                name={item.icon}
+                size={32}
+                color={colors.lavender[600]}
+              />
+            </View>
+            <AppText variant="h2" style={styles.question}>
+              {item.question}
+            </AppText>
+          </View>
 
+          {/* Opciones */}
           <View style={styles.optionsContainer}>
             {item.options.map((option) => {
-              const isSelected = item.multiple
-                ? Array.isArray(formData[item.key]) &&
-                  formData[item.key].includes(option)
-                : formData[item.key] === option;
+              const isSelected = formData[item.key] === option;
 
               return (
                 <TouchableOpacity
                   key={option}
                   activeOpacity={0.7}
-                  style={[
-                    styles.option,
-                    isSelected && styles.selected,
-                    option === "Sí" &&
-                      hasYes &&
-                      !isSelected &&
-                      styles.yesOptionHighlighted,
-                  ]}
-                  onPress={() => handleSelect(item.key, option, item.multiple)}
+                  style={[styles.option, isSelected && styles.selected]}
+                  onPress={() => handleSelect(item.key, option)}
                 >
                   <AppText
-                    variant="body"
-                    tone={isSelected ? "normal" : "muted"}
-                    style={isSelected && styles.selectedText}
+                    variant="h4"
+                    color={isSelected ? "primary" : "secondary"}
                   >
                     {option}
                   </AppText>
@@ -261,10 +221,10 @@ export default function ServicesScreen({ navigation }) {
             <View style={styles.infoMessage}>
               <Ionicons
                 name="information-circle"
-                size={20}
+                size={24}
                 color={colors.lavender[600]}
               />
-              <AppText variant="small" style={styles.infoText}>
+              <AppText variant="body" color="secondary" style={styles.infoText}>
                 {placeType === "salud" &&
                   "Te mostraremos centros de salud cercanos"}
                 {placeType === "psicologico" &&
@@ -277,43 +237,46 @@ export default function ServicesScreen({ navigation }) {
             </View>
           )}
 
+          {/* Footer */}
           <View style={styles.footer}>
             {/* Indicador de progreso */}
             <View style={styles.progressContainer}>
-              {questions.map((_, index) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.dot,
-                    index === currentIndex && styles.activeDot,
-                    index < currentIndex && styles.completedDot,
-                  ]}
-                />
-              ))}
+              {questions.map((q, index) => {
+                const isPast = index < currentIndex;
+                const isCurrent = index === currentIndex;
+
+                return (
+                  <View
+                    key={index}
+                    style={[
+                      styles.progressItem,
+                      isPast && styles.progressPast,
+                      isCurrent && styles.progressCurrent,
+                    ]}
+                  >
+                    {isCurrent && (
+                      <Ionicons name={q.icon} size={16} color={colors.white} />
+                    )}
+                  </View>
+                );
+              })}
             </View>
 
-            <StyledButton
-              title={getButtonTitle()}
-              tone="dark"
-              size="large"
+            <Button
+              type="primary"
+              size="xl"
               onPress={handleNext}
-              disabled={
-                item.multiple
-                  ? !formData[item.key] ||
-                    formData[item.key].length === 0 ||
-                    (formData[item.key].includes("Otro") && !otherText)
-                  : !formData[item.key] ||
-                    (formData[item.key] === "Otro" && !otherText)
-              }
-              icon={
+              disabled={!formData[item.key]}
+              iconRight={
                 <Ionicons
                   name={getButtonIcon()}
                   size={20}
                   color={colors.white}
                 />
               }
-              iconPosition="right"
-            />
+            >
+              {getButtonTitle()}
+            </Button>
           </View>
         </View>
       </View>
@@ -337,6 +300,7 @@ export default function ServicesScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: colors.lavender[50],
   },
   slide: {
@@ -344,93 +308,90 @@ const styles = StyleSheet.create({
     height,
     justifyContent: "center",
     alignItems: "center",
-    padding: 24,
+    padding: spacing.xl,
   },
   card: {
     backgroundColor: colors.white,
-    borderRadius: 24,
-    padding: 24,
+    borderRadius: borderRadius.xl,
+    padding: spacing.xl,
     width: "100%",
     maxWidth: 400,
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    elevation: 10,
+    ...shadow.md,
+  },
+  questionHeader: {
+    alignItems: "center",
+    marginBottom: spacing.xl,
+  },
+  iconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: borderRadius.circle,
+    backgroundColor: colors.lavender[50],
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: spacing.md,
+    borderWidth: 2,
+    borderColor: colors.lavender[200],
   },
   question: {
-    marginBottom: 32,
+    textAlign: "center",
     color: colors.lavender[900],
   },
   optionsContainer: {
     width: "100%",
-    marginBottom: 24,
+    marginBottom: spacing.xl,
+    gap: spacing.sm,
   },
   option: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 18,
+    padding: spacing.lg,
     borderWidth: 2,
-    borderColor: colors.neutral[100],
-    borderRadius: 16,
-    marginVertical: 6,
-    backgroundColor: colors.neutral[50],
+    borderColor: colors.lavender[100],
+    borderRadius: borderRadius.lg,
+    backgroundColor: colors.white,
   },
   selected: {
-    borderColor: colors.lavender[500],
+    borderColor: colors.lavender[600],
     backgroundColor: colors.lavender[50],
-  },
-  selectedText: {
-    fontWeight: "700",
-    color: colors.lavender[800],
-  },
-  yesOptionHighlighted: {
-    borderColor: colors.lavender[300],
-    backgroundColor: colors.lavender[50],
-  },
-  input: {
-    borderWidth: 2,
-    borderColor: colors.neutral[200],
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 24,
-    fontSize: 16,
-    color: colors.neutral[900],
   },
   infoMessage: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: colors.lavender[50],
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-    gap: 8,
+    padding: spacing.md,
+    borderRadius: borderRadius.md,
+    marginBottom: spacing.lg,
+    gap: spacing.sm,
+    borderLeftWidth: 4,
+    borderLeftColor: colors.lavender[600],
   },
   infoText: {
-    color: colors.lavender[700],
     flex: 1,
   },
   footer: {
-    marginTop: 16,
     alignItems: "center",
+    gap: spacing.xl,
   },
   progressContainer: {
     flexDirection: "row",
-    marginBottom: 32,
+    gap: spacing.sm,
   },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: colors.neutral[200],
-    marginHorizontal: 4,
+  progressItem: {
+    width: 40,
+    height: 40,
+    borderRadius: borderRadius.circle,
+    backgroundColor: colors.lavender[100],
+    justifyContent: "center",
+    alignItems: "center",
   },
-  activeDot: {
-    width: 24,
+  progressPast: {
+    backgroundColor: colors.lavender[400],
+  },
+  progressCurrent: {
+    width: 48,
+    height: 48,
     backgroundColor: colors.lavender[600],
-  },
-  completedDot: {
-    backgroundColor: colors.lavender[300],
   },
 });

@@ -1,117 +1,91 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AppText from "../components/UI/AppText";
 import Button from "../components/UI/Button";
-import SvgComponent from "../assets/icons/logo.jsx";
-import { colors } from "../thema/colors";
 import SafeLayout from "../components/Layout/SafeLayout";
+import { components } from "../styles/components";
+import { colors } from "../thema/colors";
+import { spacing } from "../styles/tokens";
 
 export default function MessageFormScreen({ navigation }) {
-  const handleConfigure = () => {
-    navigation.replace("Form");
-  };
-
-  const handleSkip = () => {
-    navigation.replace("Form");
+  const handleContinue = () => {
+    navigation.navigate("Form");
   };
 
   return (
     <SafeLayout>
       <View style={styles.container}>
-        {/* Logo */}
-        <View style={styles.logoContainer}>
-          <SvgComponent width={100} height={100} />
-          <AppText variant="h2" style={styles.appName}>
-            Violencia Cero
-          </AppText>
-        </View>
-
         {/* Contenido principal */}
         <View style={styles.contentContainer}>
-          <View style={styles.iconCircle}>
-            <Ionicons name="settings" size={50} color={colors.lavender[600]} />
+          <View style={[components.iconContainerLarge, styles.iconCircle]}>
+            <AppText variant="h1">💜</AppText>
           </View>
 
           <AppText variant="h1" style={styles.title}>
-            ⚙️ Configuremos tu experiencia
+            Nos tomará solo un momento
           </AppText>
 
-          <AppText variant="body" style={styles.message}>
-            Para brindarte una mejor experiencia, te invitamos a configurar:
+          <AppText variant="body" color="secondary" style={styles.message}>
+            Estas preguntas son solo para tu primer ingreso y nos ayudan a
+            mejorar la aplicación.
           </AppText>
 
-          <View style={styles.configItems}>
-            <View style={styles.configItem}>
-              <Ionicons name="text" size={28} color={colors.lavender[600]} />
-              <View style={styles.configItemText}>
-                <AppText variant="h4" style={styles.configItemTitle}>
-                  Tamaño de letra
-                </AppText>
-                <AppText variant="body" tone="muted">
-                  Ajusta el texto para una mejor lectura
-                </AppText>
-              </View>
-            </View>
-
-            <View style={styles.configItem}>
-              <Ionicons name="shield" size={28} color={colors.lavender[600]} />
-              <View style={styles.configItemText}>
-                <AppText variant="h4" style={styles.configItemTitle}>
-                  Contacto de confianza
-                </AppText>
-                <AppText variant="body" tone="muted">
-                  Guarda un número para emergencias
-                </AppText>
-              </View>
-            </View>
-
-            <View style={styles.configItem}>
-              <Ionicons
-                name="accessibility"
-                size={28}
-                color={colors.lavender[600]}
-              />
-              <View style={styles.configItemText}>
-                <AppText variant="h4" style={styles.configItemTitle}>
-                  Accesibilidad
-                </AppText>
-                <AppText variant="body" tone="muted">
-                  Configura TalkBack/VoiceOver
-                </AppText>
-              </View>
-            </View>
+          {/* Mensaje principal destacado */}
+          <View style={styles.principalMessage}>
+            <AppText variant="h2" style={styles.principalMessageText}>
+              No solicitaremos ni guardaremos datos personales
+            </AppText>
           </View>
 
-          <View style={styles.noteBox}>
-            <Ionicons
-              name="information-circle"
-              size={24}
-              color={colors.lavender[600]}
-            />
-            <AppText variant="body" style={styles.noteText}>
-              Puedes cambiar estos ajustes en cualquier momento desde el menú de
-              configuración.
-            </AppText>
+          {/* Cards con las características */}
+          <View style={styles.cardsContainer}>
+            {/* Card 1: Totalmente anónimo */}
+            <View style={[components.card, styles.featureCard]}>
+              <View style={components.iconContainerSmall}>
+                <Ionicons
+                  name="eye-off"
+                  size={24}
+                  color={colors.lavender[600]}
+                />
+              </View>
+              <View style={styles.cardContent}>
+                <AppText variant="h4" style={styles.cardTitle}>
+                  Totalmente anónimo
+                </AppText>
+                <AppText variant="body" color="tertiary">
+                  No asociamos tus respuestas con tu identidad
+                </AppText>
+              </View>
+            </View>
+
+            {/* Card 2: Menos de 2 minutos */}
+            <View style={[components.card, styles.featureCard]}>
+              <View style={components.iconContainerSmall}>
+                <Ionicons name="time" size={24} color={colors.lavender[600]} />
+              </View>
+              <View style={styles.cardContent}>
+                <AppText variant="h4" style={styles.cardTitle}>
+                  Menos de 2 minutos
+                </AppText>
+                <AppText variant="body" color="tertiary">
+                  Rápido y sencillo de completar
+                </AppText>
+              </View>
+            </View>
           </View>
         </View>
 
-        {/* Botones */}
+        {/* Botón */}
         <View style={styles.buttonContainer}>
           <Button
             type="primary"
             size="large"
-            onPress={handleConfigure}
-            style={styles.configureButton}
+            onPress={handleContinue}
+            style={styles.continueButton}
           >
-            Ir a Configuración
+            Continuar
           </Button>
-
-          <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
-            <AppText variant="body" color="tertiary">
-              Omitir por ahora
-            </AppText>
-          </TouchableOpacity>
         </View>
       </View>
     </SafeLayout>
@@ -122,90 +96,76 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-between",
-    paddingVertical: 40,
-    paddingHorizontal: 20,
-  },
-  logoContainer: {
-    alignItems: "center",
-    marginTop: 20,
-  },
-  appName: {
-    marginTop: 10,
-    color: colors.lavender[800],
+    paddingVertical: spacing.xxxl,
+    paddingHorizontal: spacing.xl,
   },
   contentContainer: {
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: 10,
+    alignItems: "center",
   },
   iconCircle: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: colors.lavender[50],
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 30,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginBottom: spacing.lg,
     borderWidth: 2,
     borderColor: colors.lavender[200],
-    alignSelf: "center",
   },
   title: {
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: spacing.md,
     color: colors.lavender[800],
   },
   message: {
-    textAlign: "center",
-    marginBottom: 25,
+    marginBottom: spacing.xl,
     lineHeight: 24,
+    paddingHorizontal: spacing.sm,
   },
-  configItems: {
+  // Mensaje principal destacado
+  principalMessage: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.lavender[100],
+    padding: spacing.lg,
+    borderRadius: spacing.md,
+    marginBottom: spacing.xl,
+    borderWidth: 2,
+    borderColor: colors.lavender[400],
+    gap: spacing.md,
     width: "100%",
-    marginBottom: 25,
   },
-  configItem: {
+  principalMessageText: {
+    flex: 1,
+    textAlign: "center",
+    color: colors.lavender[800],
+  },
+  // Contenedor de cards
+  cardsContainer: {
+    width: "100%",
+    gap: spacing.md,
+    marginBottom: spacing.md,
+  },
+  // Card de característica
+  featureCard: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 20,
-    backgroundColor: colors.lavender[50],
-    padding: 15,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.lavender[200],
+    padding: spacing.lg,
+    marginBottom: 0, // Usamos gap del contenedor
   },
-  configItemText: {
+  cardContent: {
     flex: 1,
-    marginLeft: 15,
+    marginLeft: spacing.md,
   },
-  configItemTitle: {
-    marginBottom: 4,
-  },
-  noteBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: colors.lavender[50],
-    padding: 15,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.lavender[200],
-    marginTop: 5,
-  },
-  noteText: {
-    flex: 1,
-    marginLeft: 10,
-    fontSize: 14,
+  cardTitle: {
+    marginBottom: spacing.xxs,
   },
   buttonContainer: {
     width: "100%",
     alignItems: "center",
-    marginBottom: 20,
+    marginTop: spacing.md,
   },
-  configureButton: {
+  continueButton: {
     width: "100%",
-    marginBottom: 15,
-  },
-  skipButton: {
-    padding: 10,
   },
 });
