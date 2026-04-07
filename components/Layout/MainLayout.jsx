@@ -8,6 +8,7 @@ import styles from "../../styles";
 import AppNavbar from "./AppNavbar";
 import { SettingsContext } from "../../context/SettingsContext";
 import { useNavigation } from "@react-navigation/native";
+import AppTutorial from "../UI/AppTutorial";
 
 import CalculatorScreen from "../../screens/CalculatorScreen";
 import { colors } from "../../thema/colors";
@@ -54,13 +55,7 @@ export default function MainLayout({ children }) {
             accessibilityHint="Abre la app de mensajes para enviar un SMS a tu contacto de confianza"
           >
             <View
-              style={{
-                alignItems: "center",
-                height: "100%",
-                width: "100%",
-                justifyContent: "center",
-                alignSelf: "center",
-              }}
+              style={layoutStyles.btnContent}
             >
               <Ionicons
                 name="mail"
@@ -85,13 +80,7 @@ export default function MainLayout({ children }) {
             accessibilityHint="Ver lugares de emergencia para realizar una llamada"
           >
             <View
-              style={{
-                height: "100%",
-                width: "100%",
-                alignItems: "center",
-                justifyContent: "center",
-                alignSelf: "center",
-              }}
+              style={[layoutStyles.btnContent, { height: "100%", width: "100%" }]}
             >
               <Ionicons
                 name="call"
@@ -113,13 +102,7 @@ export default function MainLayout({ children }) {
             accessibilityHint="Abre una calculadora para ocultar la aplicación"
           >
             <View
-              style={{
-                alignItems: "center",
-                height: "100%",
-                width: "100%",
-                justifyContent: "center",
-                alignSelf: "center",
-              }}
+              style={layoutStyles.btnContent}
             >
               <Ionicons
                 name="calculator"
@@ -134,13 +117,16 @@ export default function MainLayout({ children }) {
         </View>
       </View>
 
+      {/* ── Tutorial de primera vez ── */}
+      <AppTutorial />
+      
       {/* ── Calculadora en Modal de pantalla completa ── */}
       <Modal
         visible={calcVisible}
         animationType="slide"
         presentationStyle="fullScreen"
         statusBarTranslucent
-        onRequestClose={() => {}} // Bloquea el botón atrás en Android
+        onRequestClose={() => {}}
       >
         <CalculatorScreen onUnlock={handleUnlock} />
       </Modal>
@@ -169,5 +155,12 @@ const layoutStyles = StyleSheet.create({
     justifyContent: "space-around",
     elevation: 100,
     ...styles.shadow.xs,
+  },
+    btnContent: {
+    alignItems: "center",
+    height: "100%",
+    width: "100%",
+    justifyContent: "center",
+    alignSelf: "center",
   },
 });
