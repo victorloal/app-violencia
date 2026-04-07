@@ -1,5 +1,5 @@
 import * as Location from "expo-location";
-import { Linking, Alert } from "react-native";
+import { Linking, Alert, Platform } from "react-native";
 
 export const linkingService = {
   // ===== WHATSAPP =====
@@ -17,12 +17,19 @@ export const linkingService = {
       }
 
       // 2. VERIFICAR NÚMERO DE TELÉFONO
-      if (!phoneNumber) {
+      if (!phoneNumber || phoneNumber.trim() === "") {
         Alert.alert(
-          "Número requerido",
-          "No hay un número de contacto configurado",
+          "Número no configurado",
+          "Por favor, configura tu número de contacto en la pantalla de Configuración.",
+          [
+            {
+              text: "Ir a Configuración",
+              onPress: () => navigation.replace("Config"),
+            },
+            { text: "Cancelar", style: "cancel" },
+          ],
         );
-        return null;
+        return;
       }
 
       // 3. OBTENER UBICACIÓN - Esperar a que llegue
@@ -112,28 +119,25 @@ export const linkingService = {
   // ===== LLAMADA TELEFÓNICA =====
   makePhoneCall: async (phoneNumber) => {
     try {
-      if (!phoneNumber) {
-        Alert.alert("Error", "No hay número de teléfono configurado");
-        return false;
+      if (!phoneNumber || phoneNumber.trim() === "") {
+        Alert.alert(
+          "Número no configurado",
+          "Por favor, configura tu número de contacto en la pantalla de Configuración.",
+          [
+            {
+              text: "Ir a Configuración",
+              onPress: () => navigation.replace("Config"),
+            },
+            { text: "Cancelar", style: "cancel" },
+          ],
+        );
+        return;
       }
 
       let cleanNumber = phoneNumber.replace(/[^0-9]/g, "");
 
-      // Para llamadas, necesitamos el formato completo con código de país
-      if (!cleanNumber.startsWith("57")) {
-        cleanNumber = "57" + cleanNumber;
-      }
-
       const url = `tel:${cleanNumber}`;
-      const supported = await Linking.canOpenURL(url);
-
-      if (supported) {
-        await Linking.openURL(url);
-        return true;
-      } else {
-        Alert.alert("Error", "Tu dispositivo no puede realizar llamadas");
-        return false;
-      }
+      await Linking.openURL(url);
     } catch (error) {
       console.error("Error en makePhoneCall:", error);
       Alert.alert("Error", "No se pudo realizar la llamada");

@@ -50,7 +50,10 @@ export default function ViolenceTypeCard({
         {/* Descripción con scroll */}
         <ScrollView
           style={cardStyles.descriptionContainer}
-          showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={true}
+          indicatorStyle="default"
+          automaticallyAdjustsScrollIndicatorInsets={true}
+          persistentScrollbar={true}
         >
           <AppText variant="body" style={cardStyles.description}>
             {description}
@@ -59,7 +62,7 @@ export default function ViolenceTypeCard({
 
         {/* ── Botones inferiores ── */}
         <View style={cardStyles.buttonsContainer}>
-          <Button
+          {/* <Button
             type="primaryGhost"
             variant="circle"
             size="xs"
@@ -71,9 +74,9 @@ export default function ViolenceTypeCard({
                 color={semanticColors.primary}
               />
             }
-          ></Button>
+          ></Button> */}
 
-          <Button type="primary" size="xl" onPress={onPressServices}>
+          <Button type="primary" size="xxl" onPress={onPressServices}>
             ¿Necesitas Atención?
           </Button>
         </View>
@@ -178,7 +181,7 @@ export default function ViolenceTypeCard({
             <View style={cardStyles.modalFooter}>
               <Button
                 type="primary"
-                size="lg"
+                size="xl"
                 onPress={() => {
                   setModalVisible(false);
                   onPressServices();
@@ -197,10 +200,10 @@ export default function ViolenceTypeCard({
 const cardStyles = StyleSheet.create({
   // ── Card principal ──
   card: {
-    padding: spacing.lg,
-    ...shadow.md,
-    width: "100%",
     flex: 1,
+    justifyContent: "center",
+    alignContent: "center",
+    elevation: 2,
   },
   title: {
     textAlign: "center",
@@ -213,17 +216,16 @@ const cardStyles = StyleSheet.create({
     borderRadius: 50,
     alignSelf: "center",
     marginBottom: spacing.lg,
-    borderWidth: borderWidth.thick,
-    borderColor: semanticColors.primaryLight,
     ...shadow.sm,
   },
   descriptionContainer: {
     flex: 1,
   },
   description: {
-    textAlign: "center",
+    textAlign: "left",
     color: semanticColors.text.secondary,
     paddingHorizontal: spacing.xs,
+    paddingVertical: spacing.xs,
   },
 
   // ── Botones inferiores ──
@@ -259,6 +261,7 @@ const cardStyles = StyleSheet.create({
     top: spacing.md,
     right: spacing.lg,
     zIndex: zIndex.modal,
+    color: semanticColors.error,
   },
   modalHeader: {
     alignItems: "center",
@@ -279,6 +282,9 @@ const cardStyles = StyleSheet.create({
   },
   modalScrollView: {
     flexGrow: 1,
+    alignItems: "center",
+    alignContent: "center",
+    justifyContent: "center",
   },
   modalScrollContent: {
     paddingBottom: spacing.sm,
@@ -286,7 +292,10 @@ const cardStyles = StyleSheet.create({
   modalDescription: {
     color: semanticColors.text.secondary,
     marginBottom: spacing.xl,
-    textAlign: "justify",
+    textAlign: "left",
+    alignItems: "center",
+    alignContent: "center",
+    justifyContent: "center",
   },
   modalSection: {
     backgroundColor: semanticColors.primaryLight,
@@ -298,7 +307,7 @@ const cardStyles = StyleSheet.create({
   },
   modalSectionHeader: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     gap: spacing.sm,
     marginBottom: spacing.xs,
   },

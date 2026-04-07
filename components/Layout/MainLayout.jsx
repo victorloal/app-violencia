@@ -10,6 +10,8 @@ import { SettingsContext } from "../../context/SettingsContext";
 import { useNavigation } from "@react-navigation/native";
 
 import CalculatorScreen from "../../screens/CalculatorScreen";
+import { colors } from "../../thema/colors";
+import { linkingService } from "../../services/linkingService";
 
 export default function MainLayout({ children }) {
   const { setIsCamouflageOn, phoneNumber } = useContext(SettingsContext);
@@ -29,31 +31,7 @@ export default function MainLayout({ children }) {
   };
 
   const handleCallButtonPress = () => {
-    navigation.navigate("Places", { tipo: "emergencia" });
-  };
-
-  const handleMessageButtonPress = () => {
-    if (!phoneNumber || phoneNumber.trim() === "") {
-      Alert.alert(
-        "Número no configurado",
-        "Por favor, configura tu número de contacto en la pantalla de Configuración.",
-        [
-          {
-            text: "Ir a Configuración",
-            onPress: () => navigation.replace("Config"),
-          },
-          { text: "Cancelar", style: "cancel" },
-        ],
-      );
-      return;
-    }
-
-    const message = "Hola, necesito ayuda.";
-    const url = `sms:${phoneNumber}?body=${encodeURIComponent(message)}`;
-
-    Linking.openURL(url).catch(() => {
-      Alert.alert("Error", "No se pudo abrir la aplicación de mensajes.");
-    });
+    navigation.navigate("Emergency", { tipo: "emergencia" });
   };
 
   return (
@@ -71,7 +49,7 @@ export default function MainLayout({ children }) {
           <Button
             type="primaryGhost"
             size="flex"
-            onPress={handleMessageButtonPress}
+            onPress={() => linkingService.sendLocationWhatsApp(phoneNumber)}
             accessibilityLabel="Enviar mensaje"
             accessibilityHint="Abre la app de mensajes para enviar un SMS a tu contacto de confianza"
           >
@@ -85,11 +63,11 @@ export default function MainLayout({ children }) {
               }}
             >
               <Ionicons
-                name="mail-outline"
+                name="mail"
                 size={30}
                 color={styles.semanticColors.primary}
               />
-              <AppText variant="caption" color="primary">
+              <AppText variant="caption" bold color="secondary">
                 Mensaje
               </AppText>
             </View>
@@ -100,18 +78,31 @@ export default function MainLayout({ children }) {
             type="primary"
             size="flex"
             variant="circle"
-            iconLeft={
-              <Ionicons
-                name="call"
-                size={30}
-                color={styles.semanticColors.text.inverse}
-              />
-            }
             onPress={handleCallButtonPress}
+            onLongPress={() => linkingService.makePhoneCall(phoneNumber)}
             style={{ height: "100%", width: "100%" }}
             accessibilityLabel="Llamada de emergencia"
             accessibilityHint="Ver lugares de emergencia para realizar una llamada"
-          />
+          >
+            <View
+              style={{
+                height: "100%",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                alignSelf: "center",
+              }}
+            >
+              <Ionicons
+                name="call"
+                size={35}
+                color={styles.semanticColors.text.inverse}
+              />
+              <AppText variant="body" bold color="light">
+                24/7
+              </AppText>
+            </View>
+          </Button>
 
           {/* Botón Salir (derecha) */}
           <Button
@@ -135,8 +126,8 @@ export default function MainLayout({ children }) {
                 size={30}
                 color={styles.semanticColors.primary}
               />
-              <AppText variant="caption" color="primary">
-                Salir
+              <AppText variant="caption" bold color="secondary">
+                Camuflaje
               </AppText>
             </View>
           </Button>
@@ -160,24 +151,23 @@ export default function MainLayout({ children }) {
 const layoutStyles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+    elevation: 100,
   },
   content: {
     flex: 1,
-    paddingBottom: "15%", // Espacio para la barra inferior fija
+    elevation: 100,
   },
   bottomBar: {
     flexDirection: "row",
     width: "100%",
     height: "15%",
-    backgroundColor: styles.semanticColors.primary,
+    backgroundColor: colors.lavender[100],
     alignItems: "center",
     justifyContent: "space-around",
-    borderTopWidth: 1,
-    ...styles.shadow.md,
-  },
-  callButton: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    elevation: 100,
+    ...styles.shadow.xs,
   },
 });

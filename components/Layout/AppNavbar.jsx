@@ -131,7 +131,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.lavender[100],
-    marginBottom: spacing.sm,
     ...Platform.select({
       ios: {
         shadowColor: colors.lavender[900],

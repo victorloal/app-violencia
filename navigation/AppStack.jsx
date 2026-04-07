@@ -16,6 +16,7 @@ import MessageConfigScreen from "../screens/MessageConfigScreen";
 import MessageFormScreen from "../screens/MessageFormScreen";
 import { SettingsContext } from "../context/SettingsContext";
 import { colors } from "../thema/colors";
+import EmergencyScreen from "../screens/EmergencyScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -90,6 +91,7 @@ export default function AppStack() {
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="Services" component={ServicesScreen} />
       <Stack.Screen name="Places" component={PlacesScreen} />
+      <Stack.Screen name="Emergency" component={EmergencyScreen} />
     </Stack.Navigator>
   );
 }

@@ -7,72 +7,127 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import globalStyles from "../../styles";
-import ViolenceTypeCard from "./ViolenceTypeCard";
 import { Ionicons } from "@expo/vector-icons";
+import ViolenceTypeCard from "./ViolenceTypeCard";
 import styles from "../../styles";
+import { spacing, borderRadius, semanticColors } from "../../styles/tokens";
+import Button from "./Button";
+
 const { width } = Dimensions.get("window");
-const CARD_WIDTH = width - 60;
+const CARD_WIDTH = width - spacing.xxxl * 2;
 
 export default function ViolenceCarousel({ data, navigation }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [realIndex, setRealIndex] = useState(0);
   const [infiniteData, setInfiniteData] = useState([]);
   const flatListRef = useRef(null);
+  const currentIndexRef = useRef(0);
+  const initialScrollDone = useRef(false);
+  const isDragging = useRef(false);
+  const pendingIndex = useRef(null); // Para manejar scrolls pendientes
 
   useEffect(() => {
     const duplicatedData = [...data, ...data, ...data];
     setInfiniteData(duplicatedData);
-    setCurrentIndex(data.length);
+    updateIndices(data.length);
+    initialScrollDone.current = false;
   }, [data]);
+
+  useEffect(() => {
+    if (infiniteData.length > 0 && !initialScrollDone.current) {
+      setTimeout(() => {
+        flatListRef.current?.scrollToIndex({
+          index: data.length,
+          animated: false,
+          viewPosition: 0.5,
+        });
+        initialScrollDone.current = true;
+      }, 100);
+    }
+  }, [infiniteData]);
+
+  const updateIndices = (newIndex) => {
+    currentIndexRef.current = newIndex;
+    setCurrentIndex(newIndex);
+    setRealIndex(((newIndex % data.length) + data.length) % data.length);
+  };
 
   const scrollToIndex = (index, animated = true) => {
     if (flatListRef.current) {
-      flatListRef.current.scrollToIndex({
-        index,
-        animated,
-        viewPosition: 0.5,
-      });
+      flatListRef.current.scrollToIndex({ index, animated, viewPosition: 0.5 });
     }
   };
 
   const handleNext = () => {
-    const nextIndex = currentIndex + 1;
+    const nextIndex = currentIndexRef.current + 1;
     scrollToIndex(nextIndex);
-    setCurrentIndex(nextIndex);
+    updateIndices(nextIndex);
   };
 
   const handlePrev = () => {
-    const prevIndex = currentIndex - 1;
+    const prevIndex = currentIndexRef.current - 1;
     scrollToIndex(prevIndex);
-    setCurrentIndex(prevIndex);
+    updateIndices(prevIndex);
   };
 
-  const handleScrollEnd = (event) => {
-    const scrollPosition = event.nativeEvent.contentOffset.x;
-    const index = Math.floor(scrollPosition / CARD_WIDTH);
-    setCurrentIndex(index);
+  // Cuando empieza a arrastrar
+  const handleScrollBeginDrag = () => {
+    isDragging.current = true;
   };
 
-  const handleMomentumScrollEnd = () => {
-    if (infiniteData.length > 0) {
-      if (currentIndex >= data.length * 2) {
-        const newIndex = currentIndex - data.length;
-        flatListRef.current?.scrollToIndex({
-          index: newIndex,
-          animated: false,
-          viewPosition: 0.5,
-        });
-        setCurrentIndex(newIndex);
-      } else if (currentIndex < data.length) {
-        const newIndex = currentIndex + data.length;
-        flatListRef.current?.scrollToIndex({
-          index: newIndex,
-          animated: false,
-          viewPosition: 0.5,
-        });
-        setCurrentIndex(newIndex);
-      }
+  // Cuando termina de arrastrar - calcular el índice más cercano
+  const handleScrollEndDrag = (event) => {
+    const rawIndex = Math.round(event.nativeEvent.contentOffset.x / CARD_WIDTH);
+    const prevIndex = currentIndexRef.current;
+
+    let newIndex = rawIndex;
+
+    if (rawIndex > prevIndex + 1) {
+      newIndex = prevIndex + 1;
+    } else if (rawIndex < prevIndex - 1) {
+      newIndex = prevIndex - 1;
     }
+
+    flatListRef.current?.scrollToIndex({
+      index: newIndex,
+      animated: true,
+      viewPosition: 0.5,
+    });
+
+    updateIndices(newIndex);
+  };
+
+  // Cuando termina el momentum (después del snap)
+  const handleMomentumScrollEnd = (event) => {
+    const newIndex = Math.round(event.nativeEvent.contentOffset.x / CARD_WIDTH);
+
+    // Actualizar índices
+    updateIndices(newIndex);
+
+    // Verificar loop infinito
+    if (infiniteData.length === 0) return;
+
+    if (newIndex >= data.length * 2) {
+      const jumpIndex = newIndex - data.length;
+      flatListRef.current?.scrollToIndex({
+        index: jumpIndex,
+        animated: false,
+        viewPosition: 0.5,
+      });
+      currentIndexRef.current = jumpIndex;
+      setCurrentIndex(jumpIndex);
+    } else if (newIndex < data.length) {
+      const jumpIndex = newIndex + data.length;
+      flatListRef.current?.scrollToIndex({
+        index: jumpIndex,
+        animated: false,
+        viewPosition: 0.5,
+      });
+      currentIndexRef.current = jumpIndex;
+      setCurrentIndex(jumpIndex);
+    }
+
+    isDragging.current = false;
   };
 
   const getItemLayout = (_, index) => ({
@@ -86,7 +141,7 @@ export default function ViolenceCarousel({ data, navigation }) {
     return data[originalIndex];
   };
 
-  const navigateToFormAyuda = (item) => {
+  const navigateToServices = (item) => {
     navigation.navigate("Services", {
       violenceType: item,
       title: item.title,
@@ -103,15 +158,23 @@ export default function ViolenceCarousel({ data, navigation }) {
         data={infiniteData}
         horizontal
         showsHorizontalScrollIndicator={false}
-        pagingEnabled
         snapToInterval={CARD_WIDTH}
         snapToAlignment="center"
-        decelerationRate="fast"
-        onScrollEndDrag={handleScrollEnd}
+        decelerationRate={0.995}
+        disableIntervalMomentum
+        onScrollBeginDrag={handleScrollBeginDrag}
+        onScrollEndDrag={handleScrollEndDrag}
         onMomentumScrollEnd={handleMomentumScrollEnd}
         scrollEventThrottle={16}
         getItemLayout={getItemLayout}
-        initialScrollIndex={data.length}
+        onScrollToIndexFailed={(info) => {
+          setTimeout(() => {
+            flatListRef.current?.scrollToIndex({
+              index: info.index,
+              animated: false,
+            });
+          }, 100);
+        }}
         renderItem={({ item, index }) => {
           const originalItem = getOriginalItem(index);
           return (
@@ -119,10 +182,8 @@ export default function ViolenceCarousel({ data, navigation }) {
               <ViolenceTypeCard
                 title={item.title}
                 description={item.description}
-                // Clonamos el icono con tamaño mayor para la card
                 icon={item.icon}
-                onPressServices={() => navigateToFormAyuda(originalItem)}
-                // onPressInfo está manejado internamente por ViolenceTypeCard (modal)
+                onPressServices={() => navigateToServices(originalItem)}
                 onPressInfo={() => {}}
               />
             </View>
@@ -133,48 +194,63 @@ export default function ViolenceCarousel({ data, navigation }) {
 
       {/* Indicadores y controles */}
       <View style={carouselStyles.indicatorsContainer}>
-        <TouchableOpacity
-          style={carouselStyles.controlButton}
+        {/* Botón anterior */}
+        <Button
+          type="primaryGhost"
+          variant="circle"
+          size="xxs"
           onPress={handlePrev}
+          accessibilityLabel="Anterior"
+          accessibilityHint="Regresa al tipo de violencia anterior"
         >
           <Ionicons
             name="chevron-back"
             size={24}
-            color={styles.semanticColors.text.primary}
+            color={semanticColors.text.primary}
           />
-        </TouchableOpacity>
+        </Button>
 
-        {data.map((_, index) => {
-          const realIndex = currentIndex % data.length;
-          return (
-            <TouchableOpacity
-              key={index}
-              onPress={() => {
-                const targetIndex = data.length + index;
-                scrollToIndex(targetIndex);
-                setCurrentIndex(targetIndex);
-              }}
-            >
-              <View
-                style={[
-                  carouselStyles.indicator,
-                  index === realIndex && carouselStyles.activeIndicator,
-                ]}
-              />
-            </TouchableOpacity>
-          );
-        })}
+        {/* Indicadores */}
+        <View style={carouselStyles.indicators}>
+          {data.map((_, index) => {
+            const isActive = index === realIndex;
+            return (
+              <TouchableOpacity
+                key={index}
+                onPress={() => {
+                  const targetIndex = data.length + index;
+                  scrollToIndex(targetIndex);
+                  updateIndices(targetIndex);
+                }}
+                accessibilityLabel={`Ir al tipo ${index + 1}`}
+                accessibilityHint={`Ver información sobre ${data[index]?.title}`}
+              >
+                <View
+                  style={[
+                    carouselStyles.indicator,
+                    isActive && carouselStyles.activeIndicator,
+                  ]}
+                />
+              </TouchableOpacity>
+            );
+          })}
+        </View>
 
-        <TouchableOpacity
-          style={carouselStyles.controlButton}
+        {/* Botón siguiente */}
+        <Button
+          type="primaryGhost"
+          variant="circle"
+          size="xxs"
           onPress={handleNext}
+          accessibilityLabel="Siguiente"
+          accessibilityHint="Avanza al siguiente tipo de violencia"
         >
           <Ionicons
             name="chevron-forward"
             size={24}
-            color={styles.semanticColors.text.primary}
+            color={semanticColors.text.primary}
           />
-        </TouchableOpacity>
+        </Button>
       </View>
     </View>
   );
@@ -183,35 +259,41 @@ export default function ViolenceCarousel({ data, navigation }) {
 const carouselStyles = StyleSheet.create({
   container: {
     flex: 1,
-    height: "100%",
-    alignContent: "center",
-    alignItems: "center",
-    justifyContent: "center",
   },
   cardWrapper: {
-    justifyContent: "center",
-    paddingHorizontal: styles.spacing.sm, // Separa los componentes que muestra el carrusel
+    padding: spacing.sm,
   },
   indicatorsContainer: {
     flexDirection: "row",
-    ...styles.utilities.center,
-    gap: styles.spacing.md, // Separa un poco más los botones entre sí
-    marginTop: styles.spacing.md, // Separa los botones del contenido de arriba
-    marginBottom: styles.spacing.sm, // Margen inferior
+    alignItems: "center",
+    justifyContent: "center",
+    gap: spacing.lg,
+    marginTop: spacing.md,
+    marginBottom: spacing.sm,
+  },
+  indicators: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: spacing.sm,
   },
   indicator: {
     width: 8,
     height: 8,
-    borderRadius: 4,
-    backgroundColor: styles.semanticColors.border.dark,
+    borderRadius: borderRadius.xs,
+    backgroundColor: semanticColors.border.dark,
   },
   activeIndicator: {
     width: 20,
-    backgroundColor: styles.semanticColors.primary,
+    backgroundColor: semanticColors.primary,
   },
   controlButton: {
-    padding: styles.spacing.sm,
-    borderRadius: styles.borderRadius.circle,
-    backgroundColor: styles.semanticColors.primaryLight,
+    padding: spacing.sm,
+    borderRadius: borderRadius.circle,
+    backgroundColor: semanticColors.primaryLight,
+    width: 40,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

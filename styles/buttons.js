@@ -43,6 +43,12 @@ export const buttonStyles = StyleSheet.create({
   },
 
   // Tamaños
+  xxxs: {
+    width: "5%",
+  },
+  xxs: {
+    width: "10%",
+  },
   xs: {
     width: "20%",
   },
@@ -190,6 +196,15 @@ export const buttonTypes = {
     },
     text: {
       color: semanticColors.text.inverse,
+    },
+  },
+  ghost: {
+    container: {
+      backgroundColor: semanticColors.text.transparent,
+      borderWidth: borderWidth.none,
+    },
+    text: {
+      color: semanticColors.text.primary,
     },
   },
   disabled: {
