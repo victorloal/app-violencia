@@ -10,6 +10,7 @@ import {
   borderWidth,
   shadow,
 } from "../../styles/tokens";
+import { getTypeConfig } from "../../thema/placesTypes";
 
 const categories = [
   { id: "salud", label: "Salud", icon: "medkit-outline" },
@@ -25,34 +26,40 @@ const CategoryFilters = ({ selectedType, onSelectType }) => {
       style={styles.container}
       contentContainerStyle={styles.content}
     >
-      {categories.map((category) => (
-        <TouchableOpacity
-          key={category.id}
-          style={[
-            styles.filterChip,
-            selectedType === category.id && styles.filterChipActive,
-          ]}
-          onPress={() => onSelectType(category.id)}
-          accessible={true}
-          accessibilityLabel={`Filtrar por ${category.label}`}
-          accessibilityRole="button"
-        >
-          <Ionicons
-            name={category.icon}
-            size={18}
-            color={
-              selectedType === category.id ? colors.white : colors.lavender[700]
-            }
-          />
-          <AppText
-            variant="caption"
-            color={selectedType === category.id ? "light" : "secondary"}
-            bold={selectedType === category.id}
+      {categories.map((category) => {
+        const theme = getTypeConfig(category.id);
+        const isActive = selectedType === category.id;
+
+        return (
+          <TouchableOpacity
+            key={category.id}
+            style={[
+              styles.filterChip,
+              isActive && {
+                backgroundColor: theme.primary,
+                borderColor: theme.primary,
+              },
+            ]}
+            onPress={() => onSelectType(category.id)}
+            accessible={true}
+            accessibilityLabel={`Filtrar por ${category.label}`}
+            accessibilityRole="button"
           >
-            {category.label}
-          </AppText>
-        </TouchableOpacity>
-      ))}
+            <Ionicons
+              name={category.icon}
+              size={18}
+              color={isActive ? colors.white : theme.primary}
+            />
+            <AppText
+              variant="caption"
+              color={isActive ? "light" : "secondary"}
+              bold={isActive}
+            >
+              {category.label}
+            </AppText>
+          </TouchableOpacity>
+        );
+      })}
     </ScrollView>
   );
 };
@@ -78,11 +85,6 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
     borderWidth: borderWidth.thin,
     borderColor: colors.lavender[200],
-  },
-  filterChipActive: {
-    backgroundColor: colors.lavender[600],
-    borderColor: colors.lavender[600],
-    ...shadow.sm,
   },
 });
 

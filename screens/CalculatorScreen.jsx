@@ -35,17 +35,17 @@ const SZ = Math.min(BTN, ROW_H);
 // ── Paleta ──────────────────────────────────────────────────────
 const C = {
   bg: "#1c1c1e",
-  topBtn: "#a5a5a5",
-  topBtnText: "#000000",
-  opBtn: "#ff9f0a",
+  topBtn: "#623284",
+  topBtnText: "#ffffff",
+  opBtn: "#801AD3",
   opBtnText: "#ffffff",
-  opActive: "#ffffff",
-  opActiveTxt: "#ff9f0a",
-  numBtn: "#333335",
+  opActive: "#801AD3",
+  opActiveTxt: "#ffffffff",
+  numBtn: "#82368C",
   numBtnText: "#ffffff",
-  eqBtn: "#ff9f0a",
+  eqBtn: "#F31A73",
   eqBtnText: "#ffffff",
-  hint: "rgba(255,255,255,0.18)",
+  hint: "#623284",
 };
 
 const BUTTONS = [

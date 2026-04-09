@@ -33,10 +33,14 @@ export default function EmergencyScreen({ navigation }) {
           <View style={styles.initialMessage}>
             <Ionicons
               name="information-circle"
-              size={24}
+              size={30}
               color={colors.lavender[600]}
             />
-            <AppText variant="body" color="secondary">
+            <AppText
+              variant="body"
+              color="secondary"
+              style={styles.initialMessageText}
+            >
               Estos números pueden ayudarte en caso de emergencia
             </AppText>
           </View>
@@ -95,13 +99,17 @@ const styles = StyleSheet.create({
   initialMessage: {
     width: "100%",
     flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: colors.lavender[50],
+    backgroundColor: colors.magenta[50],
     padding: spacing.md,
     borderRadius: borderRadius.md,
     gap: spacing.sm,
     borderWidth: borderWidth.thin,
-    borderColor: colors.lavender[200],
+    borderColor: colors.magenta[100],
+  },
+
+  initialMessageText: {
+    flex: 1,
+    flexWrap: "wrap",
   },
 
   // Separador de sección

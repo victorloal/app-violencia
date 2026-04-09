@@ -5,15 +5,23 @@ import { Ionicons } from "@expo/vector-icons";
 import AppText from "../UI/AppText";
 import { colors } from "../../thema/colors";
 import { spacing, borderRadius, borderWidth } from "../../styles/tokens";
+import { getTypeConfig } from "../../thema/placesTypes";
 
 const CategoryHeader = ({ type, title, description, icon }) => {
+  const theme = getTypeConfig(type);
+
   return (
-    <View style={styles.container}>
-      <View style={styles.iconContainer}>
-        <Ionicons name={icon} size={28} color={colors.lavender[600]} />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <View
+        style={[
+          styles.iconContainer,
+          { backgroundColor: theme.badgeBg, borderColor: theme.border },
+        ]}
+      >
+        <Ionicons name={icon} size={28} color={theme.primary} />
       </View>
       <View style={styles.textContainer}>
-        <AppText variant="h2" color="primary">
+        <AppText variant="h2" style={{ color: theme.primary }}>
           {title}
         </AppText>
         <AppText variant="body" color="secondary">
@@ -32,7 +40,6 @@ const styles = StyleSheet.create({
     paddingTop: spacing.lg,
     paddingBottom: spacing.md,
     gap: spacing.md,
-    backgroundColor: colors.white,
     borderBottomWidth: borderWidth.thin,
     borderBottomColor: colors.lavender[100],
   },
@@ -40,11 +47,9 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: borderRadius.xl,
-    backgroundColor: colors.lavender[100],
     alignItems: "center",
     justifyContent: "center",
     borderWidth: borderWidth.thin,
-    borderColor: colors.lavender[200],
   },
   textContainer: {
     flex: 1,

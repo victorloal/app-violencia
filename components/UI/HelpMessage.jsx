@@ -1,14 +1,15 @@
 // components/Places/HelpMessage.jsx
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AppText from "../UI/AppText";
 import { colors } from "../../thema/colors";
 import { spacing, borderRadius, borderWidth } from "../../styles/tokens";
+import { linkingService } from "../../services/linkingService";
 
 const HelpMessage = () => {
   const handleEmergencyCall = () => {
-    mapService.makePhoneCall("123");
+    linkingService.makePhoneCall("123");
   };
 
   return (

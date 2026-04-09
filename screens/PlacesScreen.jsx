@@ -5,6 +5,11 @@ import MainLayout from "../components/Layout/MainLayout";
 import { colors } from "../thema/colors";
 import { spacing } from "../styles/tokens";
 import CategoryHeader from "../components/UI/CategoryHeader";
+import CategoryFilters from "../components/UI/CategoryFilters";
+import PlaceCard from "../components/UI/PlaceCard";
+import EmptyState from "../components/UI/EmptyState";
+import HelpMessage from "../components/UI/HelpMessage";
+import { usePlaces } from "../hooks/usePlaces";
 
 export default function PlacesScreen({ route }) {
   const { tipo = "salud" } = route.params || {};

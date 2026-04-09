@@ -171,6 +171,26 @@ export const linkingService = {
       return false;
     }
   },
+
+  // ===== NAVEGACIÓN MAPS =====
+  openMapsNavigation: async (latitude, longitude) => {
+    try {
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
+      const supported = await Linking.canOpenURL(url);
+
+      if (supported) {
+        await Linking.openURL(url);
+        return true;
+      } else {
+        Alert.alert("Error", "No se pudo abrir Google Maps");
+        return false;
+      }
+    } catch (error) {
+      console.error("Error en openMapsNavigation:", error);
+      Alert.alert("Error", "No se pudo abrir Google Maps");
+      return false;
+    }
+  },
 };
 
 // Función helper para permisos de ubicación

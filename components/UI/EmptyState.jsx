@@ -1,23 +1,27 @@
-// components/Places/EmptyState.jsx
+// components/UI/EmptyState.jsx
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import AppText from "../UI/AppText";
+import AppText from "./AppText";
 import { colors } from "../../thema/colors";
-import { spacing } from "../../styles/tokens";
+import { spacing, borderRadius } from "../../styles/tokens";
+import { getTypeConfig } from "../../thema/placesTypes";
 
-const EmptyState = ({
-  message = "No hay lugares disponibles en esta categoría",
-}) => {
+const EmptyState = ({ type = "salud" }) => {
+  const theme = getTypeConfig(type);
+
   return (
     <View style={styles.container}>
-      <Ionicons
-        name="alert-circle-outline"
-        size={48}
-        color={colors.lavender[300]}
-      />
-      <AppText variant="body" color="secondary" style={styles.text}>
-        {message}
+      <View
+        style={[styles.iconContainer, { backgroundColor: theme.background }]}
+      >
+        <Ionicons name="sad-outline" size={48} color={theme.primary} />
+      </View>
+      <AppText variant="h3" style={styles.title}>
+        No hay lugares disponibles
+      </AppText>
+      <AppText variant="body" color="tertiary" style={styles.message}>
+        No encontramos {theme.title.toLowerCase()} cerca de tu ubicación
       </AppText>
     </View>
   );
@@ -30,7 +34,18 @@ const styles = StyleSheet.create({
     padding: spacing.xxl,
     gap: spacing.md,
   },
-  text: {
+  iconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: spacing.md,
+  },
+  title: {
+    textAlign: "center",
+  },
+  message: {
     textAlign: "center",
   },
 });

@@ -1,9 +1,9 @@
-// components/Places/PlaceCard.jsx
+// components/UI/PlaceCard.jsx
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import AppText from "../UI/AppText";
-import Button from "../UI/Button";
+import AppText from "./AppText";
+import Button from "./Button";
 import { colors } from "../../thema/colors";
 import {
   spacing,
@@ -11,45 +11,42 @@ import {
   borderWidth,
   shadow,
 } from "../../styles/tokens";
-
-const getIconByType = (tipo) => {
-  switch (tipo) {
-    case "salud":
-      return "medkit-outline";
-    case "protección":
-      return "shield-outline";
-    case "justicia":
-      return "scale-outline";
-    default:
-      return "location-outline";
-  }
-};
+import { linkingService } from "../../services/linkingService";
+import { getTypeConfig } from "../../thema/placesTypes";
 
 const PlaceCard = ({ place }) => {
+  const theme = getTypeConfig(place.tipo);
+
   const handleCall = () => {
-    mapService.makePhoneCall(place.telefono);
+    linkingService.makePhoneCall(place.telefono);
   };
 
   const handleNavigate = () => {
-    mapService.openMaps(place.latitud, place.longitud, place.direccion);
+    linkingService.openMapsNavigation(place.latitud, place.longitud);
   };
 
   return (
-    <View style={styles.card}>
+    <View
+      style={[
+        styles.card,
+        { borderLeftWidth: 4, borderLeftColor: theme.primary },
+      ]}
+    >
       <View style={styles.header}>
-        <View style={styles.iconContainer}>
-          <Ionicons
-            name={getIconByType(place.tipo)}
-            size={24}
-            color={colors.lavender[700]}
-          />
+        <View
+          style={[
+            styles.iconContainer,
+            { backgroundColor: theme.background, borderColor: theme.border },
+          ]}
+        >
+          <Ionicons name={theme.icon} size={24} color={theme.primary} />
         </View>
         <View style={styles.titleContainer}>
           <AppText variant="h3" color="primary" numberOfLines={2}>
             {place.nombre}
           </AppText>
-          <View style={styles.typeBadge}>
-            <AppText variant="caption" color="secondary">
+          <View style={[styles.typeBadge, { backgroundColor: theme.badgeBg }]}>
+            <AppText variant="caption" style={{ color: theme.text }}>
               {place.tipo.charAt(0).toUpperCase() + place.tipo.slice(1)}
             </AppText>
           </View>
@@ -77,12 +74,10 @@ const PlaceCard = ({ place }) => {
           size="flex"
           onPress={handleCall}
           iconLeft={
-            <Ionicons
-              name="call-outline"
-              size={18}
-              color={colors.lavender[700]}
-            />
+            <Ionicons name="call-outline" size={18} color={theme.primary} />
           }
+          style={{ borderColor: theme.primary }}
+          textStyle={{ color: theme.primary }}
         >
           Llamar
         </Button>
@@ -94,6 +89,7 @@ const PlaceCard = ({ place }) => {
           iconLeft={
             <Ionicons name="navigate-outline" size={18} color={colors.white} />
           }
+          style={{ backgroundColor: theme.buttonBg }}
         >
           Cómo llegar
         </Button>
@@ -130,18 +126,15 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: borderRadius.md,
-    backgroundColor: colors.lavender[100],
     alignItems: "center",
     justifyContent: "center",
     borderWidth: borderWidth.thin,
-    borderColor: colors.lavender[200],
   },
   titleContainer: {
     flex: 1,
     gap: spacing.xxs,
   },
   typeBadge: {
-    backgroundColor: colors.lavender[100],
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xxs,
     borderRadius: borderRadius.pill,
