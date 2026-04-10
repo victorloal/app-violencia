@@ -69,7 +69,7 @@ export default function CalculatorScreen({ onUnlock, isTutorial = false }) {
   const [activeOp, setActiveOp] = useState(null);
   const [showInstructions, setShowInstructions] = useState(false);
 
-  // Mostrar instrucciones solo la primera vez que abre calculadora
+  // Mostrar instrucciones solo la primera vez que abre calculadora (independiente de main tutorial)
   useEffect(() => {
     const checkFirstTime = async () => {
       const hasSeenCalcInstructions = await AsyncStorage.getItem(
@@ -302,8 +302,10 @@ export default function CalculatorScreen({ onUnlock, isTutorial = false }) {
       </SafeLayout>
 
       {/* ── Modal de instrucciones para tutorial ── */}
-      {isTutorial && (
-        <Modal visible={showInstructions} transparent animationType="fade">
+      {showInstructions && (
+        <Modal visible={true} transparent animationType="fade"
+          onRequestClose={() => setShowInstructions(false)}
+        >
           <SafeAreaView style={styles.instructionsOverlay}>
             <View style={styles.instructionsContainer}>
               {/* Instrucción 1: Uso normal */}

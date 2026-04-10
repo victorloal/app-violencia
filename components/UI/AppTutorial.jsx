@@ -89,6 +89,7 @@ export default function AppTutorial({ onDone, onOpenCalcDemo, isTutorialDemo }) 
   const [step, setStep]       = useState(0);
   const fadeAnim              = useRef(new Animated.Value(0)).current;
   const scaleAnim             = useRef(new Animated.Value(0.88)).current;
+  const spotlightGlowAnim     = useRef(new Animated.Value(0.4)).current;
 
   // Solo mostrar la primera vez
   useEffect(() => {
@@ -116,6 +117,26 @@ export default function AppTutorial({ onDone, onOpenCalcDemo, isTutorialDemo }) 
       setVisible(true);
     }
   }, [isTutorialDemo]);
+
+  // Animación de pulso del spotlight
+  useEffect(() => {
+    if (!visible) return;
+    spotlightGlowAnim.setValue(0.4);
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(spotlightGlowAnim, { 
+          toValue: 1, 
+          duration: 1000, 
+          useNativeDriver: false 
+        }),
+        Animated.timing(spotlightGlowAnim, { 
+          toValue: 0.4, 
+          duration: 1000, 
+          useNativeDriver: false 
+        }),
+      ])
+    ).start();
+  }, [visible]);
 
   const current = STEPS[step];
   const isLast  = step === STEPS.length - 1;
@@ -195,18 +216,36 @@ export default function AppTutorial({ onDone, onOpenCalcDemo, isTutorialDemo }) 
 
         {/* Spotlight circular */}
         {current.spotlightX && current.spotlightY && (
-          <View
+          <Animated.View
             pointerEvents="none"
             style={[
-              tutStyles.spotlight,
+              tutStyles.spotlightWrapper,
               {
-                left:   current.spotlightX - 44,
-                top:    current.spotlightY - 44,
-                width:  88,
-                height: 88,
+                left: current.spotlightX - 60,
+                top: current.spotlightY - 60,
               },
             ]}
-          />
+          >
+            <Animated.View 
+              style={[
+                tutStyles.spotlight,
+                {
+                  opacity: spotlightGlowAnim,
+                }
+              ]} 
+            />
+            <Animated.View 
+              style={[
+                tutStyles.spotlightInner,
+                {
+                  opacity: spotlightGlowAnim.interpolate({
+                    inputRange: [0.4, 1],
+                    outputRange: [0.5, 1],
+                  }),
+                }
+              ]} 
+            />
+          </Animated.View>
         )}
 
         {/* Tooltip */}
@@ -320,17 +359,42 @@ const tutStyles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.74)",
   },
 
+  spotlightWrapper: {
+    position: "absolute",
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    overflow: 'hidden',
+  },
   spotlight: {
     position: "absolute",
-    borderRadius: 44,
-    backgroundColor: "rgba(255,255,255,0.12)",
-    borderWidth: 2.5,
-    borderColor: "rgba(255,255,255,0.55)",
-    shadowColor: colors.white,
+    top: 5,
+    left: 5,
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    backgroundColor: "rgba(255,255,255,0.3)",
+    borderWidth: 2,
+    borderColor: "rgba(255,255,255,0.5)",
+    shadowColor: '#F31A73',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.8,
+    shadowRadius: 30,
+  },
+  spotlightInner: {
+    position: "absolute",
+    top: 15,
+    left: 15,
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    borderWidth: 1.5,
+    borderColor: "rgba(255,255,255,0.4)",
+    shadowColor: '#82368C',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.7,
-    shadowRadius: 14,
-    elevation: 12,
+    shadowRadius: 20,
   },
 
   tooltip: {
