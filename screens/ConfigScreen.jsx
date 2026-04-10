@@ -105,7 +105,7 @@ export default function ConfigScreen({ navigation }) {
       <View
         style={styles.header}
         accessible={true}
-        accessibilityLabel="Configuración, personaliza tu experiencia"
+        accessibilityLabel="Configuración"
         accessibilityRole="header"
       >
         <View style={styles.headerIconContainer}>
@@ -113,9 +113,6 @@ export default function ConfigScreen({ navigation }) {
         </View>
         <AppText variant="h1" accessible={false}>
           Configuración
-        </AppText>
-        <AppText variant="h3" tone="muted" accessible={false}>
-          Personaliza tu experiencia
         </AppText>
       </View>
 
@@ -555,6 +552,7 @@ const styles = StyleSheet.create({
     textAlign: "flex-start",
   },
   fixedButtonContainer: {
+    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 20,
@@ -565,13 +563,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 10,
-    gap: 15,
+    gap: 10,
   },
   cancelButton: {
     flex: 2,
   },
   saveButton: {
-    flex: 3,
+    flex: 2,
   },
   messagePreviewContainer: {
     marginTop: 12,

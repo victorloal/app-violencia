@@ -12,7 +12,7 @@ SplashScreen.preventAutoHideAsync();
 
 export function App() {
   const [fontsLoaded, fontError] = useFonts({
-    "Verdana": require("./assets/fonts/Verdana.ttf"),
+    Verdana: require("./assets/fonts/Verdana.ttf"),
     "Verdana-Bold": require("./assets/fonts/Verdana-Bold.ttf"),
   });
 

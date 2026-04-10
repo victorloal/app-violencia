@@ -13,6 +13,7 @@ import AppTutorial from "../UI/AppTutorial";
 import CalculatorScreen from "../../screens/CalculatorScreen";
 import { colors } from "../../thema/colors";
 import { linkingService } from "../../services/linkingService";
+import Call24 from "../../assets/icons/Call24";
 
 export default function MainLayout({ children }) {
   const { setIsCamouflageOn, phoneNumber } = useContext(SettingsContext);
@@ -63,11 +64,9 @@ export default function MainLayout({ children }) {
             accessibilityLabel="Enviar mensaje"
             accessibilityHint="Abre la app de mensajes para enviar un SMS a tu contacto de confianza"
           >
-            <View
-              style={layoutStyles.btnContent}
-            >
+            <View style={layoutStyles.btnContent}>
               <Ionicons
-                name="mail"
+                name="logo-whatsapp"
                 size={30}
                 color={styles.semanticColors.primary}
               />
@@ -89,16 +88,19 @@ export default function MainLayout({ children }) {
             accessibilityHint="Ver lugares de emergencia para realizar una llamada"
           >
             <View
-              style={[layoutStyles.btnContent, { height: "100%", width: "100%" }]}
+              style={[
+                layoutStyles.btnContent,
+                { height: "100%", width: "100%" },
+              ]}
             >
-              <Ionicons
-                name="call"
-                size={35}
-                color={styles.semanticColors.text.inverse}
+              <Call24
+                width={45}
+                height={45}
+                fill={styles.semanticColors.text.inverse}
               />
-              <AppText variant="body" bold color="light">
+              {/* <AppText variant="body" bold color="light">
                 24/7
-              </AppText>
+              </AppText> */}
             </View>
           </Button>
 
@@ -110,9 +112,7 @@ export default function MainLayout({ children }) {
             accessibilityLabel="Salir con camuflaje"
             accessibilityHint="Abre una calculadora para ocultar la aplicación"
           >
-            <View
-              style={layoutStyles.btnContent}
-            >
+            <View style={layoutStyles.btnContent}>
               <Ionicons
                 name="calculator"
                 size={30}
@@ -127,8 +127,11 @@ export default function MainLayout({ children }) {
       </View>
 
       {/* ── Tutorial de primera vez ── */}
-      <AppTutorial onOpenCalcDemo={handleOpenCalcDemo} isTutorialDemo={isTutorialDemo} />
-      
+      <AppTutorial
+        onOpenCalcDemo={handleOpenCalcDemo}
+        isTutorialDemo={isTutorialDemo}
+      />
+
       {/* ── Calculadora en Modal de pantalla completa ── */}
       <Modal
         visible={calcVisible}
@@ -165,7 +168,7 @@ const layoutStyles = StyleSheet.create({
     elevation: 100,
     ...styles.shadow.xs,
   },
-    btnContent: {
+  btnContent: {
     alignItems: "center",
     height: "100%",
     width: "100%",

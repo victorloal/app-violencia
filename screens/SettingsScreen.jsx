@@ -106,7 +106,7 @@ export default function SettingsScreen({ navigation }) {
       <View
         style={styles.header}
         accessible={true}
-        accessibilityLabel="Configuración, personaliza tu experiencia"
+        accessibilityLabel="Configuración"
         accessibilityRole="header"
       >
         <View style={styles.headerIconContainer}>
@@ -114,9 +114,6 @@ export default function SettingsScreen({ navigation }) {
         </View>
         <AppText variant="h1" accessible={false}>
           Configuración
-        </AppText>
-        <AppText variant="h3" tone="muted" accessible={false}>
-          Personaliza tu experiencia
         </AppText>
       </View>
 
@@ -446,6 +443,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 30,
     marginTop: 20,
+    paddingHorizontal: 20,
   },
   headerIconContainer: {
     width: 70,
@@ -566,13 +564,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 10,
-    gap: 15,
+    gap: 10,
   },
   cancelButton: {
     flex: 2,
   },
   saveButton: {
-    flex: 3,
+    flex: 2,
   },
   messagePreviewContainer: {
     marginTop: 12,

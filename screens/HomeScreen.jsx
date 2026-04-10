@@ -19,49 +19,49 @@ const violenceTypes = [
     title: "Violencia Física",
     description:
       "Golpes, empujones, quemaduras o ataque con armas, objectos o líquidos químicos.",
-    icon: <ViolenciaFísicaIcon width={140} height={140} />,
+    icon: <ViolenciaFísicaIcon width={100} height={100} />,
   },
   {
     id: "1",
     title: "Violencia Sexual",
     description:
       "Manoseo, acoso, relaciones o actos sexuales en contra de su voluntad.",
-    icon: <ViolenciaSexualIcon width={140} height={140} />,
+    icon: <ViolenciaSexualIcon width={100} height={100} />,
   },
   {
     id: "2",
     title: "Violencia Psicológica",
     description:
       "Insultos, humillaciones, chantaje, descalificaciones, burlas, amenazas contra su vida, la de sus hijos, hijas u otros integrantes de su familia, celos extremos e intentos de control",
-    icon: <ViolenciaPsicológicaIcon width={140} height={140} />,
+    icon: <ViolenciaPsicológicaIcon width={100} height={100} />,
   },
   {
     id: "3",
     title: "Violencia Económica",
     description:
       "Limitación y control para el uso del dinero, destrucción de elementos de trabajo, prohibición para el uso de sus pertenecias y documentos personales, entre otros.",
-    icon: <ViolenciaEconómicaIcon width={140} height={140} />,
+    icon: <ViolenciaEconómicaIcon width={100} height={100} />,
   },
   {
     id: "4",
     title: "Violencia Patrimonial",
     description:
       "Destrucción de objetos personales, bienes materiales o patrimoniales, manipulación o control sobre el acceso a bienes familiares, entre otros.",
-    icon: <ViolenciaPatrimonialIcon width={140} height={140} />,
+    icon: <ViolenciaPatrimonialIcon width={100} height={100} />,
   },
   {
     id: "5",
     title: "Violencia Digital",
     description:
       "Acoso, suplantación de identidad, compartición de contenido íntimo sin consentimiento, ciberacoso o control mediante dispositivos digitales.",
-    icon: <ViolenciaDigitalIcon width={140} height={140} />,
+    icon: <ViolenciaDigitalIcon width={100} height={100} />,
   },
   {
     id: "6",
     title: "Violencia Vicaria",
     description:
       "Violencia ejercida sobre hijos, hijas u otros integrantes de la familia como forma de causar daño a la mujer.",
-    icon: <ViolenciaVicariaIcon width={140} height={140} />,
+    icon: <ViolenciaVicariaIcon width={100} height={100} />,
   },
 ];
 

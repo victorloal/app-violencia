@@ -178,7 +178,9 @@ export default function FormScreen({ navigation }) {
                         width={22}
                         height={22}
                         color={
-                          isSelected ? colors.lavender[600] : colors.neutral[500]
+                          isSelected
+                            ? colors.lavender[600]
+                            : colors.neutral[500]
                         }
                       />
                     ) : option.icon === "urbano" ? (
@@ -186,7 +188,9 @@ export default function FormScreen({ navigation }) {
                         width={22}
                         height={22}
                         color={
-                          isSelected ? colors.lavender[600] : colors.neutral[500]
+                          isSelected
+                            ? colors.lavender[600]
+                            : colors.neutral[500]
                         }
                       />
                     ) : (
@@ -194,7 +198,9 @@ export default function FormScreen({ navigation }) {
                         name={option.icon}
                         size={22}
                         color={
-                          isSelected ? colors.lavender[600] : colors.neutral[500]
+                          isSelected
+                            ? colors.lavender[600]
+                            : colors.neutral[500]
                         }
                       />
                     )}

@@ -43,9 +43,7 @@ export default function ViolenceTypeCard({
         </AppText>
 
         {/* Icono grande centrado */}
-        <View style={[components.iconContainerLarge, cardStyles.iconContainer]}>
-          {icon}
-        </View>
+        <View style={[cardStyles.iconContainer]}>{icon}</View>
 
         {/* Descripción con scroll */}
         <ScrollView
@@ -207,16 +205,14 @@ const cardStyles = StyleSheet.create({
   },
   title: {
     textAlign: "center",
-    marginBottom: spacing.md,
+    marginBottom: spacing.xs,
     color: semanticColors.text.primary,
   },
   iconContainer: {
-    width: 130,
-    height: 130,
-    borderRadius: 50,
+    width: 100,
+    height: 100,
     alignSelf: "center",
-    marginBottom: spacing.lg,
-    ...shadow.sm,
+    marginBottom: spacing.xs,
   },
   descriptionContainer: {
     flex: 1,
