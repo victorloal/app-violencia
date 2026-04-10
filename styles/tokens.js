@@ -70,6 +70,12 @@ export const zIndex = {
   modal: 100,
   toast: 1000,
 };
+
+export const fonts = {
+  regular: "Verdana",
+  bold: "Verdana-Bold",
+};
+
 export const shadow = {
   none: {
     shadowColor: "transparent",

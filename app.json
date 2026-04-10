@@ -32,7 +32,8 @@
         {
           "locationWhenInUsePermission": "La app necesita tu ubicación para enviarla en emergencias."
         }
-      ]
+      ],
+      "expo-font"
     ]
   }
 }
