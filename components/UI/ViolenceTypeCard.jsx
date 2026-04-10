@@ -211,8 +211,8 @@ const cardStyles = StyleSheet.create({
     color: semanticColors.text.primary,
   },
   iconContainer: {
-    width: 70,
-    height: 70,
+    width: 130,
+    height: 130,
     borderRadius: 50,
     alignSelf: "center",
     marginBottom: spacing.lg,
@@ -269,8 +269,8 @@ const cardStyles = StyleSheet.create({
     marginTop: spacing.xs,
   },
   modalIconContainer: {
-    width: 80,
-    height: 80,
+    width: 90,
+    height: 90,
     borderRadius: 40,
     marginBottom: spacing.sm,
     borderWidth: borderWidth.md,

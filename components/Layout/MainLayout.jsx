@@ -18,6 +18,7 @@ export default function MainLayout({ children }) {
   const { setIsCamouflageOn, phoneNumber } = useContext(SettingsContext);
   const navigation = useNavigation();
   const [calcVisible, setCalcVisible] = useState(false);
+  const [isTutorialDemo, setIsTutorialDemo] = useState(false);
 
   // Abre la calculadora (activa camuflaje en contexto)
   const handleExitCamouflage = () => {
@@ -29,6 +30,14 @@ export default function MainLayout({ children }) {
   const handleUnlock = () => {
     setIsCamouflageOn(false);
     setCalcVisible(false);
+    setIsTutorialDemo(false);
+  };
+
+  // Para demo del tutorial
+  const handleOpenCalcDemo = () => {
+    setIsTutorialDemo(true);
+    setIsCamouflageOn(true);
+    setCalcVisible(true);
   };
 
   const handleCallButtonPress = () => {
@@ -118,7 +127,7 @@ export default function MainLayout({ children }) {
       </View>
 
       {/* ── Tutorial de primera vez ── */}
-      <AppTutorial />
+      <AppTutorial onOpenCalcDemo={handleOpenCalcDemo} isTutorialDemo={isTutorialDemo} />
       
       {/* ── Calculadora en Modal de pantalla completa ── */}
       <Modal
@@ -128,7 +137,7 @@ export default function MainLayout({ children }) {
         statusBarTranslucent
         onRequestClose={() => {}}
       >
-        <CalculatorScreen onUnlock={handleUnlock} />
+        <CalculatorScreen onUnlock={handleUnlock} isTutorial={isTutorialDemo} />
       </Modal>
     </SafeLayout>
   );

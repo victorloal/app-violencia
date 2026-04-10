@@ -24,7 +24,7 @@ const STEPS = [
   {
     id: 1,
     icon: "hand-left-outline",
-    title: "Bienvenida a Sorora",
+    title: "Bienvenida a Perla",
     description:
       "Te mostramos cómo usar las funciones principales de la app en pocos pasos. Puedes cerrar este tutorial en cualquier momento.",
     tooltipSide: "center",
@@ -39,7 +39,7 @@ const STEPS = [
       "Toca el ícono de engranaje para configurar la app: tamaño de letra, accesibilidad, contraste y el número de tu contacto de emergencia.",
     tooltipSide: "bottom",
     spotlightX: width - 80,       
-    spotlightY: height * 0.080,   
+    spotlightY: height * 0.088,   
   },
   {
     id: 3,
@@ -48,8 +48,8 @@ const STEPS = [
     description:
       "Envía tu ubicación por WhatsApp a tu contacto de confianza con un solo toque. Úsalo cuando necesites que alguien sepa dónde estás.",
     tooltipSide: "top",
-    spotlightX: width * 0.13,
-    spotlightY: height - height * 0.075,
+    spotlightX: width * 0.175,
+    spotlightY: height - height * 0.068,
   },
   {
     id: 4,
@@ -59,7 +59,7 @@ const STEPS = [
       "Accede a los centros de atención de emergencia. Mantén presionado para llamar directamente a tu contacto de confianza.",
     tooltipSide: "top",
     spotlightX: width * 0.5,
-    spotlightY: height - height * 0.075,
+    spotlightY: height - height * 0.072,
   },
   {
     id: 5,
@@ -68,8 +68,9 @@ const STEPS = [
     description:
       "Oculta la app convirtiéndola en una calculadora. Para volver, mantén presionado el botón '=' de la calculadora.",
     tooltipSide: "top",
-    spotlightX: width * 0.87,
-    spotlightY: height - height * 0.075,
+    spotlightX: width * 0.825,
+    spotlightY: height - height * 0.068,
+    hasDemo: true,
   },
   {
     id: 6,
@@ -83,7 +84,7 @@ const STEPS = [
   },
 ];
 
-export default function AppTutorial({ onDone }) {
+export default function AppTutorial({ onDone, onOpenCalcDemo, isTutorialDemo }) {
   const [visible, setVisible] = useState(false);
   const [step, setStep]       = useState(0);
   const fadeAnim              = useRef(new Animated.Value(0)).current;
@@ -107,10 +108,31 @@ export default function AppTutorial({ onDone }) {
     ]).start();
   }, [step, visible]);
 
+  // Cuando termina la demo de calculadora, continuar al siguiente paso
+  useEffect(() => {
+    if (isTutorialDemo === false && step === 4) {
+      // Volvió de la calculadora, mostrar tutorial nuevamente y continuar
+      setStep((s) => s + 1);
+      setVisible(true);
+    }
+  }, [isTutorialDemo]);
+
   const current = STEPS[step];
   const isLast  = step === STEPS.length - 1;
 
+  // Si tutorial demo está activo, ocultar el modal principal
+  if (isTutorialDemo) {
+    return null;
+  }
+
   const handleNext = () => {
+    // Si es el paso con demo de calculadora, abrir calculadora
+    if (current.hasDemo && onOpenCalcDemo) {
+      setVisible(false);
+      onOpenCalcDemo();
+      return;
+    }
+
     if (isLast) handleClose();
     else setStep((s) => s + 1);
   };
@@ -245,9 +267,9 @@ export default function AppTutorial({ onDone }) {
             <Button type="primary" size="md" onPress={handleNext} style={tutStyles.nextBtn}>
               <View style={tutStyles.nextContent}>
                 <AppText variant="body" bold color="light">
-                  {isLast ? "¡Entendido!" : "Continuar"}
+                  {current.hasDemo ? "Ver demostración" : isLast ? "¡Entendido!" : "Continuar"}
                 </AppText>
-                {!isLast && (
+                {!isLast && !current.hasDemo && (
                   <Ionicons
                     name="arrow-forward"
                     size={15}

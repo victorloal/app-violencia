@@ -4,7 +4,13 @@ import { colors } from "../thema/colors";
 import MainLayout from "../components/Layout/MainLayout";
 import AppText from "../components/UI/AppText";
 import ViolenceCarousel from "../components/UI/ViolenceCarousel";
-import { Ionicons } from "@expo/vector-icons";
+import ViolenciaFísicaIcon from "../assets/icons/ViolenciaFísica";
+import ViolenciaSexualIcon from "../assets/icons/ViolenciaSexual";
+import ViolenciaPsicológicaIcon from "../assets/icons/ViolenciaPsicológica";
+import ViolenciaEconómicaIcon from "../assets/icons/ViolenciaEconómica";
+import ViolenciaPatrimonialIcon from "../assets/icons/ViolenciaPatrimonial";
+import ViolenciaDigitalIcon from "../assets/icons/ViolenciaDigital";
+import ViolenciaVicariaIcon from "../assets/icons/ViolenciaVicaria";
 
 // Datos de ejemplo para los tipos de violencia
 const violenceTypes = [
@@ -13,44 +19,49 @@ const violenceTypes = [
     title: "Violencia Física",
     description:
       "Golpes, empujones, quemaduras o ataque con armas, objectos o líquidos químicos.",
-    icon: <Ionicons name="fitness" size={40} color={colors.lavender[700]} />,
+    icon: <ViolenciaFísicaIcon width={140} height={140} />,
   },
   {
     id: "1",
-    title: "Violencia Psicológica",
-    description:
-      "Insultos, humillaciones, chantaje, descalificaciones, burlas, amenazas contra su vida, la de sus hijos, hijas u otros integrantes de su familia, celos extremos e intentos de control",
-    icon: <Ionicons name="sad" size={40} color={colors.lavender[700]} />,
-  },
-  {
-    id: "2",
-    title: "Violencia Económica",
-    description:
-      "Limitación y control para el uso del dinero, destrucción de elementos de trabajo, prohibición para el uso de sus pertenecias y documentos personales, entre otros.",
-    icon: <Ionicons name="cash" size={40} color={colors.lavender[700]} />,
-  },
-  {
-    id: "3",
-    title: "Violencia Patrimonial",
-    description:
-      "Destrucción de objetos personales, bienes materiales o patrimoniales, manipulación o control sobre el acceso a bienes familiares, entre otros.",
-    icon: <Ionicons name="key" size={40} color={colors.lavender[700]} />,
-  },
-  {
-    id: "4",
     title: "Violencia Sexual",
     description:
       "Manoseo, acoso, relaciones o actos sexuales en contra de su voluntad.",
-    icon: (
-      <Ionicons name="heart-dislike" size={40} color={colors.lavender[700]} />
-    ),
+    icon: <ViolenciaSexualIcon width={140} height={140} />,
+  },
+  {
+    id: "2",
+    title: "Violencia Psicológica",
+    description:
+      "Insultos, humillaciones, chantaje, descalificaciones, burlas, amenazas contra su vida, la de sus hijos, hijas u otros integrantes de su familia, celos extremos e intentos de control",
+    icon: <ViolenciaPsicológicaIcon width={140} height={140} />,
+  },
+  {
+    id: "3",
+    title: "Violencia Económica",
+    description:
+      "Limitación y control para el uso del dinero, destrucción de elementos de trabajo, prohibición para el uso de sus pertenecias y documentos personales, entre otros.",
+    icon: <ViolenciaEconómicaIcon width={140} height={140} />,
+  },
+  {
+    id: "4",
+    title: "Violencia Patrimonial",
+    description:
+      "Destrucción de objetos personales, bienes materiales o patrimoniales, manipulación o control sobre el acceso a bienes familiares, entre otros.",
+    icon: <ViolenciaPatrimonialIcon width={140} height={140} />,
   },
   {
     id: "5",
-    title: "Violencia Intrafamiliar",
+    title: "Violencia Digital",
     description:
-      "Violencia que ocurre dentro del núcleo familiar, ya sea física, psicológica, económica, patrimonial o sexual.",
-    icon: <Ionicons name="home" size={40} color={colors.lavender[700]} />,
+      "Acoso, suplantación de identidad, compartición de contenido íntimo sin consentimiento, ciberacoso o control mediante dispositivos digitales.",
+    icon: <ViolenciaDigitalIcon width={140} height={140} />,
+  },
+  {
+    id: "6",
+    title: "Violencia Vicaria",
+    description:
+      "Violencia ejercida sobre hijos, hijas u otros integrantes de la familia como forma de causar daño a la mujer.",
+    icon: <ViolenciaVicariaIcon width={140} height={140} />,
   },
 ];
 

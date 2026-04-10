@@ -6,6 +6,8 @@ import AppText from "../components/UI/AppText";
 import Button from "../components/UI/Button";
 import { colors } from "../thema/colors";
 import AppTextInput from "../components/UI/AppTextInput";
+import RuralIcon from "../assets/icons/Rural";
+import UrbanoIcon from "../assets/icons/Urbano";
 
 const { width, height } = Dimensions.get("window");
 
@@ -25,8 +27,8 @@ const questions = [
     id: "2",
     question: "Seleccione su zona",
     options: [
-      { label: "Rural", icon: "leaf" },
-      { label: "Urbana", icon: "business" },
+      { label: "Rural", icon: "rural" },
+      { label: "Urbana", icon: "urbano" },
     ],
     key: "zona",
     icon: "home-outline",
@@ -171,13 +173,31 @@ export default function FormScreen({ navigation }) {
                   }
                 >
                   <View style={styles.optionContent}>
-                    <Ionicons
-                      name={option.icon}
-                      size={22}
-                      color={
-                        isSelected ? colors.lavender[600] : colors.neutral[500]
-                      }
-                    />
+                    {option.icon === "rural" ? (
+                      <RuralIcon
+                        width={22}
+                        height={22}
+                        color={
+                          isSelected ? colors.lavender[600] : colors.neutral[500]
+                        }
+                      />
+                    ) : option.icon === "urbano" ? (
+                      <UrbanoIcon
+                        width={22}
+                        height={22}
+                        color={
+                          isSelected ? colors.lavender[600] : colors.neutral[500]
+                        }
+                      />
+                    ) : (
+                      <Ionicons
+                        name={option.icon}
+                        size={22}
+                        color={
+                          isSelected ? colors.lavender[600] : colors.neutral[500]
+                        }
+                      />
+                    )}
 
                     <AppText variant="h4">{option.label}</AppText>
 

@@ -167,15 +167,15 @@ export const components = StyleSheet.create({
 
   // Icon containers
   iconContainer: {
-    width: 44,
-    height: 44,
+    width: 130,
+    height: 130,
     borderRadius: borderRadius.md,
     backgroundColor: colors.lavender[100],
     ...layout.center,
   },
   iconContainerLarge: {
-    width: 48,
-    height: 48,
+    width: 90,
+    height: 90,
     borderRadius: borderRadius.md,
     backgroundColor: colors.lavender[100],
     ...layout.center,

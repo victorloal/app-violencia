@@ -66,7 +66,7 @@ export default function WelcomeScreen({ navigation, route }) {
       >
         <SvgComponent width={100} height={100} />
         <AppText variant="h1" style={screenStyles.appName} accessible={false}>
-          Nombre de la app
+          Perla
         </AppText>
       </Animated.View>
 

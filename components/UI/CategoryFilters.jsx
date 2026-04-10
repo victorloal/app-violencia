@@ -1,7 +1,6 @@
 // components/Places/CategoryFilters.jsx
 import React from "react";
-import { ScrollView, TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { ScrollView, TouchableOpacity, StyleSheet, View } from "react-native";
 import AppText from "../UI/AppText";
 import { colors } from "../../thema/colors";
 import {
@@ -11,11 +10,14 @@ import {
   shadow,
 } from "../../styles/tokens";
 import { getTypeConfig } from "../../thema/placesTypes";
+import SaludIcon from "../../assets/icons/Salud";
+import ProteccionIcon from "../../assets/icons/Protección";
+import JusticiaIcon from "../../assets/icons/Justicia";
 
 const categories = [
-  { id: "salud", label: "Salud", icon: "medkit-outline" },
-  { id: "protección", label: "Protección", icon: "shield-outline" },
-  { id: "justicia", label: "Justicia", icon: "scale-outline" },
+  { id: "salud", label: "Salud", icon: SaludIcon },
+  { id: "protección", label: "Protección", icon: ProteccionIcon },
+  { id: "justicia", label: "Justicia", icon: JusticiaIcon },
 ];
 
 const CategoryFilters = ({ selectedType, onSelectType }) => {
@@ -45,11 +47,11 @@ const CategoryFilters = ({ selectedType, onSelectType }) => {
             accessibilityLabel={`Filtrar por ${category.label}`}
             accessibilityRole="button"
           >
-            <Ionicons
-              name={category.icon}
-              size={18}
-              color={isActive ? colors.white : theme.primary}
-            />
+            {React.createElement(category.icon, {
+              width: 24,
+              height: 24,
+              color: isActive ? colors.white : theme.primary,
+            })}
             <AppText
               variant="caption"
               color={isActive ? "light" : "secondary"}
