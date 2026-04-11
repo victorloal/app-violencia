@@ -1,6 +1,5 @@
-// components/UI/PlaceCard.jsx
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AppText from "./AppText";
 import Button from "./Button";
@@ -13,9 +12,12 @@ import {
 } from "../../styles/tokens";
 import { linkingService } from "../../services/linkingService";
 import { getTypeConfig } from "../../thema/placesTypes";
+import { getPlaceImage } from "../../constants/placeIconsConfig";
 
 const PlaceCard = ({ place }) => {
   const theme = getTypeConfig(place.tipo);
+  // Use only place.id - ignore category for matching
+  const placeImage = getPlaceImage(place.id);
 
   const handleCall = () => {
     linkingService.makePhoneCall(place.telefono);
@@ -39,7 +41,15 @@ const PlaceCard = ({ place }) => {
             { backgroundColor: theme.background, borderColor: theme.border },
           ]}
         >
-          <Ionicons name={theme.icon} size={24} color={theme.primary} />
+          {placeImage ? (
+            <Image 
+              source={placeImage}
+              style={styles.placeImage}
+              resizeMode="contain"
+            />
+          ) : (
+            <Ionicons name={theme.icon} size={24} color={theme.primary} />
+          )}
         </View>
         <View style={styles.titleContainer}>
           <AppText variant="h3" color="primary" numberOfLines={2}>
@@ -123,12 +133,17 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   iconContainer: {
-    width: 48,
-    height: 48,
+    width: 80,
+    height: 80,
     borderRadius: borderRadius.md,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: borderWidth.thin,
+  },
+  placeImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: borderRadius.md,
   },
   titleContainer: {
     flex: 1,
