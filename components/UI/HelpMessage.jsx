@@ -6,15 +6,21 @@ import AppText from "../UI/AppText";
 import { colors } from "../../thema/colors";
 import { spacing, borderRadius, borderWidth } from "../../styles/tokens";
 import { linkingService } from "../../services/linkingService";
+import { getTypeConfig } from "../../thema/placesTypes";
 
-const HelpMessage = () => {
+const HelpMessage = ({ type = "salud" }) => {
+  const theme = getTypeConfig(type);
+
   const handleEmergencyCall = () => {
     linkingService.makePhoneCall("123");
   };
 
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={[
+        styles.container,
+        { backgroundColor: theme.badgeBg, borderColor: theme.border },
+      ]}
       onPress={handleEmergencyCall}
       activeOpacity={0.8}
       accessible={true}
@@ -24,12 +30,12 @@ const HelpMessage = () => {
       <Ionicons
         name="help-buoy-outline"
         size={20}
-        color={colors.lavender[600]}
+        color={theme.primary}
       />
       <AppText variant="body" color="secondary" style={styles.text}>
         Si necesitas ayuda inmediata, llama al 155 o al 123
       </AppText>
-      <Ionicons name="chevron-forward" size={16} color={colors.lavender[400]} />
+      <Ionicons name="chevron-forward" size={16} color={theme.text} />
     </TouchableOpacity>
   );
 };
@@ -38,7 +44,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.lavender[100],
     marginHorizontal: spacing.lg,
     marginTop: spacing.md,
     marginBottom: spacing.xl,
@@ -46,7 +51,6 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.md,
     gap: spacing.sm,
     borderWidth: borderWidth.thin,
-    borderColor: colors.lavender[200],
   },
   text: {
     flex: 1,

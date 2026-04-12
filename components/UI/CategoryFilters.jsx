@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     paddingVertical: spacing.sm,
     borderBottomWidth: borderWidth.thin,
-    borderBottomColor: colors.lavender[100],
+    borderBottomColor: colors.neutral[100] || "#f0f0f0",
   },
   content: {
     paddingHorizontal: spacing.lg,
@@ -80,13 +80,13 @@ const styles = StyleSheet.create({
   filterChip: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.lavender[50],
+    backgroundColor: colors.white,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: borderRadius.pill,
     gap: spacing.xs,
     borderWidth: borderWidth.thin,
-    borderColor: colors.lavender[200],
+    borderColor: "#e0e0e0",
   },
 });
 

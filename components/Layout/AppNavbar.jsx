@@ -13,12 +13,12 @@ export default function AppNavbar() {
 
   // Mensajes aprobados
   const messages = [
-    "Estás en un espacio seguro.",
-    "No estás sola.",
-    "Tu bienestar importa.",
-    "Tu vida es valiosa.",
-    "Tu seguridad es prioridad.",
-    "Mereces vivir en paz.",
+    "Estás en un espacio seguro",
+    "No estás sola",
+    "Tu bienestar importa",
+    "Tu vida es valiosa",
+    "Tu seguridad es prioridad",
+    "Mereces vivir en paz",
   ];
 
   const [currentIndex, setCurrentIndex] = useState(
@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
   },
   center: {
     justifyContent: "center",
+    width: "60%",
   },
   messageText: {
     textAlign: "center",

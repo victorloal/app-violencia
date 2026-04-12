@@ -1,4 +1,6 @@
 import { createContext, useState, useEffect } from "react";
+import { AppState } from "react-native";
+import * as ScreenCapture from "expo-screen-capture";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const SettingsContext = createContext();
@@ -31,6 +33,25 @@ export function SettingsProvider({ children }) {
     };
 
     loadSettings();
+  }, []);
+
+  // Bloqueo de capturas y auto-cierre al ir a background
+  useEffect(() => {
+    // 1. Activar bloqueo de capturas (y ocultar en recientes de Android)
+    ScreenCapture.preventScreenCaptureAsync();
+
+    // 2. Listener de AppState para auto-cierre
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (nextAppState === "background" || nextAppState === "inactive") {
+        // Al ir a background, activamos la calculadora automáticamente
+        setIsCamouflageOnState(true);
+        saveSetting("isCamouflageOn", "true");
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   const saveSetting = async (key, value) => {

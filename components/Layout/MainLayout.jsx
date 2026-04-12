@@ -1,5 +1,12 @@
 import React, { useState, useContext } from "react";
-import { View, StyleSheet, Alert, Modal, Linking } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Alert,
+  Modal,
+  Linking,
+  AppState,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Button from "../UI/Button";
 import AppText from "../UI/AppText";
@@ -16,21 +23,28 @@ import { linkingService } from "../../services/linkingService";
 import Call24 from "../../assets/icons/Call24";
 
 export default function MainLayout({ children }) {
-  const { setIsCamouflageOn, phoneNumber } = useContext(SettingsContext);
+  const { isCamouflageOn, setIsCamouflageOn, phoneNumber } =
+    useContext(SettingsContext);
   const navigation = useNavigation();
-  const [calcVisible, setCalcVisible] = useState(false);
   const [isTutorialDemo, setIsTutorialDemo] = useState(false);
+  const [isInactive, setIsInactive] = useState(false);
+
+  // Listener para ocultar contenido en iOS (App Switcher)
+  React.useEffect(() => {
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      setIsInactive(nextAppState === "inactive");
+    });
+    return () => subscription.remove();
+  }, []);
 
   // Abre la calculadora (activa camuflaje en contexto)
   const handleExitCamouflage = () => {
     setIsCamouflageOn(true);
-    setCalcVisible(true);
   };
 
   // Long-press en "=" dentro de la calculadora → vuelve a la app
   const handleUnlock = () => {
     setIsCamouflageOn(false);
-    setCalcVisible(false);
     setIsTutorialDemo(false);
   };
 
@@ -38,7 +52,6 @@ export default function MainLayout({ children }) {
   const handleOpenCalcDemo = () => {
     setIsTutorialDemo(true);
     setIsCamouflageOn(true);
-    setCalcVisible(true);
   };
 
   const handleCallButtonPress = () => {
@@ -134,7 +147,7 @@ export default function MainLayout({ children }) {
 
       {/* ── Calculadora en Modal de pantalla completa ── */}
       <Modal
-        visible={calcVisible}
+        visible={isCamouflageOn}
         animationType="slide"
         presentationStyle="fullScreen"
         statusBarTranslucent
@@ -142,6 +155,29 @@ export default function MainLayout({ children }) {
       >
         <CalculatorScreen onUnlock={handleUnlock} isTutorial={isTutorialDemo} />
       </Modal>
+
+      {/* ── Overlay de Privacidad (para iOS App Switcher) ── */}
+      {isInactive && (
+        <View style={StyleSheet.absoluteFill}>
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                backgroundColor: colors.lavender[50],
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 9999,
+              },
+            ]}
+          >
+            <Ionicons
+              name="shield-checkmark"
+              size={80}
+              color={colors.lavender[600]}
+            />
+          </View>
+        </View>
+      )}
     </SafeLayout>
   );
 }
@@ -150,12 +186,13 @@ const layoutStyles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "stretch",
     alignContent: "center",
     elevation: 100,
   },
   content: {
     flex: 1,
+    width: "100%",
     elevation: 100,
   },
   bottomBar: {

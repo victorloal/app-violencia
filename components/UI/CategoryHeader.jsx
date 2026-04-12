@@ -1,7 +1,6 @@
 // components/Places/CategoryHeader.jsx
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import AppText from "../UI/AppText";
 import { colors } from "../../thema/colors";
 import { spacing, borderRadius, borderWidth } from "../../styles/tokens";
@@ -18,7 +17,7 @@ const CategoryHeader = ({ type, title, description, icon }) => {
           { backgroundColor: theme.badgeBg, borderColor: theme.border },
         ]}
       >
-        <Ionicons name={icon} size={28} color={theme.primary} />
+        {icon}
       </View>
       <View style={styles.textContainer}>
         <AppText variant="h2" style={{ color: theme.primary }}>
@@ -41,7 +40,7 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.md,
     gap: spacing.md,
     borderBottomWidth: borderWidth.thin,
-    borderBottomColor: colors.lavender[100],
+    borderBottomColor: "transparent",
   },
   iconContainer: {
     width: 56,

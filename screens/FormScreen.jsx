@@ -16,12 +16,9 @@ const questions = [
   {
     id: "1",
     question: "¿En qué distrito te encuentras?",
-    options: [
-      { label: "Tumaco", icon: "location" },
-      { label: "Buenaventura", icon: "location" },
-    ],
+    options: [{ label: "Tumaco" }, { label: "Buenaventura" }],
     key: "region",
-    icon: "map-outline", // Icono para la pregunta
+    icon: "location-outline", // Icono para la pregunta
   },
   {
     id: "2",
@@ -37,22 +34,22 @@ const questions = [
     id: "3",
     question: "Seleccione su grupo étnico",
     options: [
-      { label: "Indígena", icon: "people" },
+      { label: "Indígena" },
       { label: "Afrodescendiente", icon: "people" },
       { label: "Mestizo", icon: "people" },
       { label: "Otro", icon: "ellipsis-horizontal-circle-outline" },
     ],
     key: "etnia",
-    icon: "globe-outline",
+    icon: "people-outline",
   },
   {
     id: "4",
     question: "¿En que rango de edad se encuentra?",
     options: [
-      { label: "Menor de edad (menos de 18)", value: "menor", icon: "school" },
-      { label: "Joven (18 - 28)", value: "joven", icon: "happy" },
+      { label: "Menor de edad (10 - 17)", value: "menor", icon: "person" },
+      { label: "Joven (18 - 28)", value: "joven", icon: "person" },
       { label: "Adulto (29 - 59)", value: "adulto", icon: "person" },
-      { label: "Adulto mayor (60+)", value: "adulto_mayor", icon: "walk" },
+      { label: "Adulto mayor (60+)", value: "adulto_mayor", icon: "person" },
     ],
     key: "edad",
     icon: "calendar-outline",

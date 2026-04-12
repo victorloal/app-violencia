@@ -43,7 +43,7 @@ export default function ViolenceTypeCard({
         </AppText>
 
         {/* Icono grande centrado */}
-        <View style={[cardStyles.iconContainer]}>{icon}</View>
+        <View style={cardStyles.iconContainer}>{icon}</View>
 
         {/* Descripción con scroll */}
         <ScrollView

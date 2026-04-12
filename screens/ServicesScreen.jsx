@@ -5,15 +5,20 @@ import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
+  ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import AppText from "../components/UI/AppText";
 import Button from "../components/UI/Button";
+import { spacing, borderRadius, shadow, borderWidth } from "../styles/tokens";
+import SaludIcon from "../assets/icons/Salud";
+import ProteccionIcon from "../assets/icons/Protección";
+import JusticiaIcon from "../assets/icons/Justicia";
+import { getTypeConfig } from "../thema/placesTypes";
+import MainLayout from "../components/Layout/MainLayout";
 import { colors } from "../thema/colors";
 import { enviarSolicitud, registrarEvento } from "../services/apiService";
-import { spacing, borderRadius, shadow } from "../styles/tokens";
-
 const { width, height } = Dimensions.get("window");
 
 const questions = [
@@ -23,7 +28,7 @@ const questions = [
     options: ["Sí", "No"],
     key: "atencion_medica",
     placeType: "salud",
-    icon: "medkit-outline",
+    icon: SaludIcon,
   },
   {
     id: "2",
@@ -31,8 +36,8 @@ const questions = [
       "¿Quieres presentar una denuncia sobre la violencia que sufriste?",
     options: ["Sí", "No"],
     key: "denuncia",
-    placeType: "legal",
-    icon: "alert-circle-outline",
+    placeType: "justicia",
+    icon: JusticiaIcon,
   },
   {
     id: "3",
@@ -40,8 +45,8 @@ const questions = [
       "¿La persona que te agredió es tu pareja, expareja o alguien de tu familia?",
     options: ["Sí", "No"],
     key: "agresor",
-    placeType: "legal",
-    icon: "alert-circle-outline",
+    placeType: "justicia",
+    icon: ProteccionIcon,
   },
   {
     id: "4",
@@ -49,8 +54,8 @@ const questions = [
       "¿La persona que te agrede ha utilizado a tu hijo o hija para lastimarte emocionalmente?",
     options: ["Sí", "No"],
     key: "amenaza_hijos",
-    placeType: "proteccion",
-    icon: "shield-outline",
+    placeType: "protección",
+    icon: ProteccionIcon,
   },
   {
     id: "5",
@@ -58,8 +63,8 @@ const questions = [
       "¿Consideras que tus derechos como víctima fueron vulnerados durante la atención de tu caso por una persona empleada, funcionaria o contratista?",
     options: ["Sí", "No"],
     key: "derechos_vulnerados",
-    placeType: "proteccion",
-    icon: "lock-closed-outline",
+    placeType: "protección",
+    icon: JusticiaIcon,
   },
 ];
 
@@ -139,9 +144,9 @@ export default function ServicesScreen({ navigation }) {
             return "Ver centros de salud";
           case "psicologico":
             return "Ver apoyo psicológico";
-          case "legal":
+          case "justicia":
             return "Ver asesoría legal";
-          case "proteccion":
+          case "protección":
             return "Ver centros de protección";
           default:
             return "Ver lugares de ayuda";
@@ -158,9 +163,9 @@ export default function ServicesScreen({ navigation }) {
             return "medical";
           case "psicologico":
             return "heart";
-          case "legal":
+          case "justicia":
             return "scale";
-          case "proteccion":
+          case "protección":
             return "shield";
           default:
             return "location";
@@ -169,22 +174,45 @@ export default function ServicesScreen({ navigation }) {
       return isLastQuestion ? "checkmark" : "arrow-forward";
     };
 
+    const currentType = item.placeType;
+    const theme = getTypeConfig(currentType);
+
     return (
-      <View style={styles.slide}>
+      <View style={[styles.slide, { backgroundColor: theme.background }]}>
         <View style={styles.card}>
-          {/* Header pregunta con icono */}
-          <View style={styles.questionHeader}>
-            <View style={styles.iconContainer}>
-              <Ionicons
-                name={item.icon}
-                size={32}
-                color={colors.lavender[600]}
-              />
+          <ScrollView
+            showsVerticalScrollIndicator={true}
+            indicatorStyle="default"
+            automaticallyAdjustsScrollIndicatorInsets={true}
+            persistentScrollbar={true}
+            contentContainerStyle={styles.scrollContent}
+          >
+            {/* Header pregunta con icono */}
+            <View style={styles.questionHeader}>
+              <View
+                style={[
+                  styles.iconContainer,
+                  {
+                    backgroundColor: theme.background,
+                    borderColor: theme.border,
+                  },
+                ]}
+              >
+                <item.icon
+                  width={50}
+                  height={50}
+                  fill={theme.primary}
+                  fillSecondary={theme.primary}
+                />
+              </View>
+              <AppText
+                variant="h2"
+                style={[styles.question, { color: theme.text }]}
+              >
+                {item.question}
+              </AppText>
             </View>
-            <AppText variant="h2" style={styles.question}>
-              {item.question}
-            </AppText>
-          </View>
+          </ScrollView>
 
           {/* Opciones */}
           <View style={styles.optionsContainer}>
@@ -195,12 +223,20 @@ export default function ServicesScreen({ navigation }) {
                 <TouchableOpacity
                   key={option}
                   activeOpacity={0.7}
-                  style={[styles.option, isSelected && styles.selected]}
+                  style={[
+                    styles.option,
+                    isSelected && {
+                      borderColor: theme.primary,
+                      backgroundColor: theme.background,
+                    },
+                  ]}
                   onPress={() => handleSelect(item.key, option)}
                 >
                   <AppText
                     variant="h4"
-                    color={isSelected ? "primary" : "secondary"}
+                    style={{
+                      color: isSelected ? theme.primary : colors.lavender[600],
+                    }}
                   >
                     {option}
                   </AppText>
@@ -208,34 +244,13 @@ export default function ServicesScreen({ navigation }) {
                     <Ionicons
                       name="checkmark-circle"
                       size={24}
-                      color={colors.lavender[600]}
+                      color={theme.primary}
                     />
                   )}
                 </TouchableOpacity>
               );
             })}
           </View>
-
-          {/* Mensaje informativo si hay respuestas "Sí" */}
-          {hasYes && (
-            <View style={styles.infoMessage}>
-              <Ionicons
-                name="information-circle"
-                size={24}
-                color={colors.lavender[600]}
-              />
-              <AppText variant="body" color="secondary" style={styles.infoText}>
-                {placeType === "salud" &&
-                  "Te mostraremos centros de salud cercanos"}
-                {placeType === "psicologico" &&
-                  "Te mostraremos centros de apoyo psicológico"}
-                {placeType === "legal" &&
-                  "Te mostraremos opciones de asesoría legal"}
-                {placeType === "proteccion" &&
-                  "Te mostraremos centros de protección"}
-              </AppText>
-            </View>
-          )}
 
           {/* Footer */}
           <View style={styles.footer}>
@@ -250,13 +265,20 @@ export default function ServicesScreen({ navigation }) {
                     key={index}
                     style={[
                       styles.progressItem,
-                      isPast && styles.progressPast,
-                      isCurrent && styles.progressCurrent,
+                      isPast && { backgroundColor: theme.border },
+                      isCurrent && {
+                        backgroundColor: theme.primary,
+                        width: 48,
+                        height: 48,
+                      },
                     ]}
                   >
-                    {isCurrent && (
-                      <Ionicons name={q.icon} size={16} color={colors.white} />
-                    )}
+                    {(isCurrent && (
+                      <q.icon fill={colors.white} width={40} height={40} />
+                    )) ||
+                      (isPast && (
+                        <q.icon fill={colors.white} width={35} height={35} />
+                      ))}
                   </View>
                 );
               })}
@@ -267,13 +289,7 @@ export default function ServicesScreen({ navigation }) {
               size="xl"
               onPress={handleNext}
               disabled={!formData[item.key]}
-              iconRight={
-                <Ionicons
-                  name={getButtonIcon()}
-                  size={20}
-                  color={colors.white}
-                />
-              }
+              style={{ backgroundColor: theme.primary }}
             >
               {getButtonTitle()}
             </Button>
@@ -284,43 +300,53 @@ export default function ServicesScreen({ navigation }) {
   };
 
   return (
-    <FlatList
-      ref={flatListRef}
-      data={questions}
-      renderItem={renderItem}
-      horizontal
-      pagingEnabled
-      scrollEnabled={false}
-      keyExtractor={(item) => item.id}
-      showsHorizontalScrollIndicator={false}
-      style={styles.container}
-    />
+    <MainLayout>
+      <FlatList
+        ref={flatListRef}
+        data={questions}
+        renderItem={renderItem}
+        horizontal
+        pagingEnabled
+        scrollEnabled={false}
+        keyExtractor={(item) => item.id}
+        showsHorizontalScrollIndicator={false}
+        style={styles.container}
+      />
+    </MainLayout>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: "100%",
     backgroundColor: colors.lavender[50],
   },
   slide: {
-    width,
-    height,
-    justifyContent: "center",
+    width: width,
+    flex: 1,
+    justifyContent: "flex-start",
     alignItems: "center",
-    padding: spacing.xl,
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
   },
   card: {
     backgroundColor: colors.white,
     borderRadius: borderRadius.xl,
     padding: spacing.xl,
     width: "100%",
-    maxWidth: 400,
+    height: "100%",
+    overflow: "hidden",
     ...shadow.md,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   questionHeader: {
     alignItems: "center",
-    marginBottom: spacing.xl,
+    marginBottom: spacing.lg,
   },
   iconContainer: {
     width: 64,
@@ -334,7 +360,7 @@ const styles = StyleSheet.create({
     borderColor: colors.lavender[200],
   },
   question: {
-    textAlign: "center",
+    textAlign: "left",
     color: colors.lavender[900],
   },
   optionsContainer: {

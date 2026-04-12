@@ -1,4 +1,9 @@
 // data/placesData.js
+import SaludIcon from "../assets/icons/Salud";
+import ProteccionIcon from "../assets/icons/Protección";
+import JusticiaIcon from "../assets/icons/Justicia";
+import { colors } from "../thema/colors";
+
 export const placesData = {
   justicia: [
     {
@@ -185,20 +190,23 @@ export const getCategoryInfo = (type) => {
     salud: {
       title: "Centros de Salud",
       description: "Atención médica y servicios de salud",
-      icon: "medkit-outline",
-      color: "green",
+      icon: <SaludIcon />,
+      color: "violet",
+      background: colors.violet[50],
     },
     protección: {
       title: "Entidades de Protección",
       description: "Protección y apoyo integral",
-      icon: "shield-outline",
-      color: "blue",
+      icon: <ProteccionIcon />,
+      color: "magenta",
+      background: colors.magenta[50],
     },
     justicia: {
       title: "Entidades de Justicia",
       description: "Asesoría legal y denuncias",
-      icon: "scale-outline",
-      color: "purple",
+      icon: <JusticiaIcon />,
+      color: "lime",
+      background: colors.lime[50],
     },
   };
   return categories[type] || categories.salud;

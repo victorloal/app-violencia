@@ -10,15 +10,17 @@ import PlaceCard from "../components/UI/PlaceCard";
 import EmptyState from "../components/UI/EmptyState";
 import HelpMessage from "../components/UI/HelpMessage";
 import { usePlaces } from "../hooks/usePlaces";
+import { getTypeConfig } from "../thema/placesTypes";
 
 export default function PlacesScreen({ route }) {
   const { tipo = "salud" } = route.params || {};
   const { selectedType, places, categoryInfo, changeType } = usePlaces(tipo);
+  const theme = getTypeConfig(selectedType);
 
   return (
     <MainLayout>
       <ScrollView
-        style={styles.container}
+        style={[styles.container, { backgroundColor: theme.background }]}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainer}
       >
@@ -40,11 +42,11 @@ export default function PlacesScreen({ route }) {
           {places.length > 0 ? (
             places.map((place) => <PlaceCard key={place.id} place={place} />)
           ) : (
-            <EmptyState />
+            <EmptyState type={selectedType} />
           )}
         </View>
 
-        <HelpMessage />
+        <HelpMessage type={selectedType} />
       </ScrollView>
     </MainLayout>
   );
