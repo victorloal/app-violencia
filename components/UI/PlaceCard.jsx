@@ -64,9 +64,9 @@ const PlaceCard = ({ place }) => {
       </View>
 
       <View style={styles.details}>
-        <DetailRow icon="time-outline" text={place.horario} />
-        <DetailRow icon="location-outline" text={place.direccion} />
-        <DetailRow icon="call-outline" text={place.telefono} />
+        <DetailRow icon="time-outline" theme={theme} text={place.horario} />
+        <DetailRow icon="location-outline" theme={theme} text={place.direccion} />
+        <DetailRow icon="call-outline" theme={theme} text={place.telefono} />
 
         {place.descripcion && (
           <View style={styles.descriptionContainer}>
@@ -108,9 +108,9 @@ const PlaceCard = ({ place }) => {
   );
 };
 
-const DetailRow = ({ icon, text }) => (
+const DetailRow = ({ icon, theme, text }) => (
   <View style={styles.detailRow}>
-    <Ionicons name={icon} size={16} color={colors.lavender[500]} />
+    <Ionicons name={icon} size={16} color={theme.primary} />
     <AppText variant="body" color="secondary" style={styles.detailText}>
       {text}
     </AppText>
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     ...shadow.sm,
     borderWidth: borderWidth.thin,
-    borderColor: colors.lavender[100],
+    borderColor: "#f0f0f0",
   },
   header: {
     flexDirection: "row",
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs,
     paddingTop: spacing.sm,
     borderTopWidth: borderWidth.thin,
-    borderTopColor: colors.lavender[100],
+    borderTopColor: "#f0f0f0",
   },
   description: {
     fontStyle: "italic",
