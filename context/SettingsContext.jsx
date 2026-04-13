@@ -7,12 +7,12 @@ export const SettingsContext = createContext();
 
 export function SettingsProvider({ children }) {
   const [fontScale, setFontScaleState] = useState(1);
-
   const [contrast, setContrastState] = useState(100);
   const [brightness, setBrightnessState] = useState(100);
   const [isVoiceOn, setIsVoiceOnState] = useState(false);
   const [isCamouflageOn, setIsCamouflageOnState] = useState(false);
   const [phoneNumber, setPhoneNumberState] = useState("");
+  const [hasAccessibilityNeeds, setHasAccessibilityNeedsState] = useState(false);
 
   // Cargar valores guardados
   useEffect(() => {
@@ -23,6 +23,7 @@ export function SettingsProvider({ children }) {
       const v = await AsyncStorage.getItem("isVoiceOn");
       const m = await AsyncStorage.getItem("isCamouflageOn");
       const p = await AsyncStorage.getItem("phoneNumber");
+      const h = await AsyncStorage.getItem("hasAccessibilityNeeds");
 
       if (f) setFontScaleState(Number(f));
       if (c) setContrastState(Number(c));
@@ -30,6 +31,7 @@ export function SettingsProvider({ children }) {
       if (v) setIsVoiceOnState(v === "true");
       if (m) setIsCamouflageOnState(m === "true");
       if (p) setPhoneNumberState(p);
+      if (h) setHasAccessibilityNeedsState(h === "true");
     };
 
     loadSettings();
@@ -89,6 +91,11 @@ export function SettingsProvider({ children }) {
     saveSetting("phoneNumber", val);
   };
 
+  const setHasAccessibilityNeeds = (val) => {
+    setHasAccessibilityNeedsState(val);
+    saveSetting("hasAccessibilityNeeds", val);
+  };
+
   return (
     <SettingsContext.Provider
       value={{
@@ -104,6 +111,8 @@ export function SettingsProvider({ children }) {
         setIsCamouflageOn,
         phoneNumber,
         setPhoneNumber,
+        hasAccessibilityNeeds,
+        setHasAccessibilityNeeds,
       }}
     >
       {children}

@@ -18,16 +18,12 @@ export default function MessageConfigScreen({ navigation }) {
       <View style={styles.container}>
         <View style={styles.contentContainer}>
           <View style={[components.iconContainerLarge, styles.iconCircle]}>
-            <AppText variant="h1">⚙️</AppText>
+            <Ionicons name="settings-sharp" size={32} color={colors.white} />
           </View>
           <AppText variant="h1" style={styles.title}>
             Configuremos tu experiencia
           </AppText>
-          <AppText variant="body" color="secondary" style={styles.message}>
-            Te invitamos a configurar tu experiencia en la app
-          </AppText>
 
-          {/* Cards usando los estilos de components.js */}
           <View style={styles.cardsContainer}>
             {/* Card Tamaño de letra */}
             <View style={[components.card, styles.featureCard]}>
@@ -118,12 +114,11 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginBottom: spacing.lg,
     borderWidth: 2,
-    borderColor: colors.lavender[200],
+    borderColor: colors.lavender[600],
   },
   title: {
     textAlign: "center",
     marginBottom: spacing.md,
-    color: colors.lavender[800],
   },
   message: {
     marginBottom: spacing.xl,
@@ -134,19 +129,19 @@ const styles = StyleSheet.create({
   principalMessage: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.lavender[100],
+    backgroundColor: colors.lavender[600],
     padding: spacing.lg,
     borderRadius: spacing.md,
     marginBottom: spacing.xl,
     borderWidth: 2,
-    borderColor: colors.lavender[400],
+    borderColor: colors.lavender[600],
     gap: spacing.md,
     width: "100%",
   },
   principalMessageText: {
     flex: 1,
     textAlign: "center",
-    color: colors.lavender[800],
+    color: colors.lavender[600],
   },
   // Contenedor de cards
   cardsContainer: {

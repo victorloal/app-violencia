@@ -16,7 +16,7 @@ import { getTypeConfig } from "../thema/placesTypes";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function PlacesScreen({ route, navigation }) {
-  const { tipo = "salud" } = route.params || {};
+  const { tipo = "salud", placeId = null } = route.params || {};
   const {
     selectedType,
     places,
@@ -24,7 +24,7 @@ export default function PlacesScreen({ route, navigation }) {
     changeType,
     isLoading,
     userRegion,
-  } = usePlaces(tipo);
+  } = usePlaces(tipo, placeId);
 
   // Debug region loading
   // console.log("Current region in PlacesScreen:", userRegion);

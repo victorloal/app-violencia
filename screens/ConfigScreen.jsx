@@ -10,8 +10,14 @@ import { linkingService } from "../services/linkingService";
 import AppTextInput from "../components/UI/AppTextInput";
 
 export default function ConfigScreen({ navigation }) {
-  const { fontScale, setFontScale, phoneNumber, setPhoneNumber } =
-    useContext(SettingsContext);
+  const {
+    fontScale,
+    setFontScale,
+    phoneNumber,
+    setPhoneNumber,
+    hasAccessibilityNeeds,
+    setHasAccessibilityNeeds,
+  } = useContext(SettingsContext);
 
   const [tempPhoneNumber, setTempPhoneNumber] = useState(phoneNumber);
 
@@ -90,7 +96,7 @@ export default function ConfigScreen({ navigation }) {
       "La configuración se ha actualizado correctamente",
       [{ text: "OK" }],
     );
-    navigation.replace("MessageForm");
+    navigation.replace("Terms");
   };
 
   const hasChanges = tempPhoneNumber !== phoneNumber;
@@ -214,7 +220,7 @@ export default function ConfigScreen({ navigation }) {
         <View
           style={styles.sectionHeader}
           accessible={true}
-          accessibilityLabel="Accesibilidad del Dispositivo"
+          accessibilityLabel="¿Tienes alguna discapacidad o dificultad?"
           accessibilityRole="header"
         >
           <View style={styles.iconWrapper} accessible={false}>
@@ -226,7 +232,7 @@ export default function ConfigScreen({ navigation }) {
             />
           </View>
           <AppText variant="h2" style={styles.sectionTitle} accessible={false}>
-            Accesibilidad del Dispositivo
+            ¿Tienes alguna discapacidad o dificultad visual?
           </AppText>
         </View>
 
@@ -235,75 +241,109 @@ export default function ConfigScreen({ navigation }) {
           tone="muted"
           style={styles.description}
           accessible={true}
-          accessibilityLabel="Configura las opciones de accesibilidad de tu teléfono."
+          accessibilityLabel="Configura las ayudas de tu teléfono para leer texto o ver mejor la pantalla."
           accessibilityRole="text"
         >
-          Configura las opciones de accesibilidad de tu teléfono.
+          Configura las ayudas de tu teléfono para leer texto o ver mejor la
+          pantalla.
         </AppText>
 
-        <Button
-          style={styles.accessibilityCard}
-          type="primaryOutline"
-          variant="default"
-          size="xl"
-          textVariant="bold"
-          onPress={openVoiceAccessibility}
-          activeOpacity={0.7}
-          accessible={true}
-          accessibilityLabel="TalkBack"
-          accessibilityHint="Lector de pantalla de Android"
-        >
-          <View style={styles.accessibilityInfo} accessible={false}>
-            <Ionicons
-              name={Platform.OS === "android" ? "logo-android" : "logo-apple"}
-              size={28}
-              color={colors.lavender[600]}
-              accessible={false}
-            />
-            <View style={styles.accessibilityTexts} accessible={false}>
-              <AppText variant="h4" accessible={false}>
-                {Platform.OS === "android" ? "TalkBack" : "VoiceOver"}
-              </AppText>
-              <AppText variant="body" tone="muted" accessible={false}>
-                {Platform.OS === "android"
-                  ? "Lector de pantalla de Android"
-                  : "Lector de pantalla de iOS"}
-              </AppText>
-            </View>
-          </View>
-        </Button>
+        <View style={styles.decisionButtons}>
+          <Button
+            type={hasAccessibilityNeeds ? "primary" : "primaryOutline"}
+            size="lg"
+            style={[
+              styles.decisionButton,
+              hasAccessibilityNeeds && styles.activeButton,
+            ]}
+            onPress={() => setHasAccessibilityNeeds(true)}
+          >
+            Sí
+          </Button>
+          <Button
+            type={!hasAccessibilityNeeds ? "primary" : "primaryOutline"}
+            size="lg"
+            style={[
+              styles.decisionButton,
+              !hasAccessibilityNeeds && styles.activeButton,
+            ]}
+            onPress={() => setHasAccessibilityNeeds(false)}
+          >
+            No
+          </Button>
+        </View>
 
-        <Button
-          style={styles.accessibilityCard}
-          type="primaryOutline"
-          variant="default"
-          size="xl"
-          textVariant="small"
-          onPress={openDisplayAccessibility}
-          activeOpacity={0.7}
-          accessible={true}
-          accessibilityLabel="Pantalla"
-          accessibilityHint="Configuración de pantalla"
-        >
-          <View style={styles.accessibilityInfo} accessible={false}>
-            <Ionicons
-              name="contrast"
-              size={28}
-              color={colors.lavender[600]}
-              accessible={false}
-            />
-            <View style={styles.accessibilityTexts} accessible={false}>
-              <AppText variant="h4" accessible={false}>
-                {Platform.OS === "android" ? "Pantalla" : "Texto y contraste"}
-              </AppText>
-              <AppText variant="body" tone="muted" accessible={false}>
-                {Platform.OS === "android"
-                  ? "Configuración de pantalla"
-                  : "Texto negrita, contraste, etc."}
-              </AppText>
-            </View>
+        {hasAccessibilityNeeds && (
+          <View style={styles.accessibilityOptions}>
+            <Button
+              style={styles.accessibilityCard}
+              type="primaryOutline"
+              variant="default"
+              size="xl"
+              textVariant="bold"
+              onPress={openVoiceAccessibility}
+              activeOpacity={0.7}
+              accessible={true}
+              accessibilityLabel="TalkBack"
+              accessibilityHint="Lector de pantalla de Android"
+            >
+              <View style={styles.accessibilityInfo} accessible={false}>
+                <Ionicons
+                  name={
+                    Platform.OS === "android" ? "logo-android" : "logo-apple"
+                  }
+                  size={28}
+                  color={colors.lavender[600]}
+                  accessible={false}
+                />
+                <View style={styles.accessibilityTexts} accessible={false}>
+                  <AppText variant="h4" accessible={false}>
+                    {Platform.OS === "android" ? "TalkBack" : "VoiceOver"}
+                  </AppText>
+                  <AppText variant="body" tone="muted" accessible={false}>
+                    {Platform.OS === "android"
+                      ? "Lector de pantalla de Android"
+                      : "Lector de pantalla de iOS"}
+                  </AppText>
+                </View>
+              </View>
+            </Button>
+
+            <Button
+              style={styles.accessibilityCard}
+              type="primaryOutline"
+              variant="default"
+              size="xl"
+              textVariant="small"
+              onPress={openDisplayAccessibility}
+              activeOpacity={0.7}
+              accessible={true}
+              accessibilityLabel="Pantalla"
+              accessibilityHint="Configuración de pantalla"
+            >
+              <View style={styles.accessibilityInfo} accessible={false}>
+                <Ionicons
+                  name="contrast"
+                  size={28}
+                  color={colors.lavender[600]}
+                  accessible={false}
+                />
+                <View style={styles.accessibilityTexts} accessible={false}>
+                  <AppText variant="h4" accessible={false}>
+                    {Platform.OS === "android"
+                      ? "Pantalla"
+                      : "Texto y contraste"}
+                  </AppText>
+                  <AppText variant="body" tone="muted" accessible={false}>
+                    {Platform.OS === "android"
+                      ? "Configuración de pantalla"
+                      : "Texto negrita, contraste, etc."}
+                  </AppText>
+                </View>
+              </View>
+            </Button>
           </View>
-        </Button>
+        )}
       </View>
 
       {/* Sección de Contacto de Confianza */}
@@ -396,7 +436,6 @@ export default function ConfigScreen({ navigation }) {
           type="primaryOutline"
           variant="default"
           size="xl"
-          textVariant="bold"
           onPress={testWhatsApp}
           accessible={true}
           accessibilityLabel="Probar WhatsApp"
@@ -483,7 +522,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   sectionTitle: {
-    color: colors.lavender[900],
     flex: 1,
   },
   row: {
@@ -546,6 +584,28 @@ const styles = StyleSheet.create({
   accessibilityTexts: {
     marginLeft: 12,
     flex: 1,
+  },
+  accessibilityOptions: {
+    marginTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: colors.lavender[100],
+    paddingTop: 20,
+  },
+  decisionButtons: {
+    flexDirection: "row",
+    gap: 12,
+    marginTop: 8,
+  },
+  decisionButton: {
+    flex: 1,
+    height: 56,
+  },
+  activeButton: {
+    elevation: 4,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   description: {
     marginBottom: 12,

@@ -1,13 +1,13 @@
 // components/common/AppText.js
 import React, { useContext } from "react";
-import { Text } from "react-native";
+import { Text, StyleSheet } from "react-native";
 import { typography } from "../../styles/typography";
 import { SettingsContext } from "../../context/SettingsContext";
 
 const AppText = ({
   children,
   variant = "body",
-  color = "primary",
+  color,
   style,
   bold,
   semiBold,
@@ -32,8 +32,17 @@ const AppText = ({
   const { fontScale: contextScale } = useContext(SettingsContext);
   const fontScale = propScale ?? contextScale;
 
-  const variantStyle = typography[variant] || typography.body;
-  const colorStyle = typography[color] || typography.primary;
+  const variantStyle = StyleSheet.flatten(
+    typography[variant] || typography.body,
+  );
+
+  // Si no se pasa color por prop, usamos el del variant si existe,
+  // si el variant no tiene color, usamos primary por defecto.
+  const colorStyle = color
+    ? typography[color]
+    : variantStyle.color
+      ? null // Ya está en variantStyle
+      : typography.primary;
 
   const modifiers = [
     bold && typography.bold,
@@ -48,7 +57,7 @@ const AppText = ({
 
   const scaledStyle = {
     ...variantStyle,
-    fontSize: variantStyle.fontSize * fontScale,
+    fontSize: (variantStyle.fontSize || 16) * fontScale,
     lineHeight: variantStyle.lineHeight
       ? variantStyle.lineHeight * fontScale
       : undefined,
@@ -63,6 +72,7 @@ const AppText = ({
       case "h2":
       case "h3":
       case "h4":
+      case "warning":
         return "header";
       case "button":
         return "button";

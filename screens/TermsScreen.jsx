@@ -12,7 +12,7 @@ export default function TermsScreen({ navigation }) {
 
   const handleAccept = () => {
     if (accepted && isAtBottom) {
-      navigation.replace("Form");
+      navigation.replace("MessageForm");
     }
   };
 
@@ -129,13 +129,13 @@ export default function TermsScreen({ navigation }) {
         </View>
 
         <View style={styles.section}>
-          <AppText variant="body" style={styles.acceptText}>
+          <AppText variant="body" style={styles.highlight}>
             Al seleccionar la opción &quot;Acepto términos y condiciones&quot;,
             que has leído y comprendido este acuerdo, y que aceptas sus
             condiciones de uso y tratamiento de la información.
           </AppText>
 
-          <AppText variant="body" style={styles.warning}>
+          <AppText variant="h2" color="warning" center>
             Si no estás de acuerdo con estos términos, puedes cerrar la
             aplicación y no continuar con su uso.
           </AppText>
@@ -181,7 +181,6 @@ export default function TermsScreen({ navigation }) {
               size="xl"
               type="primary"
               disabled={!accepted}
-              style={styles.button}
             >
               Continuar
             </Button>
@@ -202,12 +201,9 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingBottom: 20,
     backgroundColor: colors.white,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.lavender[100],
   },
   title: {
     fontSize: 24,
-    color: colors.lavender[900],
     marginTop: 10,
   },
   scrollView: {
@@ -222,23 +218,17 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 20,
-    color: colors.lavender[800],
     marginBottom: 12,
     fontWeight: "600",
   },
   text: {
-    fontSize: 16,
-    color: colors.lavender[700],
     lineHeight: 24,
     marginBottom: 15,
   },
   bold: {
     fontWeight: "700",
-    color: colors.lavender[900],
   },
   highlight: {
-    fontSize: 16,
-    color: colors.lavender[900],
     lineHeight: 24,
     marginBottom: 15,
     backgroundColor: colors.lavender[50],
@@ -248,15 +238,10 @@ const styles = StyleSheet.create({
     borderLeftColor: colors.lavender[600],
   },
   acceptText: {
-    fontSize: 16,
-    color: colors.lavender[800],
     lineHeight: 24,
     marginBottom: 15,
-    fontStyle: "italic",
   },
   warning: {
-    fontSize: 16,
-    color: colors.orange[600],
     lineHeight: 24,
     textAlign: "center",
     fontWeight: "500",
@@ -287,7 +272,6 @@ const styles = StyleSheet.create({
   },
   checkboxLabel: {
     fontSize: 16,
-    color: colors.lavender[900],
     flex: 1,
   },
   lockText: {
@@ -300,10 +284,8 @@ const styles = StyleSheet.create({
     justifyContent: "start",
     padding: 12,
     gap: 12,
-    backgroundColor: colors.lavender[50],
     borderRadius: 8,
     borderLeftWidth: 4,
-    borderLeftColor: colors.lavender[600],
   },
   button: {
     alignItems: "center",

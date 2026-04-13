@@ -1,6 +1,5 @@
 // screens/HomeScreen.jsx
 import { View, StyleSheet } from "react-native";
-import { colors } from "../thema/colors";
 import MainLayout from "../components/Layout/MainLayout";
 import AppText from "../components/UI/AppText";
 import ViolenceCarousel from "../components/UI/ViolenceCarousel";
@@ -73,7 +72,6 @@ export default function HomeScreen({ navigation }) {
           Tipos de Violencia
         </AppText>
       </View>
-
       <ViolenceCarousel data={violenceTypes} navigation={navigation} />
     </MainLayout>
   );

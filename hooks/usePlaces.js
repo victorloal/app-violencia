@@ -6,9 +6,10 @@ import { getPlacesByType, getCategoryInfo } from "../data/placesData";
 /**
  * Custom hook to manage places data and filtering by city
  * @param {string} initialType Initial category type
+ * @param {string} placeId Optional specific place ID to filter by
  * @returns {object} { selectedType, places, categoryInfo, changeType, isLoading, userRegion }
  */
-export const usePlaces = (initialType = "salud") => {
+export const usePlaces = (initialType = "salud", placeId = null) => {
   const [selectedType, setSelectedType] = useState(initialType);
   const [places, setPlaces] = useState([]);
   const [categoryInfo, setCategoryInfo] = useState(null);
@@ -45,13 +46,18 @@ export const usePlaces = (initialType = "salud") => {
         const info = getCategoryInfo(selectedType);
 
         // Filter by region if available
-        const filteredPlaces = finalRegion
+        let filteredPlaces = finalRegion
           ? allTypePlaces.filter(
               (p) =>
                 p.ciudad &&
                 p.ciudad.toLowerCase() === finalRegion.toLowerCase(),
             )
           : [];
+
+        // Filter by specific ID if provided
+        if (placeId) {
+          filteredPlaces = filteredPlaces.filter((p) => p.id === placeId);
+        }
 
         setPlaces(filteredPlaces);
         setCategoryInfo(info);
@@ -63,7 +69,7 @@ export const usePlaces = (initialType = "salud") => {
     };
 
     loadUserDataAndFilter();
-  }, [selectedType]);
+  }, [selectedType, placeId]);
 
   const changeType = (type) => {
     setSelectedType(type);

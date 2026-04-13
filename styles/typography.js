@@ -1,18 +1,24 @@
 // styles/typography.js
 import { StyleSheet } from "react-native";
-import { fontSize, fontWeight, lineHeight, semanticColors, fonts } from "./tokens";
+import {
+  fontSize,
+  fontWeight,
+  lineHeight,
+  semanticColors,
+  fonts,
+} from "./tokens";
 
 export const textVariants = {
   h1: {
     fontFamily: fonts.bold,
     fontSize: fontSize.xxxl,
-    fontWeight: fontWeight.extraBold,
+    fontWeight: fontWeight.semiBold,
     color: semanticColors.text.primary,
   },
   h2: {
     fontFamily: fonts.bold,
     fontSize: fontSize.xxl,
-    fontWeight: fontWeight.bold,
+    fontWeight: fontWeight.semiBold,
     color: semanticColors.text.primary,
   },
   h3: {
@@ -29,17 +35,17 @@ export const textVariants = {
   },
   bodyLarge: {
     fontFamily: fonts.regular,
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.regular,
+    color: semanticColors.text.secondary,
+    lineHeight: fontSize.xl * lineHeight.normal,
+  },
+  body: {
+    fontFamily: fonts.regular,
     fontSize: fontSize.lg,
     fontWeight: fontWeight.regular,
     color: semanticColors.text.secondary,
     lineHeight: fontSize.lg * lineHeight.normal,
-  },
-  body: {
-    fontFamily: fonts.regular,
-    fontSize: fontSize.md,
-    fontWeight: fontWeight.regular,
-    color: semanticColors.text.secondary,
-    lineHeight: fontSize.md * lineHeight.normal,
   },
   bodySmall: {
     fontFamily: fonts.regular,
@@ -55,15 +61,14 @@ export const textVariants = {
     color: semanticColors.text.tertiary,
   },
   button: {
-    fontFamily: fonts.bold,
-    fontWeight: fontWeight.semiBold,
+    fontFamily: fonts.regular,
+    fontWeight: fontWeight.regular,
     color: semanticColors.text.secondary,
-    textTransform: "uppercase",
   },
   title: {
     fontFamily: fonts.bold,
     fontSize: fontSize.xxl,
-    fontWeight: fontWeight.bold,
+    fontWeight: fontWeight.semiBold,
     color: semanticColors.text.primary,
   },
   subtitle: {
@@ -71,6 +76,14 @@ export const textVariants = {
     fontSize: fontSize.xl,
     fontWeight: fontWeight.semiBold,
     color: semanticColors.text.primary,
+  },
+  warning: {
+    fontFamily: fonts.bold,
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semiBold,
+    color: semanticColors.text.warning,
+    lineHeight: fontSize.lg * lineHeight.normal,
+    textAlign: "center",
   },
 };
 
@@ -81,7 +94,7 @@ export const textColors = {
   light: { color: semanticColors.text.inverse },
   danger: { color: semanticColors.error },
   success: { color: semanticColors.success },
-  warning: { color: semanticColors.warning },
+  warning: { color: semanticColors.text.warning },
 };
 
 export const textModifiers = {

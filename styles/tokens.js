@@ -124,11 +124,12 @@ export const semanticColors = {
   background: colors.lavender[50],
   surface: colors.white,
   text: {
-    primary: colors.lavender[900],
-    secondary: colors.lavender[700],
+    primary: colors.lavender[600],
+    secondary: colors.lavender[600],
     tertiary: colors.lavender[500],
     disabled: colors.lavender[300],
     inverse: colors.white,
+    warning: colors.orange[600],
   },
   border: {
     light: colors.lavender[100],

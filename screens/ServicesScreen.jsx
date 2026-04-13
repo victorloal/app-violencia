@@ -29,6 +29,10 @@ const questions = [
     key: "atencion_medica",
     placeType: "salud",
     icon: SaludIcon,
+    redirectTo: {
+      tumaco: "hospital_san_andres",
+      buenaventura: "hospital_luis_ablanque_distrital",
+    },
   },
   {
     id: "2",
@@ -38,6 +42,10 @@ const questions = [
     key: "denuncia",
     placeType: "justicia",
     icon: JusticiaIcon,
+    redirectTo: {
+      tumaco: "fiscalia_tumaco",
+      buenaventura: "fiscalia_buenaventura",
+    },
   },
   {
     id: "3",
@@ -47,6 +55,10 @@ const questions = [
     key: "agresor",
     placeType: "justicia",
     icon: ProteccionIcon,
+    redirectTo: {
+      tumaco: "comisaria_tumaco",
+      buenaventura: "comisaria_buenaventura",
+    },
   },
   {
     id: "4",
@@ -56,6 +68,10 @@ const questions = [
     key: "amenaza_hijos",
     placeType: "protección",
     icon: ProteccionIcon,
+    redirectTo: {
+      tumaco: "icbf_tumaco",
+      buenaventura: "icbf_buenaventura",
+    },
   },
   {
     id: "5",
@@ -65,6 +81,10 @@ const questions = [
     key: "derechos_vulnerados",
     placeType: "ministerio_publico",
     icon: JusticiaIcon,
+    redirectTo: {
+      tumaco: "defensoria_del_pueblo_tumaco",
+      buenaventura: "defensoria_del_pueblo_buenaventura",
+    },
   },
 ];
 
@@ -100,34 +120,59 @@ export default function ServicesScreen({ navigation }) {
   const handleNext = async () => {
     const currentQuestion = questions[currentIndex];
     const currentKey = currentQuestion.key;
+    const answer = formData[currentKey];
     let updatedData = { ...formData };
 
     // Guardar temporalmente los datos
     await AsyncStorage.setItem("userData", JSON.stringify(updatedData));
 
-    // Verificar si hay alguna respuesta "Sí"
-    if (hasAnyYesAnswer() || updatedData[currentKey] === "Sí") {
-      const placeType = getPlaceTypeFromYesAnswer();
-      console.log(`Redirigiendo a Place con tipo: ${placeType}`);
+    // Si la respuesta es "Sí", buscar redirección específica
+    if (answer === "Sí") {
+      const region = await AsyncStorage.getItem("region");
+      const normalizedRegion = region ? region.trim().toLowerCase() : null;
+
+      let targetPlaceId = null;
+      if (currentQuestion.redirectTo && normalizedRegion) {
+        targetPlaceId = currentQuestion.redirectTo[normalizedRegion];
+      }
+
+      const placeType = currentQuestion.placeType;
+
+      console.log(
+        `Redirigiendo a: ${targetPlaceId || placeType} (Region: ${normalizedRegion})`,
+      );
       await AsyncStorage.setItem("hasYesAnswer", "true");
 
       enviarSolicitud(updatedData, placeType);
       registrarEvento("solicitar_ayuda", placeType, "ServicesScreen");
 
-      // Redirigir a Place con el tipo correspondiente
-      navigation.replace("Places", { tipo: placeType });
+      // Redirigir a Places con el tipo y el ID específico (si existe)
+      navigation.replace("Places", {
+        tipo: placeType,
+        placeId: targetPlaceId,
+      });
       return;
     }
 
-    // Si no hay respuestas "Sí" y no es la última pregunta, continuar
+    // Si no es "Sí" y no es la última pregunta, continuar
     if (currentIndex < questions.length - 1) {
       flatListRef.current.scrollToIndex({ index: currentIndex + 1 });
       setCurrentIndex(currentIndex + 1);
     } else {
-      // Si llegó al final sin respuestas "Sí", guardar y redirigir a Message
-      enviarSolicitud(updatedData, "otro");
-      await AsyncStorage.setItem("formCompleted", "true");
-      navigation.replace("Places", { tipo: "otro" });
+      // Si llegó al final sin haber respondido "Sí" a NADA significativo (o al menos a esta última)
+      // Nota: El comportamiento actual redirige al primer "SÍ" encontrado en el histórico si existe,
+      // pero el usuario pidió "Siguiente" -> Redirección.
+      // Vamos a verificar si HUBO algún "SÍ" previo que no disparó redirección (aunque con la lógica anterior sí lo hacía).
+
+      const previousYesType = getPlaceTypeFromYesAnswer();
+
+      if (previousYesType) {
+        navigation.replace("Places", { tipo: previousYesType });
+      } else {
+        enviarSolicitud(updatedData, "otro");
+        await AsyncStorage.setItem("formCompleted", "true");
+        navigation.replace("Places", { tipo: "otro" });
+      }
     }
   };
 

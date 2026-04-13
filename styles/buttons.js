@@ -138,6 +138,16 @@ export const buttonTypes = {
       color: semanticColors.primary,
     },
   },
+  inversePrimary: {
+    container: {
+      backgroundColor: semanticColors.text.inverse,
+      borderColor: semanticColors.text.inverse,
+      borderWidth: borderWidth.none,
+    },
+    text: {
+      color: semanticColors.primary,
+    },
+  },
   secondary: {
     container: {
       backgroundColor: semanticColors.secondary,

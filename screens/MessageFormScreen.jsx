@@ -19,7 +19,7 @@ export default function MessageFormScreen({ navigation }) {
         {/* Contenido principal */}
         <View style={styles.contentContainer}>
           <View style={[components.iconContainerLarge, styles.iconCircle]}>
-            <AppText variant="h1">💜</AppText>
+            <Ionicons name="heart" size={32} color={colors.white} />
           </View>
 
           <AppText variant="h1" style={styles.title}>
@@ -27,16 +27,8 @@ export default function MessageFormScreen({ navigation }) {
           </AppText>
 
           <AppText variant="body" color="secondary" style={styles.message}>
-            Estas preguntas son solo para tu primer ingreso y nos ayudan a
-            mejorar la aplicación.
+            Estas preguntas son solo para tu primer ingreso.
           </AppText>
-
-          {/* Mensaje principal destacado */}
-          <View style={styles.principalMessage}>
-            <AppText variant="h2" style={styles.principalMessageText}>
-              No solicitaremos ni guardaremos datos personales
-            </AppText>
-          </View>
 
           {/* Cards con las características */}
           <View style={styles.cardsContainer}>
@@ -66,7 +58,7 @@ export default function MessageFormScreen({ navigation }) {
               </View>
               <View style={styles.cardContent}>
                 <AppText variant="h4" style={styles.cardTitle}>
-                  Menos de 2 minutos
+                  Solo sera un momento
                 </AppText>
                 <AppText variant="body" color="tertiary">
                   Rápido y sencillo de completar
@@ -109,8 +101,6 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     marginBottom: spacing.lg,
-    borderWidth: 2,
-    borderColor: colors.lavender[200],
   },
   title: {
     textAlign: "center",

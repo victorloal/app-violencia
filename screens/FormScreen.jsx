@@ -8,24 +8,28 @@ import { colors } from "../thema/colors";
 import AppTextInput from "../components/UI/AppTextInput";
 import RuralIcon from "../assets/icons/Rural";
 import UrbanoIcon from "../assets/icons/Urbano";
+import MujerIcon from "../assets/icons/mujer";
 
 const { width, height } = Dimensions.get("window");
 
-// Configuración de iconos para cada pregunta y opción
+// Configuración de preguntas con soporte para iconos personalizados
 const questions = [
   {
     id: "1",
     question: "¿En qué distrito te encuentras?",
-    options: [{ label: "Tumaco" }, { label: "Buenaventura" }],
+    options: [
+      { label: "Tumaco", value: "tumaco" },
+      { label: "Buenaventura", value: "buenaventura" },
+    ],
     key: "region",
-    icon: "location-outline", // Icono para la pregunta
+    icon: "location-outline",
   },
   {
     id: "2",
     question: "Seleccione su zona",
     options: [
-      { label: "Rural", icon: "rural" },
-      { label: "Urbana", icon: "urbano" },
+      { label: "Rural", value: "rural", icon: "rural", isSvg: true },
+      { label: "Urbana", value: "urbana", icon: "urbano", isSvg: true },
     ],
     key: "zona",
     icon: "home-outline",
@@ -34,45 +38,85 @@ const questions = [
     id: "3",
     question: "Seleccione su grupo étnico",
     options: [
-      { label: "Indígena" },
-      { label: "Afrodescendiente", icon: "people" },
-      { label: "Mestizo", icon: "people" },
-      { label: "Otro", icon: "ellipsis-horizontal-circle-outline" },
+      { label: "Indígena", value: "indigena" },
+      { label: "Afrodescendiente", value: "afro" },
+      { label: "Mestizo", value: "mestizo" },
+      { label: "Otro, ¿cual?", value: "otro", hasInput: true },
     ],
     key: "etnia",
-    icon: "people-outline",
+    icon: "mujer",
+    isSvgIcon: true,
   },
   {
     id: "4",
-    question: "¿En que rango de edad se encuentra?",
+    question: "¿En qué rango de edad se encuentra?",
     options: [
-      { label: "Menor de edad (10 - 17)", value: "menor", icon: "person" },
-      { label: "Joven (18 - 28)", value: "joven", icon: "person" },
-      { label: "Adulto (29 - 59)", value: "adulto", icon: "person" },
-      { label: "Adulto mayor (60+)", value: "adulto_mayor", icon: "person" },
+      { label: "Menor de edad (10 - 17)", value: "menor" },
+      { label: "Joven (18 - 28)", value: "joven" },
+      { label: "Adulto (29 - 59)", value: "adulto" },
+      { label: "Adulto mayor (60+)", value: "adulto_mayor" },
     ],
     key: "edad",
     icon: "calendar-outline",
   },
   {
     id: "5",
-    question: "¿En que situación laboral se encuentra?",
+    question: "¿En qué situación laboral se encuentra?",
     options: [
-      { label: "Empleado", icon: "briefcase" },
-      { label: "Desempleado", icon: "remove-circle" },
-      { label: "Estudiante", icon: "school" },
-      { label: "Independiente", icon: "construct" },
+      { label: "Empleado", value: "empleado", icon: "briefcase-outline" },
+      {
+        label: "Desempleado",
+        value: "desempleado",
+        icon: "remove-circle-outline",
+      },
+      { label: "Estudiante", value: "estudiante", icon: "school-outline" },
+      {
+        label: "Independiente",
+        value: "independiente",
+        icon: "construct-outline",
+      },
     ],
     key: "laboral",
-    icon: "cash-outline",
+    icon: "briefcase-outline",
   },
 ];
 
+// Componente para renderizar iconos en opciones (Soporta SVG personalizados)
+const OptionIcon = ({ icon, isSvg, color, size = 22 }) => {
+  if (isSvg) {
+    if (icon === "rural")
+      return <RuralIcon width={size} height={size} color={color} />;
+    if (icon === "urbano")
+      return <UrbanoIcon width={size} height={size} color={color} />;
+    if (icon === "mujer")
+      return <MujerIcon width={size} height={size} color={color} />;
+  }
+  return <Ionicons name={icon} size={size} color={color} />;
+};
+
+// Componente para el icono de la pregunta (soporta SVG e Ionicons)
+const QuestionIcon = ({ icon, isSvg, color, size = 28 }) => {
+  if (isSvg && icon === "mujer") {
+    return <MujerIcon width={size} height={size} color={color} />;
+  }
+  return <Ionicons name={icon} size={size} color={color} />;
+};
+
+// Componente para el icono de progreso (tamaños más pequeños)
+const ProgressIcon = ({ icon, isSvg, color, size = 14 }) => {
+  if (isSvg && icon === "mujer") {
+    return <MujerIcon width={size} height={size} color={color} />;
+  }
+  return <Ionicons name={icon} size={size} color={color} />;
+};
+
 export default function FormScreen({ navigation }) {
+  const OTHER_VALUE = "otro";
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [formData, setFormData] = useState({});
   const [otherText, setOtherText] = useState("");
+  const [otherInputVisible, setOtherInputVisible] = useState(false);
 
   // Cargar datos guardados previamente
   useEffect(() => {
@@ -80,7 +124,26 @@ export default function FormScreen({ navigation }) {
       try {
         const savedData = await AsyncStorage.getItem("userData");
         if (savedData) {
-          setFormData(JSON.parse(savedData));
+          const parsed = JSON.parse(savedData);
+          setFormData(parsed);
+
+          // Verificar si hay un valor "otro" guardado para mostrar el input
+          const currentQuestion = questions[currentIndex];
+          if (currentQuestion) {
+            const currentValue = parsed[currentQuestion.key];
+            if (
+              currentValue &&
+              currentValue !== OTHER_VALUE &&
+              !currentQuestion.options.find((opt) => opt.value === currentValue)
+            ) {
+              setOtherText(currentValue);
+              setOtherInputVisible(true);
+              setFormData((prev) => ({
+                ...prev,
+                [currentQuestion.key]: OTHER_VALUE,
+              }));
+            }
+          }
         }
       } catch (error) {
         console.error("Error cargando datos del formulario:", error);
@@ -89,20 +152,36 @@ export default function FormScreen({ navigation }) {
     loadSavedData();
   }, []);
 
-  const handleSelect = (key, value, multiple = false) => {
-    if (multiple) {
-      const currentValues = Array.isArray(formData[key]) ? formData[key] : [];
-      if (currentValues.includes(value)) {
-        setFormData({
-          ...formData,
-          [key]: currentValues.filter((v) => v !== value),
-        });
-      } else {
-        setFormData({ ...formData, [key]: [...currentValues, value] });
-      }
+  // Verificar si la opción actual es "Otro" y mostrar input
+  useEffect(() => {
+    const currentQuestion = questions[currentIndex];
+    const currentValue = formData[currentQuestion?.key];
+    const hasOtherOption = currentQuestion?.options.some((opt) => opt.hasInput);
+    const isOtherSelected = currentValue === OTHER_VALUE;
+
+    setOtherInputVisible(hasOtherOption && isOtherSelected);
+
+    // Si no está seleccionado "Otro", limpiar el texto
+    if (!isOtherSelected && otherText) {
+      setOtherText("");
+    }
+  }, [currentIndex, formData]);
+
+  const handleSelect = (key, value, hasInput = false) => {
+    if (hasInput && value === OTHER_VALUE) {
+      setFormData({ ...formData, [key]: OTHER_VALUE });
+      setOtherInputVisible(true);
     } else {
       setFormData({ ...formData, [key]: value });
+      if (otherInputVisible) {
+        setOtherInputVisible(false);
+        setOtherText("");
+      }
     }
+  };
+
+  const handleOtherTextChange = (text) => {
+    setOtherText(text);
   };
 
   const handleNext = async () => {
@@ -110,63 +189,70 @@ export default function FormScreen({ navigation }) {
     const currentKey = currentQuestion.key;
     let updatedData = { ...formData };
 
-    // Manejar la opción "Otro"
-    if (currentQuestion.multiple) {
-      const currentValues = Array.isArray(formData[currentKey])
-        ? formData[currentKey]
-        : [];
-      if (currentValues.includes("Otro") && otherText) {
-        updatedData[currentKey] = currentValues.map((v) =>
-          v === "Otro" ? otherText : v,
-        );
-      }
-    } else if (formData[currentKey] === "Otro" && otherText) {
-      updatedData[currentKey] = otherText;
+    if (otherInputVisible && otherText.trim()) {
+      updatedData[currentKey] = otherText.trim();
+    } else if (formData[currentKey] === OTHER_VALUE && !otherText.trim()) {
+      return;
     }
 
     setFormData(updatedData);
-    setOtherText("");
-
-    // Guardar progreso en el dispositivo
     await AsyncStorage.setItem("userData", JSON.stringify(updatedData));
 
-    // Guardar la región de forma independiente para que el hook usePlaces la encuentre siempre
     if (updatedData.region) {
       await AsyncStorage.setItem("region", updatedData.region);
     }
 
     if (currentIndex < questions.length - 1) {
-      flatListRef.current.scrollToIndex({ index: currentIndex + 1 });
+      flatListRef.current.scrollToIndex({
+        index: currentIndex + 1,
+        animated: true,
+      });
       setCurrentIndex(currentIndex + 1);
+      setOtherInputVisible(false);
+      setOtherText("");
     } else {
       await AsyncStorage.setItem("formCompleted", "true");
-
-      // Enviar al backend (no bloquea la navegación)
       import("../services/apiService").then(({ enviarPerfil }) => {
         enviarPerfil(updatedData);
       });
-
       navigation.replace("Home");
     }
   };
 
+  const isNextDisabled = () => {
+    const currentQuestion = questions[currentIndex];
+    const currentValue = formData[currentQuestion.key];
+
+    if (!currentValue) return true;
+    if (currentValue === OTHER_VALUE && !otherText.trim()) return true;
+    return false;
+  };
+
+  // Función para verificar si una pregunta está completada
+  const isQuestionCompleted = (question, index) => {
+    if (index < currentIndex) return true;
+    const value = formData[question.key];
+    if (!value) return false;
+    if (value === OTHER_VALUE && !otherText.trim()) return false;
+    return true;
+  };
+
   const renderItem = ({ item }) => {
     const isLastQuestion = currentIndex === questions.length - 1;
+    const currentValue = formData[item.key];
 
     return (
       <View style={styles.slide}>
         <View style={styles.card}>
           {/* Header pregunta */}
           <View style={styles.questionHeader}>
-            <View style={styles.questionIcon}>
-              <Ionicons
-                name={item.icon}
-                size={28}
-                color={colors.lavender[600]}
-              />
-            </View>
-
-            <AppText variant="h2" align="center" style={styles.question}>
+            <QuestionIcon
+              icon={item.icon}
+              isSvg={item.isSvgIcon}
+              color={colors.lavender[600]}
+              size={32}
+            />
+            <AppText variant="h2" style={styles.question}>
               {item.question}
             </AppText>
           </View>
@@ -174,64 +260,40 @@ export default function FormScreen({ navigation }) {
           {/* Opciones */}
           <View style={styles.optionsContainer}>
             {item.options.map((option) => {
-              const isSelected = item.multiple
-                ? Array.isArray(formData[item.key]) &&
-                  formData[item.key].includes(option.label)
-                : formData[item.key] === option.label;
+              const isSelected = currentValue === option.value;
 
               return (
                 <Button
-                  key={option.label}
-                  type="primaryOutline"
+                  key={option.value}
+                  type={isSelected ? "primary" : "primaryOutline"}
                   size="xl"
                   variant="default"
-                  textVariant="bold"
-                  style={[styles.option, isSelected && styles.selected]}
                   onPress={() =>
-                    handleSelect(item.key, option.label, item.multiple)
+                    handleSelect(item.key, option.value, option.hasInput)
                   }
+                  style={[styles.option, isSelected && styles.selected]}
                 >
                   <View style={styles.optionContent}>
-                    {option.icon === "rural" ? (
-                      <RuralIcon
-                        width={22}
-                        height={22}
-                        color={
-                          isSelected
-                            ? colors.lavender[600]
-                            : colors.neutral[500]
-                        }
-                      />
-                    ) : option.icon === "urbano" ? (
-                      <UrbanoIcon
-                        width={22}
-                        height={22}
-                        color={
-                          isSelected
-                            ? colors.lavender[600]
-                            : colors.neutral[500]
-                        }
-                      />
-                    ) : (
-                      <Ionicons
-                        name={option.icon}
+                    {option.icon && (
+                      <OptionIcon
+                        icon={option.icon}
+                        isSvg={option.isSvg}
+                        color={isSelected ? colors.white : colors.lavender[600]}
                         size={22}
-                        color={
-                          isSelected
-                            ? colors.lavender[600]
-                            : colors.neutral[500]
-                        }
                       />
                     )}
-
-                    <AppText variant="h4">{option.label}</AppText>
-
-                    {isSelected && (
+                    <AppText
+                      variant="body"
+                      color={isSelected ? "light" : "secondary"}
+                      style={styles.optionLabel}
+                    >
+                      {option.label}
+                    </AppText>
+                    {isSelected && !option.hasInput && (
                       <Ionicons
                         name="checkmark-circle"
-                        style={{ alignItems: "flex-end" }}
                         size={22}
-                        color={colors.lavender[600]}
+                        color={colors.white}
                       />
                     )}
                   </View>
@@ -241,88 +303,75 @@ export default function FormScreen({ navigation }) {
           </View>
 
           {/* Input para "Otro" */}
-          {(item.multiple
-            ? Array.isArray(formData[item.key]) &&
-              formData[item.key].includes("Otro")
-            : formData[item.key] === "Otro") && (
+          {otherInputVisible && (
             <View style={styles.otherContainer}>
               <AppTextInput
                 placeholder="Especifica aquí..."
-                type="default"
                 variant="default"
                 size="large"
                 keyboardType="default"
-                bold
-                state="focused"
-                onChangeText={setOtherText}
+                onChangeText={handleOtherTextChange}
                 value={otherText}
+                autoFocus={true}
                 leftIcon={
                   <Ionicons
-                    name="create"
+                    name="create-outline"
                     size={18}
                     color={colors.lavender[500]}
-                    style={styles.otherIcon}
                   />
                 }
-              ></AppTextInput>
+              />
             </View>
           )}
 
           {/* Footer */}
           <View style={styles.footer}>
-            {/* progreso */}
+            {/* Progreso */}
             <View style={styles.progressContainer}>
               {questions.map((q, index) => {
                 const isPast = index < currentIndex;
                 const isCurrent = index === currentIndex;
+                const isCompleted = isQuestionCompleted(q, index);
+
+                // Determinar el color del icono según el estado
+                let iconColor;
+                if (isCurrent) {
+                  iconColor = colors.white;
+                } else if (isPast || isCompleted) {
+                  iconColor = colors.white;
+                } else {
+                  iconColor = colors.neutral[600];
+                }
+
+                // Tamaño del icono según el estado
+                const iconSize = isCurrent ? 18 : 14;
 
                 return (
                   <View
                     key={index}
                     style={[
                       styles.progressItem,
-                      isPast && styles.progressPast,
+                      (isPast || isCompleted) && styles.progressPast,
                       isCurrent && styles.progressCurrent,
                     ]}
                   >
-                    <Ionicons
-                      name={q.icon}
-                      size={isCurrent ? 18 : 14}
-                      color={
-                        isCurrent
-                          ? colors.white
-                          : isPast
-                            ? colors.white
-                            : colors.neutral[600]
-                      }
+                    <ProgressIcon
+                      icon={q.icon}
+                      isSvg={q.isSvgIcon}
+                      color={iconColor}
+                      size={iconSize}
                     />
                   </View>
                 );
               })}
             </View>
 
-            {/* botón siguiente */}
+            {/* Botón siguiente */}
             <Button
               type="primary"
               size="xl"
-              textVariant="bold"
               onPress={handleNext}
-              disabled={
-                item.multiple
-                  ? !formData[item.key] ||
-                    formData[item.key].length === 0 ||
-                    (formData[item.key].includes("Otro") && !otherText)
-                  : !formData[item.key] ||
-                    (formData[item.key] === "Otro" && !otherText)
-              }
-              icon={
-                <Ionicons
-                  name={isLastQuestion ? "checkmark" : "arrow-forward"}
-                  size={20}
-                  color={colors.white}
-                />
-              }
-              iconPosition="right"
+              disabled={isNextDisabled()}
             >
               {isLastQuestion ? "Finalizar" : "Siguiente"}
             </Button>
@@ -331,6 +380,7 @@ export default function FormScreen({ navigation }) {
       </View>
     );
   };
+
   return (
     <FlatList
       ref={flatListRef}
@@ -349,17 +399,6 @@ export default function FormScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.lavender[50],
-  },
-  questionHeader: {
-    alignItems: "center",
-    justifyContent: "center",
-    alignContent: "center",
-    alignSelf: "center",
-    marginBottom: 16,
-  },
-  questionIcon: {
-    marginRight: 12,
-    alignItems: "center",
   },
   slide: {
     width,
@@ -380,80 +419,53 @@ const styles = StyleSheet.create({
     shadowRadius: 20,
     elevation: 10,
   },
+  questionHeader: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 24,
+    gap: 12,
+  },
   question: {
-    marginBottom: 32,
-    color: colors.lavender[900],
-    alignSelf: "center",
     textAlign: "center",
   },
   optionsContainer: {
     width: "100%",
     marginBottom: 24,
+    gap: 8,
   },
   option: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderWidth: 2,
     borderRadius: 16,
-    marginVertical: 6,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
   optionContent: {
     flexDirection: "row",
     alignItems: "center",
-    flex: 1,
     gap: 12,
   },
-  optionIcon: {
-    marginRight: 12,
+  optionLabel: {
+    flex: 1,
   },
   selected: {
-    backgroundColor: colors.lavender[200],
-  },
-  inputContainer: {
-    flexDirection: "row",
-    flex: 1,
-    alignItems: "center",
-    borderWidth: 2,
-    borderColor: colors.neutral[200],
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    marginBottom: 16,
-    backgroundColor: colors.neutral[50],
-  },
-  input: {
-    flex: 1,
-    padding: 16,
-    fontSize: 16,
-    color: colors.neutral[900],
+    backgroundColor: colors.lavender[600],
+    borderColor: colors.lavender[600],
   },
   otherContainer: {
     marginBottom: 16,
-    flexDirection: "row",
-    alignItems: "center",
   },
-
-  otherInputWrapper: {
-    backgroundColor: colors.lavender[500],
-  },
-
-  otherIcon: {
-    marginRight: 8,
-  },
-
   footer: {
     marginTop: 16,
     alignItems: "center",
+    gap: 24,
   },
   progressContainer: {
     flexDirection: "row",
-    marginBottom: 32,
     gap: 8,
   },
   progressItem: {
-    width: 32,
-    height: 32,
-    borderRadius: 90,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: colors.lavender[100],
     justifyContent: "center",
     alignItems: "center",
@@ -462,11 +474,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lavender[600],
   },
   progressCurrent: {
-    width: 40,
-    height: 40,
-    backgroundColor: colors.lavender[700],
-  },
-  activeProgressItem: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: colors.lavender[700],
   },
 });

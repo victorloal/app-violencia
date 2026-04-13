@@ -38,6 +38,7 @@ export const TYPE_CONFIG = {
     text: colors.lime[800],
     buttonBg: colors.lime[600],
     title: "Sector Justicia",
+    description: "Atención médica y hospitalaria para emergencias y consultas",
   },
   ministerio_publico: {
     icon: "business-outline", // Ionicon name

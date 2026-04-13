@@ -177,7 +177,7 @@ export const components = StyleSheet.create({
     width: 90,
     height: 90,
     borderRadius: borderRadius.md,
-    backgroundColor: colors.lavender[100],
+    backgroundColor: colors.lavender[600],
     ...layout.center,
     borderWidth: 1,
     borderColor: colors.lavender[200],
