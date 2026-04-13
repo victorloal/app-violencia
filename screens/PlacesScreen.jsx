@@ -96,6 +96,7 @@ export default function PlacesScreen({ route, navigation }) {
         )}
 
         <CategoryFilters
+          style={styles.filters}
           selectedType={selectedType}
           onSelectType={changeType}
         />
@@ -118,6 +119,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.lavender[50],
+  },
+  filters:{
+    height:"50%",
   },
   contentContainer: {
     paddingBottom: spacing.xxl,
@@ -157,6 +161,5 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     width: "100%",
-    maxWidth: 300,
   },
 });

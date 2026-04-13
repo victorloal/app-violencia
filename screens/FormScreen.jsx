@@ -53,8 +53,8 @@ const questions = [
     options: [
       { label: "Menor de edad (10 - 17)", value: "menor" },
       { label: "Joven (18 - 28)", value: "joven" },
-      { label: "Adulto (29 - 59)", value: "adulto" },
-      { label: "Adulto mayor (60+)", value: "adulto_mayor" },
+      { label: "Adulta (29 - 59)", value: "adulto" },
+      { label: "Adulta mayor (60+)", value: "adulto_mayor" },
     ],
     key: "edad",
     icon: "calendar-outline",
@@ -63,9 +63,9 @@ const questions = [
     id: "5",
     question: "¿En qué situación laboral se encuentra?",
     options: [
-      { label: "Empleado", value: "empleado", icon: "briefcase-outline" },
+      { label: "Empleada", value: "empleado", icon: "briefcase-outline" },
       {
-        label: "Desempleado",
+        label: "Desempleada",
         value: "desempleado",
         icon: "remove-circle-outline",
       },

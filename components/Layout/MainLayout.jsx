@@ -73,6 +73,7 @@ export default function MainLayout({ children }) {
           <Button
             type="primaryGhost"
             size="flex"
+            style={{ elevation:0 }}
             onPress={() => linkingService.sendLocationWhatsApp(phoneNumber)}
             accessibilityLabel="Enviar mensaje"
             accessibilityHint="Abre la app de mensajes para enviar un SMS a tu contacto de confianza"
@@ -83,7 +84,7 @@ export default function MainLayout({ children }) {
                 size={30}
                 color={styles.semanticColors.primary}
               />
-              <AppText variant="caption" bold color="secondary">
+              <AppText variant="body" bold color="secondary">
                 Mensaje
               </AppText>
             </View>
@@ -96,7 +97,7 @@ export default function MainLayout({ children }) {
             variant="circle"
             onPress={handleCallButtonPress}
             onLongPress={() => linkingService.makePhoneCall(phoneNumber)}
-            style={{ height: "100%", width: "100%" }}
+            style={{ height: "100%", width: "100%", elevation:4 }}
             accessibilityLabel="Llamada de emergencia"
             accessibilityHint="Ver lugares de emergencia para realizar una llamada"
           >
@@ -122,6 +123,7 @@ export default function MainLayout({ children }) {
             type="primaryGhost"
             size="flex"
             onPress={handleExitCamouflage}
+            style={{ elevation:0 }}
             accessibilityLabel="Salir con camuflaje"
             accessibilityHint="Abre una calculadora para ocultar la aplicación"
           >
@@ -131,7 +133,7 @@ export default function MainLayout({ children }) {
                 size={30}
                 color={styles.semanticColors.primary}
               />
-              <AppText variant="caption" bold color="secondary">
+              <AppText variant="body" bold color="secondary">
                 Camuflaje
               </AppText>
             </View>

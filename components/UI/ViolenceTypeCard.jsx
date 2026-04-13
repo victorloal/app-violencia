@@ -19,6 +19,7 @@ import {
   zIndex,
   shadow,
 } from "../../styles/tokens";
+import { colors } from "../../thema/colors";
 
 export default function ViolenceTypeCard({
   title,
@@ -219,7 +220,7 @@ const cardStyles = StyleSheet.create({
   },
   description: {
     textAlign: "left",
-    color: semanticColors.text.secondary,
+    color: colors.neutral[600],
     paddingHorizontal: spacing.xs,
     paddingVertical: spacing.xs,
   },

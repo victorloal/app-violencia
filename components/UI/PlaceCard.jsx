@@ -57,7 +57,7 @@ const PlaceCard = ({ place }) => {
         <View
           style={[
             styles.iconContainer,
-            { backgroundColor: theme.background, borderColor: theme.border },
+            { backgroundColor: colors.white, borderColor: theme.border },
           ]}
         >
           {placeImage ? (
@@ -80,7 +80,7 @@ const PlaceCard = ({ place }) => {
           <AppText
             variant="h4"
             numberOfLines={4}
-            style={[styles.detailText, { color: theme.primary }]}
+            style={[styles.detailText, { color: theme.text }]}
           >
             {place.nombre}
           </AppText>
@@ -100,7 +100,7 @@ const PlaceCard = ({ place }) => {
           <View style={styles.descriptionContainer}>
             <AppText
               variant="body"
-              style={[styles.detailText, { color: theme.primary }]}
+              style={[styles.detailText, { color: theme.text }]}
             >
               {place.descripcion}
             </AppText>
@@ -110,11 +110,11 @@ const PlaceCard = ({ place }) => {
 
       <View style={styles.actions}>
         <Button
-          type="primaryOutline"
+          type="primary"
           size="flex"
-          onPress={handleCall}
-          style={[styles.button, { borderColor: theme.primary }]}
-          textStyle={{ color: theme.primary }}
+          onPress={handleNavigate}
+          style={[styles.button, { backgroundColor: theme.badgeBg} ]}
+          textStyle={{ color: theme.text }}
         >
           Llamar
         </Button>
@@ -122,7 +122,8 @@ const PlaceCard = ({ place }) => {
           type="primary"
           size="flex"
           onPress={handleNavigate}
-          style={[styles.button, { backgroundColor: theme.buttonBg }]}
+          style={[styles.button, { backgroundColor: theme.badgeBg} ]}
+          textStyle={{ color: theme.text }}
         >
           Cómo llegar
         </Button>
@@ -136,7 +137,7 @@ const DetailRow = ({ icon, theme, text }) => (
     <Ionicons name={icon} size={24} color={theme.primary} />
     <AppText
       variant="body"
-      style={[styles.detailText, { color: theme.primary }]}
+      style={[styles.detailText, { color: theme.text }]}
     >
       {text}
     </AppText>
@@ -174,6 +175,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     flex: 1,
     gap: spacing.xxs,
+    textAlignVertical: 'center'
   },
   typeBadge: {
     paddingHorizontal: spacing.sm,
@@ -193,6 +195,7 @@ const styles = StyleSheet.create({
   detailText: {
     flex: 1,
     flexWrap: "wrap",
+    textAlignVertical: 'center'
   },
   descriptionContainer: {
     marginTop: spacing.xs,
@@ -208,6 +211,7 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
+    elevation:3,
     height: "100%",
     width: "100%",
   },

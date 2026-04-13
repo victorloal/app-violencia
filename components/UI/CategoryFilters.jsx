@@ -31,6 +31,7 @@ const CategoryFilters = ({ selectedType, onSelectType }) => {
             key={category.id}
             style={[
               styles.filterChip,
+              
               isActive && {
                 backgroundColor: theme.primary,
                 borderColor: theme.primary,
@@ -55,7 +56,7 @@ const CategoryFilters = ({ selectedType, onSelectType }) => {
               />
             )}
             <AppText
-              variant="caption"
+              variant="body"
               color={isActive ? "light" : "secondary"}
               bold={isActive}
               style={
@@ -73,9 +74,8 @@ const CategoryFilters = ({ selectedType, onSelectType }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: spacing.sm,
-    borderBottomWidth: borderWidth.thin,
-    borderBottomColor: colors.neutral[100] || "#f0f0f0",
+    paddingVertical: spacing.sm
+    
   },
   content: {
     paddingHorizontal: spacing.lg,
@@ -83,10 +83,11 @@ const styles = StyleSheet.create({
   },
   filterChip: {
     flexDirection: "row",
+    elevation:4,
     alignItems: "center",
     backgroundColor: colors.white,
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+    paddingVertical: spacing.md,
     borderRadius: borderRadius.pill,
     gap: spacing.xs,
     borderWidth: borderWidth.thin,

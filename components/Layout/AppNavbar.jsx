@@ -68,6 +68,7 @@ export default function AppNavbar() {
             type="primaryGhost"
             variant="circle"
             size="small"
+            style={{ elevation:0 }}
             onPress={() => navigation.goBack()}
             accessibilityLabel="Volver atrás"
             accessibilityHint="Navega a la pantalla anterior"
@@ -83,6 +84,7 @@ export default function AppNavbar() {
             type="primaryGhost"
             variant="circle"
             size="small"
+            style={{ elevation:0 }}
             accessibilityLabel="Volver atrás"
             accessibilityHint="Navega a la pantalla anterior"
           ></Button>
@@ -109,6 +111,7 @@ export default function AppNavbar() {
           type="primaryGhost"
           variant="circle"
           size="small"
+          style={{ elevation:0 }}
           onPress={() => navigation.replace("Settings")}
           accessibilityLabel="Configuración"
           accessibilityHint="Ir a la pantalla de configuración"

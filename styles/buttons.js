@@ -9,6 +9,7 @@ export const buttonStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: borderWidth.none,
+    elevation:4
   },
   content: {
     flexDirection: "row",

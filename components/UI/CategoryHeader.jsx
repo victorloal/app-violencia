@@ -28,10 +28,10 @@ const CategoryHeader = ({ type, title, description }) => {
         )}
       </View>
       <View style={styles.textContainer}>
-        <AppText variant="h2" style={{ color: theme.primary }}>
+        <AppText variant="h2" style={{ color: theme.text }}>
           {title}
         </AppText>
-        <AppText variant="body" style={{ color: theme.primary }}>
+        <AppText variant="body" style={{ color: theme.text }}>
           {description}
         </AppText>
       </View>
