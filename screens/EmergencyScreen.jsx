@@ -41,7 +41,8 @@ export default function EmergencyScreen({ navigation }) {
               color="secondary"
               style={styles.initialMessageText}
             >
-              Estos números pueden ayudarte en caso de emergencia
+              Estos números pueden ayudarte en caso de emergencia a cualquier
+              hora
             </AppText>
           </View>
 
@@ -60,19 +61,6 @@ export default function EmergencyScreen({ navigation }) {
               <EmergencyCard place={userEmergencyNumber} />
             </>
           )}
-
-          {/* Todos los números de emergencia (sin distinción) */}
-          <View style={styles.sectionHeader}>
-            <View style={styles.sectionHeaderLine} />
-            <View style={styles.sectionHeaderLabel}>
-              <Ionicons name="heart" size={20} color={colors.lavender[400]} />
-              <AppText variant="caption" color="tertiary" center>
-                Todos estos números están disponibles 24/7
-              </AppText>
-            </View>
-            <View style={styles.sectionHeaderLine} />
-          </View>
-
           {otherNumbers.map((p) => (
             <EmergencyCard key={p.id} place={p} />
           ))}

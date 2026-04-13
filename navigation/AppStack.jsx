@@ -9,7 +9,6 @@ import FormScreen from "../screens/FormScreen";
 import MessageScreen from "../screens/MessageScreen";
 import ServicesScreen from "../screens/ServicesScreen";
 import PlacesScreen from "../screens/PlacesScreen";
-import WelcomeScreen from "../screens/WelcomesScreen";
 import TermsScreen from "../screens/TermsScreen";
 import ConfigScreen from "../screens/ConfigScreen";
 import MessageConfigScreen from "../screens/MessageConfigScreen";
@@ -17,6 +16,7 @@ import MessageFormScreen from "../screens/MessageFormScreen";
 import { SettingsContext } from "../context/SettingsContext";
 import { colors } from "../thema/colors";
 import EmergencyScreen from "../screens/EmergencyScreen";
+import WelcomeScreen from "../screens/WelcomesScreen";
 
 const Stack = createNativeStackNavigator();
 

@@ -6,7 +6,7 @@ import { getPlacesByType, getCategoryInfo } from "../data/placesData";
 /**
  * Custom hook to manage places data and filtering by city
  * @param {string} initialType Initial category type
- * @param {string} placeId Optional specific place ID to filter by
+ * @param {string} placeId Optional specific place ID to prioritize (appears first, doesn't hide others)
  * @returns {object} { selectedType, places, categoryInfo, changeType, isLoading, userRegion }
  */
 export const usePlaces = (initialType = "salud", placeId = null) => {
@@ -54,9 +54,19 @@ export const usePlaces = (initialType = "salud", placeId = null) => {
             )
           : [];
 
-        // Filter by specific ID if provided
-        if (placeId) {
-          filteredPlaces = filteredPlaces.filter((p) => p.id === placeId);
+        // 🔥 NUEVO: Si hay placeId, mover ese lugar al principio (no filtrar exclusivamente)
+        if (placeId && filteredPlaces.length > 0) {
+          const specificPlaceIndex = filteredPlaces.findIndex(
+            (p) => p.id === placeId,
+          );
+
+          if (specificPlaceIndex !== -1) {
+            const specificPlace = filteredPlaces[specificPlaceIndex];
+            // Remover el lugar de su posición actual
+            filteredPlaces.splice(specificPlaceIndex, 1);
+            // Insertarlo al principio del array
+            filteredPlaces.unshift(specificPlace);
+          }
         }
 
         setPlaces(filteredPlaces);

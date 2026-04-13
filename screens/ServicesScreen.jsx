@@ -53,7 +53,7 @@ const questions = [
       "¿La persona que te agredió es tu pareja, expareja o alguien de tu familia?",
     options: ["Sí", "No"],
     key: "agresor",
-    placeType: "justicia",
+    placeType: "protección",
     icon: ProteccionIcon,
     redirectTo: {
       tumaco: "comisaria_tumaco",

@@ -77,14 +77,13 @@ const PlaceCard = ({ place }) => {
           )}
         </View>
         <View style={styles.titleContainer}>
-          <AppText variant="h3" color="primary" numberOfLines={2}>
+          <AppText
+            variant="h4"
+            numberOfLines={4}
+            style={[styles.detailText, { color: theme.primary }]}
+          >
             {place.nombre}
           </AppText>
-          <View style={[styles.typeBadge, { backgroundColor: theme.badgeBg }]}>
-            <AppText variant="caption" style={{ color: theme.text }}>
-              {place.tipo.split("_").join(" ").toUpperCase()}
-            </AppText>
-          </View>
         </View>
       </View>
 
@@ -99,7 +98,10 @@ const PlaceCard = ({ place }) => {
 
         {place.descripcion && (
           <View style={styles.descriptionContainer}>
-            <AppText variant="body" color="tertiary" style={styles.description}>
+            <AppText
+              variant="body"
+              style={[styles.detailText, { color: theme.primary }]}
+            >
               {place.descripcion}
             </AppText>
           </View>
@@ -109,26 +111,18 @@ const PlaceCard = ({ place }) => {
       <View style={styles.actions}>
         <Button
           type="primaryOutline"
-          variant="pill"
           size="flex"
           onPress={handleCall}
-          iconLeft={
-            <Ionicons name="call-outline" size={18} color={theme.primary} />
-          }
-          style={{ borderColor: theme.primary }}
+          style={[styles.button, { borderColor: theme.primary }]}
           textStyle={{ color: theme.primary }}
         >
           Llamar
         </Button>
         <Button
           type="primary"
-          variant="pill"
           size="flex"
           onPress={handleNavigate}
-          iconLeft={
-            <Ionicons name="navigate-outline" size={18} color={colors.white} />
-          }
-          style={{ backgroundColor: theme.buttonBg }}
+          style={[styles.button, { backgroundColor: theme.buttonBg }]}
         >
           Cómo llegar
         </Button>
@@ -139,8 +133,11 @@ const PlaceCard = ({ place }) => {
 
 const DetailRow = ({ icon, theme, text }) => (
   <View style={styles.detailRow}>
-    <Ionicons name={icon} size={16} color={theme.primary} />
-    <AppText variant="body" color="secondary" style={styles.detailText}>
+    <Ionicons name={icon} size={24} color={theme.primary} />
+    <AppText
+      variant="body"
+      style={[styles.detailText, { color: theme.primary }]}
+    >
       {text}
     </AppText>
   </View>
@@ -203,14 +200,16 @@ const styles = StyleSheet.create({
     borderTopWidth: borderWidth.thin,
     borderTopColor: "#f0f0f0",
   },
-  description: {
-    fontStyle: "italic",
-    lineHeight: 20,
-  },
   actions: {
     flexDirection: "row",
+    flex: 1,
     alignItems: "center",
     gap: spacing.sm,
+  },
+  button: {
+    flex: 1,
+    height: "100%",
+    width: "100%",
   },
 });
 

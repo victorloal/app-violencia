@@ -73,7 +73,7 @@ export default function CalculatorScreen({ onUnlock, isTutorial = false }) {
   useEffect(() => {
     const checkFirstTime = async () => {
       const hasSeenCalcInstructions = await AsyncStorage.getItem(
-        "calc_instructions_seen"
+        "calc_instructions_seen",
       );
       if (!hasSeenCalcInstructions) {
         setShowInstructions(true);
@@ -303,7 +303,10 @@ export default function CalculatorScreen({ onUnlock, isTutorial = false }) {
 
       {/* ── Modal de instrucciones para tutorial ── */}
       {showInstructions && (
-        <Modal visible={true} transparent animationType="fade"
+        <Modal
+          visible={true}
+          transparent
+          animationType="fade"
           onRequestClose={() => setShowInstructions(false)}
         >
           <SafeAreaView style={styles.instructionsOverlay}>
@@ -317,7 +320,9 @@ export default function CalculatorScreen({ onUnlock, isTutorial = false }) {
                   </Text>
                 </View>
                 <Text style={styles.instructionText}>
-                  Realiza operaciones matemáticas como en una calculadora regular. Presiona los números, operadores y el botón "=" para ver el resultado.
+                  Realiza operaciones matemáticas como en una calculadora
+                  regular. Presiona los números, operadores y el botón
+                  &quot;=&quot; &quot;=&quot; ver el resultado.
                 </Text>
               </View>
 
@@ -330,7 +335,9 @@ export default function CalculatorScreen({ onUnlock, isTutorial = false }) {
                   </Text>
                 </View>
                 <Text style={styles.instructionText}>
-                  Mantén presionado el botón "=" durante 1 segundo y verás un patrón de vibración. ¡Así cerrarás la calculadora y regresarás a Perla!
+                  Mantén presionado el botón &quot;=&quot; durante 1 segundo y
+                  verás un patrón de vibración. ¡Así cerrarás la calculadora y
+                  regresarás a Perla!
                 </Text>
               </View>
 

@@ -1,5 +1,11 @@
-import React, { useEffect, useRef } from "react";
-import { StyleSheet, Animated } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  StyleSheet,
+  Animated,
+  FlatList,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import AppText from "../components/UI/AppText";
 import Button from "../components/UI/Button";
 import SvgComponent from "../assets/icons/logo.jsx";
@@ -7,54 +13,91 @@ import styles from "../styles";
 import { components } from "../styles/components";
 import CenteredLayout from "../components/Layout/CenteredLayout";
 import { slideInX, animationConfig } from "../styles/animations";
+import { colors } from "../thema/colors";
+
+const WELCOME_MESSAGES = [
+  "Este espacio es seguro y confidencial.",
+  "Te orientamos en rutas de atención frente a violencias contra las mujeres.",
+  "Aquí puedes informarte y buscar apoyo.",
+  "Tu autonomía, decisión y elección es lo más importante.",
+];
 
 export default function WelcomeScreen({ navigation, route }) {
   const { onMessageSeen } = route.params || {};
+  const { width } = useWindowDimensions();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const flatListRef = useRef(null);
 
-  // Animaciones para cada elemento
+  // Animaciones para cada elemento principal
   const logoAnim = useRef(new Animated.Value(0)).current;
   const titleAnim = useRef(new Animated.Value(0)).current;
-  const message1Anim = useRef(new Animated.Value(0)).current;
-  const message2Anim = useRef(new Animated.Value(0)).current;
-  const message3Anim = useRef(new Animated.Value(0)).current;
-  const message4Anim = useRef(new Animated.Value(0)).current;
+  const sliderAnim = useRef(new Animated.Value(0)).current;
   const buttonAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // 1. Logo aparece
-    Animated.timing(logoAnim, {
-      toValue: 1, duration: 700, useNativeDriver: true,
-    }).start(() => {
-      // 2. Contenido sube desde abajo
+    const config = animationConfig.stagger;
+
+    Animated.sequence([
       Animated.parallel([
         Animated.timing(logoAnim, { ...config, toValue: 1 }),
         Animated.timing(titleAnim, { ...config, toValue: 1 }),
       ]),
-      Animated.timing(message1Anim, { ...config, toValue: 1 }),
-      Animated.timing(message2Anim, { ...config, toValue: 1 }),
-      Animated.timing(message3Anim, { ...config, toValue: 1 }),
-      Animated.timing(message4Anim, { ...config, toValue: 1 }),
+      Animated.timing(sliderAnim, { ...config, toValue: 1 }),
       Animated.timing(buttonAnim, { ...config, toValue: 1 }),
     ]).start();
-  }, [
-    buttonAnim,
-    logoAnim,
-    message1Anim,
-    message2Anim,
-    message3Anim,
-    message4Anim,
-    titleAnim,
-  ]);
+  }, []);
+
+  // Autoplay logic
+  useEffect(() => {
+    const interval = setInterval(() => {
+      let nextIndex = (activeIndex + 1) % WELCOME_MESSAGES.length;
+      setActiveIndex(nextIndex);
+
+      if (flatListRef.current) {
+        flatListRef.current.scrollToIndex({
+          index: nextIndex,
+          animated: true,
+        });
+      }
+    }, 4000); // 4 segundos por mensaje
+
+    return () => clearInterval(interval);
+  }, [activeIndex]);
 
   const handlePress = () => {
-    if (onMessageSeen) onMessageSeen();
-    else navigation.replace("MessageConfig");
+    if (onMessageSeen) {
+      onMessageSeen();
+    } else {
+      navigation.replace("MessageConfig");
+    }
   };
 
-  // Estilos de animación importados de styles/animations.js
+  const renderItem = ({ item }) => (
+    <View style={[screenStyles.slide, { width }]}>
+      <View style={[components.card, screenStyles.cardVariant]}>
+        <AppText variant="body" style={screenStyles.cardText}>
+          {item}
+        </AppText>
+      </View>
+    </View>
+  );
+
+  const Pagination = () => (
+    <View style={screenStyles.paginationContainer}>
+      {WELCOME_MESSAGES.map((_, i) => (
+        <View
+          key={i}
+          style={[
+            screenStyles.dot,
+            activeIndex === i && screenStyles.activeDot,
+          ]}
+        />
+      ))}
+    </View>
+  );
 
   return (
-    <CenteredLayout>
+    <CenteredLayout style={{ backgroundColor: "#743688" }}>
       {/* Logo principal */}
       <Animated.View
         style={[screenStyles.logoContainer, slideInX(logoAnim)]}
@@ -63,121 +106,86 @@ export default function WelcomeScreen({ navigation, route }) {
         accessibilityRole="image"
         accessibilityHint="Logo de la aplicación"
       >
-        <SvgComponent width={100} height={100} />
-        <AppText variant="h1" style={screenStyles.appName} accessible={false}>
-          Perla
-        </AppText>
+        <SvgComponent width={300} height={300} />
       </Animated.View>
 
-      <Animated.View
-        style={[
-          components.card,
-          screenStyles.cardVariant,
-          slideInX(message1Anim),
-        ]}
-        accessible={true}
-        accessibilityLabel="Este espacio es seguro y confidencial"
-        accessibilityRole="text"
-      >
-        <AppText variant="h3" style={screenStyles.cardText} accessible={false}>
-          Este espacio es seguro y confidencial.
-        </AppText>
+      {/* Slider de mensajes */}
+      <Animated.View style={[screenStyles.sliderWrapper, slideInX(sliderAnim)]}>
+        <FlatList
+          ref={flatListRef}
+          data={WELCOME_MESSAGES}
+          renderItem={renderItem}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onMomentumScrollEnd={(e) => {
+            const index = Math.round(e.nativeEvent.contentOffset.x / width);
+            setActiveIndex(index);
+          }}
+          keyExtractor={(_, index) => index.toString()}
+        />
+        <Pagination />
       </Animated.View>
 
-      <Animated.View
-        style={[
-          components.card,
-          screenStyles.cardVariant,
-          slideInX(message2Anim),
-        ]}
-        accessible={true}
-        accessibilityLabel="Te orientamos en rutas de atención frente a violencias contra las mujeres"
-        accessibilityRole="text"
-      >
-        <AppText variant="h3" style={screenStyles.cardText} accessible={false}>
-          Te orientamos en rutas de atención frente a violencias contra las
-          mujeres.
-        </AppText>
-      </Animated.View>
-
-      <Animated.View
-        style={[
-          components.card,
-          screenStyles.cardVariant,
-          slideInX(message3Anim),
-        ]}
-        accessible={true}
-        accessibilityLabel="Aquí puedes informarte y buscar apoyo"
-        accessibilityRole="text"
-      >
-        <AppText variant="h3" style={screenStyles.cardText} accessible={false}>
-          Aquí puedes informarte y buscar apoyo.
-        </AppText>
-      </Animated.View>
-
-      <Animated.View
-        style={[
-          components.card,
-          screenStyles.cardVariant,
-          slideInX(message4Anim),
-        ]}
-        accessible={true}
-        accessibilityLabel="Tu autonomía, decisión y elección es lo más importante"
-        accessibilityRole="text"
-      >
-        <AppText variant="h3" style={screenStyles.cardText} accessible={false}>
-          Tu autonomía, decisión y elección es lo más importante.
-        </AppText>
-      </Animated.View>
-
-      {/* Botón para continuar */}
       <Animated.View
         style={[screenStyles.buttonContainer, slideInX(buttonAnim)]}
         accessible={true}
         accessibilityLabel="Comenzar"
         accessibilityRole="button"
       >
-        <Button type="primary" onPress={handlePress} size="xl">
+        <Button type="inversePrimary" onPress={handlePress} size="xl">
           Comenzar
         </Button>
       </Animated.View>
-    </View>
+    </CenteredLayout>
   );
 }
 
-// ── Estilos ───────────────────────────────────────────────────────
-const ws = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: "#3c1042",
-  },
-
-  // Logo ocupa toda la pantalla de fondo
+const screenStyles = StyleSheet.create({
   logoContainer: {
-    marginBottom: styles.spacing.sm,
+    marginBottom: styles.spacing.xl,
     alignItems: "center",
   },
-  nameContainer: {
-    alignItems: "center",
-    marginBottom: styles.spacing.xxxl,
+  sliderWrapper: {
+    height: 180,
+    width: "100%",
   },
-  appName: {
-    textAlign: "center",
-    color: styles.semanticColors.text.primary,
+  slide: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: styles.spacing.md,
   },
   cardVariant: {
-    flexDirection: "row",
+    width: "100%",
+    minHeight: 100,
+    justifyContent: "center",
     alignItems: "center",
-    marginBottom: styles.spacing.md,
-    marginHorizontal: styles.spacing.md,
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
   },
   cardText: {
-    flex: 1,
-    color: styles.semanticColors.text.secondary,
+    color: "#743688",
     textAlign: "center",
+    paddingHorizontal: styles.spacing.lg,
+  },
+  paginationContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: styles.spacing.md,
+    gap: styles.spacing.sm,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "rgba(255, 255, 255, 0.4)",
+  },
+  activeDot: {
+    backgroundColor: colors.white,
+    width: 24, // Efecto pill para el activo
   },
   buttonContainer: {
     width: "90%",
-    marginTop: styles.spacing.md,
+    marginTop: styles.spacing.xl,
   },
 });

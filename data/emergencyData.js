@@ -73,38 +73,6 @@ export const emergencyNumbers = [
     ),
   },
   {
-    id: "e-7",
-    nombre: "Defensa Civil",
-    numero: "144",
-    horario: "24 horas",
-    descripcion: "Gestión de desastres y emergencias civiles.",
-    tipo: "emergencia",
-    prioridad: false,
-    icon: (color) => (
-      <Ionicons name="construct-outline" size={22} color={color} />
-    ),
-  },
-  {
-    id: "e-8",
-    nombre: "Cruz Roja",
-    numero: "132",
-    horario: "24 horas",
-    descripcion: "Atención médica y emergencias humanitarias.",
-    tipo: "emergencia",
-    prioridad: false,
-    icon: (color) => <Ionicons name="medkit-outline" size={22} color={color} />,
-  },
-  {
-    id: "e-9",
-    nombre: "Bomberos",
-    numero: "119",
-    horario: "24 horas",
-    descripcion: "Atención de incendios y emergencias.",
-    tipo: "emergencia",
-    prioridad: false,
-    icon: (color) => <Ionicons name="flame-outline" size={22} color={color} />,
-  },
-  {
     id: "e-10",
     nombre: "Línea Amiga – Salud Mental",
     numero: "106",
