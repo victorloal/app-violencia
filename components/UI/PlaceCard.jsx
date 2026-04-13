@@ -1,5 +1,4 @@
-import React from "react";
-import { View, StyleSheet, Image } from "react-native";
+import { Alert, View, StyleSheet, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AppText from "./AppText";
 import Button from "./Button";
@@ -13,6 +12,7 @@ import {
 import { linkingService } from "../../services/linkingService";
 import { getTypeConfig } from "../../thema/placesTypes";
 import { getPlaceImage } from "../../constants/placeIconsConfig";
+import React from "react";
 
 const PlaceCard = ({ place }) => {
   const theme = getTypeConfig(place.tipo);
@@ -20,7 +20,26 @@ const PlaceCard = ({ place }) => {
   const placeImage = getPlaceImage(place.id);
 
   const handleCall = () => {
-    linkingService.makePhoneCall(place.telefono);
+    if (!place.telefono) return;
+
+    const phones = place.telefono.split("\n").map((num) => num.trim());
+
+    if (phones.length > 1) {
+      Alert.alert(
+        "Seleccionar número",
+        "Esta entidad tiene múltiples números de contacto:",
+        [
+          ...phones.map((phone) => ({
+            text: `Llamar a ${phone}`,
+            onPress: () => linkingService.makePhoneCall(phone),
+          })),
+          { text: "Cancelar", style: "cancel" },
+        ],
+        { cancelable: true },
+      );
+    } else {
+      linkingService.makePhoneCall(phones[0]);
+    }
   };
 
   const handleNavigate = () => {
@@ -42,13 +61,19 @@ const PlaceCard = ({ place }) => {
           ]}
         >
           {placeImage ? (
-            <Image 
+            <Image
               source={placeImage}
               style={styles.placeImage}
               resizeMode="contain"
             />
+          ) : theme.isCustomIcon ? (
+            React.createElement(theme.icon, {
+              width: 32,
+              height: 32,
+              color: theme.primary,
+            })
           ) : (
-            <Ionicons name={theme.icon} size={24} color={theme.primary} />
+            <Ionicons name={theme.icon} size={32} color={theme.primary} />
           )}
         </View>
         <View style={styles.titleContainer}>
@@ -57,7 +82,7 @@ const PlaceCard = ({ place }) => {
           </AppText>
           <View style={[styles.typeBadge, { backgroundColor: theme.badgeBg }]}>
             <AppText variant="caption" style={{ color: theme.text }}>
-              {place.tipo.charAt(0).toUpperCase() + place.tipo.slice(1)}
+              {place.tipo.split("_").join(" ").toUpperCase()}
             </AppText>
           </View>
         </View>
@@ -65,7 +90,11 @@ const PlaceCard = ({ place }) => {
 
       <View style={styles.details}>
         <DetailRow icon="time-outline" theme={theme} text={place.horario} />
-        <DetailRow icon="location-outline" theme={theme} text={place.direccion} />
+        <DetailRow
+          icon="location-outline"
+          theme={theme}
+          text={place.direccion}
+        />
         <DetailRow icon="call-outline" theme={theme} text={place.telefono} />
 
         {place.descripcion && (

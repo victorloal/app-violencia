@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, FlatList, Dimensions, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
@@ -74,6 +74,21 @@ export default function FormScreen({ navigation }) {
   const [formData, setFormData] = useState({});
   const [otherText, setOtherText] = useState("");
 
+  // Cargar datos guardados previamente
+  useEffect(() => {
+    const loadSavedData = async () => {
+      try {
+        const savedData = await AsyncStorage.getItem("userData");
+        if (savedData) {
+          setFormData(JSON.parse(savedData));
+        }
+      } catch (error) {
+        console.error("Error cargando datos del formulario:", error);
+      }
+    };
+    loadSavedData();
+  }, []);
+
   const handleSelect = (key, value, multiple = false) => {
     if (multiple) {
       const currentValues = Array.isArray(formData[key]) ? formData[key] : [];
@@ -112,11 +127,18 @@ export default function FormScreen({ navigation }) {
     setFormData(updatedData);
     setOtherText("");
 
+    // Guardar progreso en el dispositivo
+    await AsyncStorage.setItem("userData", JSON.stringify(updatedData));
+
+    // Guardar la región de forma independiente para que el hook usePlaces la encuentre siempre
+    if (updatedData.region) {
+      await AsyncStorage.setItem("region", updatedData.region);
+    }
+
     if (currentIndex < questions.length - 1) {
       flatListRef.current.scrollToIndex({ index: currentIndex + 1 });
       setCurrentIndex(currentIndex + 1);
     } else {
-      await AsyncStorage.setItem("userData", JSON.stringify(updatedData));
       await AsyncStorage.setItem("formCompleted", "true");
 
       // Enviar al backend (no bloquea la navegación)

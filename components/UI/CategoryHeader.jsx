@@ -2,11 +2,11 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import AppText from "../UI/AppText";
-import { colors } from "../../thema/colors";
 import { spacing, borderRadius, borderWidth } from "../../styles/tokens";
 import { getTypeConfig } from "../../thema/placesTypes";
+import { Ionicons } from "@expo/vector-icons";
 
-const CategoryHeader = ({ type, title, description, icon }) => {
+const CategoryHeader = ({ type, title, description }) => {
   const theme = getTypeConfig(type);
 
   return (
@@ -17,7 +17,15 @@ const CategoryHeader = ({ type, title, description, icon }) => {
           { backgroundColor: theme.badgeBg, borderColor: theme.border },
         ]}
       >
-        {icon}
+        {theme.isCustomIcon ? (
+          React.createElement(theme.icon, {
+            width: 32,
+            height: 32,
+            color: theme.primary,
+          })
+        ) : (
+          <Ionicons name={theme.icon} size={32} color={theme.primary} />
+        )}
       </View>
       <View style={styles.textContainer}>
         <AppText variant="h2" style={{ color: theme.primary }}>

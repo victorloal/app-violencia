@@ -1,7 +1,9 @@
 // screens/PlacesScreen.jsx
 import React from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import MainLayout from "../components/Layout/MainLayout";
+import AppText from "../components/UI/AppText";
+import Button from "../components/UI/Button";
 import { colors } from "../thema/colors";
 import { spacing } from "../styles/tokens";
 import CategoryHeader from "../components/UI/CategoryHeader";
@@ -11,11 +13,71 @@ import EmptyState from "../components/UI/EmptyState";
 import HelpMessage from "../components/UI/HelpMessage";
 import { usePlaces } from "../hooks/usePlaces";
 import { getTypeConfig } from "../thema/placesTypes";
+import { Ionicons } from "@expo/vector-icons";
 
-export default function PlacesScreen({ route }) {
+export default function PlacesScreen({ route, navigation }) {
   const { tipo = "salud" } = route.params || {};
-  const { selectedType, places, categoryInfo, changeType } = usePlaces(tipo);
+  const {
+    selectedType,
+    places,
+    categoryInfo,
+    changeType,
+    isLoading,
+    userRegion,
+  } = usePlaces(tipo);
+
+  // Debug region loading
+  // console.log("Current region in PlacesScreen:", userRegion);
+
   const theme = getTypeConfig(selectedType);
+
+  if (isLoading) {
+    return (
+      <MainLayout>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.lavender[600]} />
+          <AppText style={{ marginTop: spacing.md }}>
+            Cargando lugares...
+          </AppText>
+        </View>
+      </MainLayout>
+    );
+  }
+
+  if (!userRegion) {
+    return (
+      <MainLayout>
+        <View style={styles.emptyRegionContainer}>
+          <View style={styles.iconCircle}>
+            <Ionicons
+              name="location-outline"
+              size={64}
+              color={colors.lavender[600]}
+            />
+          </View>
+          <AppText variant="h2" align="center" style={styles.emptyTitle}>
+            Región No Seleccionada
+          </AppText>
+          <AppText
+            variant="body"
+            align="center"
+            style={styles.emptyDescription}
+          >
+            Para mostrarte los lugares más cercanos, necesitamos saber si te
+            encuentras en Tumaco o Buenaventura.
+          </AppText>
+          <Button
+            type="primary"
+            size="xl"
+            style={styles.actionButton}
+            onPress={() => navigation.navigate("Form")}
+          >
+            Realizar Encuesta
+          </Button>
+        </View>
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>
@@ -60,8 +122,41 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingBottom: spacing.xxl,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   listContainer: {
     padding: spacing.lg,
     gap: spacing.md,
+  },
+  emptyRegionContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: spacing.xl,
+  },
+  iconCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: colors.lavender[100],
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: spacing.xl,
+  },
+  emptyTitle: {
+    marginBottom: spacing.md,
+    color: colors.lavender[900],
+  },
+  emptyDescription: {
+    marginBottom: spacing.xxl,
+    color: colors.neutral[600],
+    paddingHorizontal: spacing.xl,
+  },
+  actionButton: {
+    width: "100%",
+    maxWidth: 300,
   },
 });

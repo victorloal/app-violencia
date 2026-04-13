@@ -63,7 +63,7 @@ const questions = [
       "¿Consideras que tus derechos como víctima fueron vulnerados durante la atención de tu caso por una persona empleada, funcionaria o contratista?",
     options: ["Sí", "No"],
     key: "derechos_vulnerados",
-    placeType: "protección",
+    placeType: "ministerio_publico",
     icon: JusticiaIcon,
   },
 ];
@@ -155,25 +155,6 @@ export default function ServicesScreen({ navigation }) {
       return isLastQuestion ? "Finalizar" : "Siguiente";
     };
 
-    // Ícono del botón según el contexto
-    const getButtonIcon = () => {
-      if (hasYes) {
-        switch (placeType) {
-          case "salud":
-            return "medical";
-          case "psicologico":
-            return "heart";
-          case "justicia":
-            return "scale";
-          case "protección":
-            return "shield";
-          default:
-            return "location";
-        }
-      }
-      return isLastQuestion ? "checkmark" : "arrow-forward";
-    };
-
     const currentType = item.placeType;
     const theme = getTypeConfig(currentType);
 
@@ -233,7 +214,7 @@ export default function ServicesScreen({ navigation }) {
                   onPress={() => handleSelect(item.key, option)}
                 >
                   <AppText
-                    variant="h4"
+                    variant="body"
                     style={{
                       color: isSelected ? theme.primary : colors.lavender[600],
                     }}
@@ -360,7 +341,7 @@ const styles = StyleSheet.create({
     borderColor: colors.lavender[200],
   },
   question: {
-    textAlign: "left",
+    textAlign: "center",
     color: colors.lavender[900],
   },
   optionsContainer: {

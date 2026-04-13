@@ -9,26 +9,20 @@ import {
   borderWidth,
   shadow,
 } from "../../styles/tokens";
-import { getTypeConfig } from "../../thema/placesTypes";
-import SaludIcon from "../../assets/icons/Salud";
-import ProteccionIcon from "../../assets/icons/Protección";
-import JusticiaIcon from "../../assets/icons/Justicia";
-
-const categories = [
-  { id: "salud", label: "Salud", icon: SaludIcon },
-  { id: "protección", label: "Protección", icon: ProteccionIcon },
-  { id: "justicia", label: "Justicia", icon: JusticiaIcon },
-];
+import { getTypeConfig, CATEGORIES } from "../../thema/placesTypes";
+import { Ionicons } from "@expo/vector-icons";
 
 const CategoryFilters = ({ selectedType, onSelectType }) => {
+  const selectedTheme = getTypeConfig(selectedType);
+
   return (
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      style={styles.container}
+      style={[styles.container, { backgroundColor: selectedTheme.background }]}
       contentContainerStyle={styles.content}
     >
-      {categories.map((category) => {
+      {CATEGORIES.map((category) => {
         const theme = getTypeConfig(category.id);
         const isActive = selectedType === category.id;
 
@@ -47,15 +41,26 @@ const CategoryFilters = ({ selectedType, onSelectType }) => {
             accessibilityLabel={`Filtrar por ${category.label}`}
             accessibilityRole="button"
           >
-            {React.createElement(category.icon, {
-              width: 24,
-              height: 24,
-              color: isActive ? colors.white : theme.primary,
-            })}
+            {theme.isCustomIcon ? (
+              React.createElement(theme.icon, {
+                width: 20,
+                height: 20,
+                fill: isActive ? colors.white : theme.primary,
+              })
+            ) : (
+              <Ionicons
+                name={theme.icon}
+                size={20}
+                color={isActive ? colors.white : theme.primary}
+              />
+            )}
             <AppText
               variant="caption"
               color={isActive ? "light" : "secondary"}
               bold={isActive}
+              style={
+                isActive ? { color: colors.white } : { color: theme.primary }
+              }
             >
               {category.label}
             </AppText>
@@ -68,7 +73,6 @@ const CategoryFilters = ({ selectedType, onSelectType }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.white,
     paddingVertical: spacing.sm,
     borderBottomWidth: borderWidth.thin,
     borderBottomColor: colors.neutral[100] || "#f0f0f0",
