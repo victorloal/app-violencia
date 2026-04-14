@@ -1,414 +1,133 @@
 // components/UI/AppTutorial.jsx
-import React, { useState, useEffect, useRef } from "react";
-import {
-  View,
-  Modal,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-  Animated,
-} from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useCallback } from "react";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useCopilot } from "react-native-copilot";
 import AppText from "./AppText";
-import Button from "./Button";
 import { colors } from "../../thema/colors";
+import { useTutorialContext } from "../../context/TutorialContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const { width, height } = Dimensions.get("window");
-const TUTORIAL_KEY = "sorora_tutorial_done";
+const TUTORIAL_KEY = "@Perla/tutorial_completed";
+// ── Tooltip personalizado ────────────────────────────────────────
+// Esta versión de react-native-copilot solo pasa { labels } como prop.
+// La navegación se controla con useCopilot() desde adentro.
+export function TutorialTooltip({ labels }) {
+  const { goToNext, stop, currentStep, isLastStep } = useCopilot();
+const { setTutorialActive, markTutorialCompleted, openCalcDemoRef } = useTutorialContext();
 
-// ── Pasos del tutorial ────────────────────────────────────────────
-// spotlightX / spotlightY: centro del elemento a destacar
-// tooltipSide: "center" | "top" | "bottom"
-const STEPS = [
-  {
-    id: 1,
-    icon: "hand-left-outline",
-    title: "Bienvenida a Perla",
-    description:
-      "Te mostramos cómo usar las funciones principales de la app en pocos pasos. Puedes cerrar este tutorial en cualquier momento.",
-    tooltipSide: "center",
-    spotlightX: null,
-    spotlightY: null,
-  },
-  {
-    id: 2,
-    icon: "settings-outline",
-    title: "Ajustes",
-    description:
-      "Toca el ícono de engranaje para configurar la app: tamaño de letra, accesibilidad, contraste y el número de tu contacto de emergencia.",
-    tooltipSide: "bottom",
-    spotlightX: width - 80,       
-    spotlightY: height * 0.088,   
-  },
-  {
-    id: 3,
-    icon: "mail-outline",
-    title: "Botón Mensaje",
-    description:
-      "Envía tu ubicación por WhatsApp a tu contacto de confianza con un solo toque. Úsalo cuando necesites que alguien sepa dónde estás.",
-    tooltipSide: "top",
-    spotlightX: width * 0.175,
-    spotlightY: height - height * 0.068,
-  },
-  {
-    id: 4,
-    icon: "call-outline",
-    title: "Botón 24/7",
-    description:
-      "Accede a los centros de atención de emergencia. Mantén presionado para llamar directamente a tu contacto de confianza.",
-    tooltipSide: "top",
-    spotlightX: width * 0.5,
-    spotlightY: height - height * 0.072,
-  },
-  {
-    id: 5,
-    icon: "calculator-outline",
-    title: "Botón Camuflaje",
-    description:
-      "Oculta la app convirtiéndola en una calculadora. Para volver, mantén presionado el botón '=' de la calculadora.",
-    tooltipSide: "top",
-    spotlightX: width * 0.825,
-    spotlightY: height - height * 0.068,
-    hasDemo: true,
-  },
-  {
-    id: 6,
-    icon: "apps-outline",
-    title: "Carrusel de violencias",
-    description:
-      "Desliza las tarjetas para conocer los tipos de violencia. En cada una puedes ver más información y solicitar ayuda.",
-    tooltipSide: "bottom",
-    spotlightX: width * 0.5,
-    spotlightY: height * 0.45,
-  },
-];
+  const iconName =
+    currentStep?.name?.split(":")[0] ?? "information-circle-outline";
+  const title = currentStep?.text?.split("|")[0] ?? "";
+  const desc  = currentStep?.text?.split("|")[1] ?? "";
 
-export default function AppTutorial({ onDone, onOpenCalcDemo, isTutorialDemo }) {
-  const [visible, setVisible] = useState(false);
-  const [step, setStep]       = useState(0);
-  const fadeAnim              = useRef(new Animated.Value(0)).current;
-  const scaleAnim             = useRef(new Animated.Value(0.88)).current;
-  const spotlightGlowAnim     = useRef(new Animated.Value(0.4)).current;
-
-  // Solo mostrar la primera vez
-  useEffect(() => {
-    AsyncStorage.getItem(TUTORIAL_KEY).then((done) => {
-      if (!done) setVisible(true);
-    });
-  }, []);
-
-  // Animación de entrada al cambiar paso
-  useEffect(() => {
-    if (!visible) return;
-    fadeAnim.setValue(0);
-    scaleAnim.setValue(0.88);
-    Animated.parallel([
-      Animated.timing(fadeAnim,  { toValue: 1, duration: 240, useNativeDriver: true }),
-      Animated.spring(scaleAnim, { toValue: 1, friction: 7,   useNativeDriver: true }),
-    ]).start();
-  }, [step, visible]);
-
-  // Cuando termina la demo de calculadora, continuar al siguiente paso
-  useEffect(() => {
-    if (isTutorialDemo === false && step === 4) {
-      // Volvió de la calculadora, mostrar tutorial nuevamente y continuar
-      setStep((s) => s + 1);
-      setVisible(true);
-    }
-  }, [isTutorialDemo]);
-
-  // Animación de pulso del spotlight
-  useEffect(() => {
-    if (!visible) return;
-    spotlightGlowAnim.setValue(0.4);
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(spotlightGlowAnim, { 
-          toValue: 1, 
-          duration: 1000, 
-          useNativeDriver: false 
-        }),
-        Animated.timing(spotlightGlowAnim, { 
-          toValue: 0.4, 
-          duration: 1000, 
-          useNativeDriver: false 
-        }),
-      ])
-    ).start();
-  }, [visible]);
-
-  const current = STEPS[step];
-  const isLast  = step === STEPS.length - 1;
-
-  // Si tutorial demo está activo, ocultar el modal principal
-  if (isTutorialDemo) {
-    return null;
-  }
-
-  const handleNext = () => {
-    // Si es el paso con demo de calculadora, abrir calculadora
-    if (current.hasDemo && onOpenCalcDemo) {
-      setVisible(false);
-      onOpenCalcDemo();
+const handleNext = () => {
+    // Step 5: Open calculator demo instead of just advancing
+    if (currentStep?.name === "calculator-outline:camuflaje") {
+      openCalcDemoRef.current?.();
+      setTutorialActive(true);
       return;
     }
 
-    if (isLast) handleClose();
-    else setStep((s) => s + 1);
+    setTutorialActive(true);
+    if (isLastStep) {
+      markTutorialCompleted();
+      stop();
+    } else {
+      goToNext();
+    }
+  };
+  const handleStop = () => {
+    setTutorialActive(true);
+    markTutorialCompleted();
+    stop();
   };
 
-  const handleClose = async () => {
-    await AsyncStorage.setItem(TUTORIAL_KEY, "true");
-    setVisible(false);
-    onDone?.();
-  };
-
-  if (!visible) return null;
-
-  // ── Posición del tooltip ─────────────────────────────────────────
-  const tooltipStyle = (() => {
-    switch (current.tooltipSide) {
-      case "center":
-        return { top: height * 0.28, left: 20, right: 20 };
-      case "top":
-        // Tooltip encima de la barra inferior
-        return { bottom: height * 0.19, left: 20, right: 20 };
-      case "bottom":
-      default:
-        // Tooltip debajo del elemento (navbar o carrusel)
-        return { top: height * 0.14, left: 20, right: 20 };
-    }
-  })();
-
-  // ── Flecha del tooltip ───────────────────────────────────────────
-  const arrowEl = (() => {
-    if (!current.spotlightX || current.tooltipSide === "center") return null;
-
-    // Clamp para que la flecha no salga de la tarjeta
-    const cardLeft   = 20;
-    const cardRight  = width - 20;
-    const cardWidth  = cardRight - cardLeft;
-    const rawLeft    = current.spotlightX - cardLeft - 12;
-    const clampedLeft = Math.max(16, Math.min(cardWidth - 40, rawLeft));
-
-    if (current.tooltipSide === "top") {
-      // Flecha apunta hacia abajo (hacia la barra inferior)
-      return (
-        <View style={[arrowStyles.base, arrowStyles.down, { left: clampedLeft }]} />
-      );
-    }
-    // Flecha apunta hacia arriba (hacia navbar o carrusel)
-    return (
-      <View style={[arrowStyles.base, arrowStyles.up, { left: clampedLeft }]} />
-    );
-  })();
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="fade"
-      statusBarTranslucent
-      onRequestClose={handleClose}
-    >
-      <View style={tutStyles.overlay}>
-
-        {/* Spotlight circular */}
-        {current.spotlightX && current.spotlightY && (
-          <Animated.View
-            pointerEvents="none"
-            style={[
-              tutStyles.spotlightWrapper,
-              {
-                left: current.spotlightX - 60,
-                top: current.spotlightY - 60,
-              },
-            ]}
-          >
-            <Animated.View 
-              style={[
-                tutStyles.spotlight,
-                {
-                  opacity: spotlightGlowAnim,
-                }
-              ]} 
-            />
-            <Animated.View 
-              style={[
-                tutStyles.spotlightInner,
-                {
-                  opacity: spotlightGlowAnim.interpolate({
-                    inputRange: [0.4, 1],
-                    outputRange: [0.5, 1],
-                  }),
-                }
-              ]} 
-            />
-          </Animated.View>
-        )}
-
-        {/* Tooltip */}
-        <Animated.View
-          style={[
-            tutStyles.tooltip,
-            tooltipStyle,
-            { opacity: fadeAnim, transform: [{ scale: scaleAnim }] },
-          ]}
+    <View style={styles.tooltip}>
+      {/* Cabecera */}
+      <View style={styles.header}>
+        <View style={styles.iconWrap}>
+          <Ionicons name={iconName} size={18} color={colors.lavender[700]} />
+        </View>
+        <AppText variant="h3" bold style={styles.title}>
+          {title}
+        </AppText>
+        <TouchableOpacity
+          onPress={handleStop}
+          style={styles.closeBtn}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >
-          {/* Flecha */}
-          {arrowEl}
-
-          {/* Cabecera */}
-          <View style={tutStyles.header}>
-            <View style={tutStyles.iconWrap}>
-              <Ionicons name={current.icon} size={20} color={colors.lavender[700]} />
-            </View>
-            <AppText variant="h3" bold style={tutStyles.title}>
-              {current.title}
-            </AppText>
-            <TouchableOpacity
-              onPress={handleClose}
-              style={tutStyles.closeBtn}
-              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-            >
-              <Ionicons name="close" size={18} color={colors.neutral[500]} />
-            </TouchableOpacity>
-          </View>
-
-          {/* Descripción */}
-          <AppText variant="body" style={tutStyles.desc}>
-            {current.description}
-          </AppText>
-
-          {/* Puntos de progreso */}
-          <View style={tutStyles.dots}>
-            {STEPS.map((_, i) => (
-              <View
-                key={i}
-                style={[
-                  tutStyles.dot,
-                  i === step && tutStyles.dotActive,
-                  i < step  && tutStyles.dotDone,
-                ]}
-              />
-            ))}
-          </View>
-
-          {/* Acciones */}
-          <View style={tutStyles.actions}>
-            <TouchableOpacity onPress={handleClose} style={tutStyles.skipBtn}>
-              <AppText variant="caption" style={tutStyles.skipText}>
-                Saltar tutorial
-              </AppText>
-            </TouchableOpacity>
-
-            <Button type="primary" size="md" onPress={handleNext} style={tutStyles.nextBtn}>
-              <View style={tutStyles.nextContent}>
-                <AppText variant="body" bold color="light">
-                  {current.hasDemo ? "Ver demostración" : isLast ? "¡Entendido!" : "Continuar"}
-                </AppText>
-                {!isLast && !current.hasDemo && (
-                  <Ionicons
-                    name="arrow-forward"
-                    size={15}
-                    color={colors.white}
-                    style={{ marginLeft: 6 }}
-                  />
-                )}
-              </View>
-            </Button>
-          </View>
-        </Animated.View>
+          <Ionicons name="close" size={16} color={colors.neutral[500]} />
+        </TouchableOpacity>
       </View>
-    </Modal>
+
+      {/* Descripción */}
+      <AppText variant="body" style={styles.desc}>
+        {desc}
+      </AppText>
+
+      {/* Acciones */}
+      <View style={styles.actions}>
+        <TouchableOpacity onPress={handleStop} style={styles.skipBtn}>
+          <AppText variant="caption" style={styles.skipText}>
+            Saltar tutorial
+          </AppText>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={handleNext} style={styles.nextBtn}>
+          <AppText variant="body" bold style={styles.nextText}>
+            {isLastStep ? "¡Entendido!" : "Continuar"}
+          </AppText>
+          {!isLastStep && (
+            <Ionicons
+              name="arrow-forward"
+              size={14}
+              color={colors.white}
+              style={{ marginLeft: 5 }}
+            />
+          )}
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 
-// ── Utilidad para resetear desde Settings ────────────────────────
+// ── Hook para iniciar el tutorial automáticamente ────────────────
+// Usa doble requestAnimationFrame para garantizar que todos los
+// CopilotStep ya están medidos antes de llamar start().
+export function useTutorialAutoStart() {
+  const { start } = useCopilot();
+  const { isTutorialActive, isTutorialCompleted } = useTutorialContext();
+
+  const startIfNeeded = useCallback(() => {
+    if (!isTutorialActive && !isTutorialCompleted) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => start());
+      });
+    }
+  }, [start, isTutorialActive, isTutorialCompleted]);
+
+  useEffect(() => {
+    startIfNeeded();
+  }, [startIfNeeded]);
+}
+
+// ── Resetear desde Settings ──────────────────────────────────────
 export async function resetTutorial() {
   await AsyncStorage.removeItem(TUTORIAL_KEY);
 }
 
 // ── Estilos ──────────────────────────────────────────────────────
-const arrowStyles = StyleSheet.create({
-  base: {
-    position: "absolute",
-    width: 0,
-    height: 0,
-    borderLeftWidth: 11,
-    borderRightWidth: 11,
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-  },
-  down: {
-    bottom: -13,
-    borderTopWidth: 14,
-    borderTopColor: colors.white,
-  },
-  up: {
-    top: -13,
-    borderBottomWidth: 14,
-    borderBottomColor: colors.white,
-  },
-});
-
-const tutStyles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.74)",
-  },
-
-  spotlightWrapper: {
-    position: "absolute",
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    overflow: 'hidden',
-  },
-  spotlight: {
-    position: "absolute",
-    top: 5,
-    left: 5,
-    width: 110,
-    height: 110,
-    borderRadius: 55,
-    backgroundColor: "rgba(255,255,255,0.3)",
-    borderWidth: 2,
-    borderColor: "rgba(255,255,255,0.5)",
-    shadowColor: '#F31A73',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.8,
-    shadowRadius: 30,
-  },
-  spotlightInner: {
-    position: "absolute",
-    top: 15,
-    left: 15,
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: "rgba(255,255,255,0.2)",
-    borderWidth: 1.5,
-    borderColor: "rgba(255,255,255,0.4)",
-    shadowColor: '#82368C',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.7,
-    shadowRadius: 20,
-  },
-
+const styles = StyleSheet.create({
   tooltip: {
-    position: "absolute",
     backgroundColor: colors.white,
     borderRadius: 20,
-    padding: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.16,
-    shadowRadius: 20,
-    elevation: 20,
+    padding: 18,
+    minWidth: 280,
+    maxWidth: 340,
   },
-
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -416,8 +135,8 @@ const tutStyles = StyleSheet.create({
     gap: 10,
   },
   iconWrap: {
-    width: 34,
-    height: 34,
+    width: 32,
+    height: 32,
     borderRadius: 10,
     backgroundColor: colors.lavender[100],
     alignItems: "center",
@@ -426,43 +145,22 @@ const tutStyles = StyleSheet.create({
   title: {
     flex: 1,
     color: colors.lavender[900],
-    fontSize: 15,
+    fontSize: 14,
   },
   closeBtn: {
-    width: 28,
-    height: 28,
+    width: 26,
+    height: 26,
     borderRadius: 8,
     backgroundColor: colors.neutral[100],
     alignItems: "center",
     justifyContent: "center",
   },
-
   desc: {
     color: colors.neutral[600],
-    lineHeight: 22,
+    lineHeight: 21,
     marginBottom: 14,
+    fontSize: 13,
   },
-
-  dots: {
-    flexDirection: "row",
-    gap: 5,
-    marginBottom: 14,
-    alignItems: "center",
-  },
-  dot: {
-    width: 7,
-    height: 7,
-    borderRadius: 4,
-    backgroundColor: colors.neutral[200],
-  },
-  dotActive: {
-    width: 20,
-    backgroundColor: colors.lavender[600],
-  },
-  dotDone: {
-    backgroundColor: colors.lavender[300],
-  },
-
   actions: {
     flexDirection: "row",
     alignItems: "center",
@@ -472,14 +170,18 @@ const tutStyles = StyleSheet.create({
   skipText: {
     color: colors.neutral[400],
     textDecorationLine: "underline",
+    fontSize: 12,
   },
   nextBtn: {
-    borderRadius: 12,
-    paddingHorizontal: 18,
-    paddingVertical: 10,
-  },
-  nextContent: {
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: colors.lavender[600],
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 9,
+  },
+  nextText: {
+    color: colors.white,
+    fontSize: 13,
   },
 });
