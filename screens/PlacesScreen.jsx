@@ -120,8 +120,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.lavender[50],
   },
-  filters:{
-    height:"50%",
+  filters: {
+    height: "50%",
   },
   contentContainer: {
     paddingBottom: spacing.xxl,

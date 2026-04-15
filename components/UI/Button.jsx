@@ -1,13 +1,14 @@
-// components/common/Button.js
 import React from "react";
 import {
-  TouchableOpacity,
+  Pressable,
   ActivityIndicator,
   View,
   Platform,
+  StyleSheet,
 } from "react-native";
 import AppText from "./AppText";
 import { getButtonStyles } from "../../styles/buttons";
+import { colors } from "../../thema/colors";
 
 const Button = ({
   children,
@@ -42,12 +43,24 @@ const Button = ({
   const defaultAccessibilityLabel =
     typeof children === "string" ? children : "Botón";
 
+  // Determinar color del ripple basado en el tipo
+  const rippleColor = type.includes("Outline")
+    ? styles.text.color + "20" // Color del texto con baja opacidad
+    : "rgba(255, 255, 255, 0.2)";
+
   return (
-    <TouchableOpacity
-      style={[styles.container, style]}
+    <Pressable
+      style={({ pressed }) => [
+        styles.container,
+        pressed && Platform.OS === "ios" && { opacity: 0.7 },
+        style,
+      ]}
       onPress={onPress}
       disabled={disabled || loading}
-      activeOpacity={0.7}
+      android_ripple={{
+        color: rippleColor,
+        borderless: false,
+      }}
       // Propiedades de accesibilidad
       accessible={true}
       accessibilityLabel={accessibilityLabel || defaultAccessibilityLabel}
@@ -101,7 +114,7 @@ const Button = ({
           </>
         )}
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
@@ -128,11 +141,21 @@ export const IconButton = ({
   });
 
   return (
-    <TouchableOpacity
-      style={[styles.container, { width: size, height: size }, style]}
+    <Pressable
+      style={({ pressed }) => [
+        styles.container,
+        { width: size, height: size },
+        pressed && Platform.OS === "ios" && { opacity: 0.7 },
+        style,
+      ]}
       onPress={onPress}
       disabled={disabled}
-      activeOpacity={0.7}
+      android_ripple={{
+        color: type.includes("Outline")
+          ? styles.text.color + "20"
+          : "rgba(255, 255, 255, 0.2)",
+        borderless: false,
+      }}
       // Propiedades de accesibilidad
       accessible={true}
       accessibilityLabel={accessibilityLabel || "Botón de icono"}
@@ -144,7 +167,7 @@ export const IconButton = ({
       <View accessible={false} importantForAccessibility="no">
         {icon}
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 

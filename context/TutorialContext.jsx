@@ -1,5 +1,11 @@
 // context/TutorialContext.jsx
-import React, { createContext, useContext, useRef, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useRef,
+  useState,
+  useEffect,
+} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const TUTORIAL_KEY = "@Perla/tutorial_completed";
 const TutorialContext = createContext({
@@ -43,7 +49,9 @@ export function TutorialProvider({ children }) {
 export function useTutorialContext() {
   const context = useContext(TutorialContext);
   if (!context) {
-    throw new Error("useTutorialContext debe usarse dentro de TutorialProvider");
+    throw new Error(
+      "useTutorialContext debe usarse dentro de TutorialProvider",
+    );
   }
   return context;
 }

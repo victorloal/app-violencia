@@ -5,7 +5,7 @@ const SvgComponent = ({ fill = "#801AD3", ...props }) => (
     xmlns="http://www.w3.org/2000/svg"
     id="Capa_1"
     data-name="Capa 1"
-    viewBox="0 0 455 300"
+    viewBox="-10 0 455 300"
     {...props}
   >
     <Defs></Defs>

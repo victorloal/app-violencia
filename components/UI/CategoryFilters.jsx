@@ -31,7 +31,7 @@ const CategoryFilters = ({ selectedType, onSelectType }) => {
             key={category.id}
             style={[
               styles.filterChip,
-              
+
               isActive && {
                 backgroundColor: theme.primary,
                 borderColor: theme.primary,
@@ -44,8 +44,8 @@ const CategoryFilters = ({ selectedType, onSelectType }) => {
           >
             {theme.isCustomIcon ? (
               React.createElement(theme.icon, {
-                width: 20,
-                height: 20,
+                width: 35,
+                height: 35,
                 fill: isActive ? colors.white : theme.primary,
               })
             ) : (
@@ -74,8 +74,7 @@ const CategoryFilters = ({ selectedType, onSelectType }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: spacing.sm
-    
+    paddingVertical: spacing.sm,
   },
   content: {
     paddingHorizontal: spacing.lg,
@@ -83,7 +82,7 @@ const styles = StyleSheet.create({
   },
   filterChip: {
     flexDirection: "row",
-    elevation:4,
+    elevation: 4,
     alignItems: "center",
     backgroundColor: colors.white,
     paddingHorizontal: spacing.md,

@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, FlatList, Dimensions, StyleSheet } from "react-native";
+import {
+  View,
+  FlatList,
+  Dimensions,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import AppText from "../components/UI/AppText";
@@ -85,11 +91,11 @@ const questions = [
 const OptionIcon = ({ icon, isSvg, color, size = 22 }) => {
   if (isSvg) {
     if (icon === "rural")
-      return <RuralIcon width={size} height={size} color={color} />;
+      return <RuralIcon width={size} height={size} fill={color} />;
     if (icon === "urbano")
-      return <UrbanoIcon width={size} height={size} color={color} />;
+      return <UrbanoIcon width={size} height={size} fill={color} />;
     if (icon === "mujer")
-      return <MujerIcon width={size} height={size} color={color} />;
+      return <MujerIcon width={size} height={size} fill={color} />;
   }
   return <Ionicons name={icon} size={size} color={color} />;
 };
@@ -97,7 +103,7 @@ const OptionIcon = ({ icon, isSvg, color, size = 22 }) => {
 // Componente para el icono de la pregunta (soporta SVG e Ionicons)
 const QuestionIcon = ({ icon, isSvg, color, size = 28 }) => {
   if (isSvg && icon === "mujer") {
-    return <MujerIcon width={size} height={size} color={color} />;
+    return <MujerIcon width={size} height={size} fill={color} />;
   }
   return <Ionicons name={icon} size={size} color={color} />;
 };
@@ -105,7 +111,7 @@ const QuestionIcon = ({ icon, isSvg, color, size = 28 }) => {
 // Componente para el icono de progreso (tamaños más pequeños)
 const ProgressIcon = ({ icon, isSvg, color, size = 14 }) => {
   if (isSvg && icon === "mujer") {
-    return <MujerIcon width={size} height={size} color={color} />;
+    return <MujerIcon width={size} height={size} fill={color} />;
   }
   return <Ionicons name={icon} size={size} color={color} />;
 };
@@ -244,85 +250,93 @@ export default function FormScreen({ navigation }) {
     return (
       <View style={styles.slide}>
         <View style={styles.card}>
-          {/* Header pregunta */}
-          <View style={styles.questionHeader}>
-            <QuestionIcon
-              icon={item.icon}
-              isSvg={item.isSvgIcon}
-              color={colors.lavender[600]}
-              size={32}
-            />
-            <AppText variant="h2" style={styles.question}>
-              {item.question}
-            </AppText>
-          </View>
-
-          {/* Opciones */}
-          <View style={styles.optionsContainer}>
-            {item.options.map((option) => {
-              const isSelected = currentValue === option.value;
-
-              return (
-                <Button
-                  key={option.value}
-                  type={isSelected ? "primary" : "primaryOutline"}
-                  size="xl"
-                  variant="default"
-                  onPress={() =>
-                    handleSelect(item.key, option.value, option.hasInput)
-                  }
-                  style={[styles.option, isSelected && styles.selected]}
-                >
-                  <View style={styles.optionContent}>
-                    {option.icon && (
-                      <OptionIcon
-                        icon={option.icon}
-                        isSvg={option.isSvg}
-                        color={isSelected ? colors.white : colors.lavender[600]}
-                        size={22}
-                      />
-                    )}
-                    <AppText
-                      variant="body"
-                      color={isSelected ? "light" : "secondary"}
-                      style={styles.optionLabel}
-                    >
-                      {option.label}
-                    </AppText>
-                    {isSelected && !option.hasInput && (
-                      <Ionicons
-                        name="checkmark-circle"
-                        size={22}
-                        color={colors.white}
-                      />
-                    )}
-                  </View>
-                </Button>
-              );
-            })}
-          </View>
-
-          {/* Input para "Otro" */}
-          {otherInputVisible && (
-            <View style={styles.otherContainer}>
-              <AppTextInput
-                placeholder="Especifica aquí..."
-                variant="default"
-                size="large"
-                keyboardType="default"
-                onChangeText={handleOtherTextChange}
-                value={otherText}
-                autoFocus={true}
-                leftIcon={
-                  <Ionicons
-                    name="create-outline"
-                    size={18}
-                    color={colors.lavender[500]}
-                  />
-                }
+          <ScrollView
+            style={styles.contentScroll}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContent}
+          >
+            {/* Header pregunta */}
+            <View style={styles.questionHeader}>
+              <QuestionIcon
+                icon={item.icon}
+                isSvg={item.isSvgIcon}
+                color={colors.lavender[600]}
+                size={32}
               />
+              <AppText variant="h2" style={styles.question}>
+                {item.question}
+              </AppText>
             </View>
-          )}
+
+            {/* Opciones */}
+            <View style={styles.optionsContainer}>
+              {item.options.map((option) => {
+                const isSelected = currentValue === option.value;
+
+                return (
+                  <Button
+                    key={option.value}
+                    type={isSelected ? "primary" : "primaryOutline"}
+                    size="xl"
+                    variant="default"
+                    onPress={() =>
+                      handleSelect(item.key, option.value, option.hasInput)
+                    }
+                    style={[styles.option, isSelected && styles.selected]}
+                  >
+                    <View style={styles.optionContent}>
+                      {option.icon && (
+                        <OptionIcon
+                          icon={option.icon}
+                          isSvg={option.isSvg}
+                          color={
+                            isSelected ? colors.white : colors.lavender[600]
+                          }
+                          size={35}
+                        />
+                      )}
+                      <AppText
+                        variant="body"
+                        color={isSelected ? "light" : "secondary"}
+                        style={styles.optionLabel}
+                      >
+                        {option.label}
+                      </AppText>
+                      {isSelected && !option.hasInput && (
+                        <Ionicons
+                          name="checkmark-circle"
+                          size={22}
+                          color={colors.white}
+                        />
+                      )}
+                    </View>
+                  </Button>
+                );
+              })}
+            </View>
+
+            {/* Input para "Otro" */}
+            {otherInputVisible && (
+              <View style={styles.otherContainer}>
+                <AppTextInput
+                  placeholder="Especifica aquí..."
+                  variant="default"
+                  size="large"
+                  keyboardType="default"
+                  onChangeText={handleOtherTextChange}
+                  value={otherText}
+                  autoFocus={true}
+                  leftIcon={
+                    <Ionicons
+                      name="create-outline"
+                      size={18}
+                      color={colors.lavender[500]}
+                    />
+                  }
+                />
+              </View>
+            )}
+          </ScrollView>
 
           {/* Footer */}
           <View style={styles.footer}>
@@ -413,11 +427,19 @@ const styles = StyleSheet.create({
     padding: 24,
     width: "100%",
     maxWidth: 400,
+    maxHeight: "90%", // Evitar que la card sea más alta que la pantalla
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.1,
     shadowRadius: 20,
     elevation: 10,
+  },
+  contentScroll: {
+    flexShrink: 1, // Permite que el scroll ocupe el espacio necesario sin empujar el footer fuera
+    width: "100%",
+  },
+  scrollContent: {
+    paddingBottom: 8, // Aire al final del scroll
   },
   questionHeader: {
     alignItems: "center",

@@ -8,10 +8,41 @@ import { components } from "../styles/components";
 import { colors } from "../thema/colors";
 import { spacing } from "../styles/tokens";
 
+import AppSlider from "../components/UI/AppSlider";
+
 export default function MessageFormScreen({ navigation }) {
   const handleContinue = () => {
     navigation.navigate("Form");
   };
+
+  const FEATURES = [
+    {
+      title: "Totalmente anónimo",
+      description: "No asociamos tus respuestas con tu identidad",
+      icon: "eye-off",
+    },
+    {
+      title: "Solo sera un momento",
+      description: "Rápido y sencillo de completar",
+      icon: "time",
+    },
+  ];
+
+  const renderFeatureCard = ({ item }) => (
+    <View style={[components.card, styles.featureCard]}>
+      <View style={components.iconContainerSmall}>
+        <Ionicons name={item.icon} size={24} color={colors.lavender[600]} />
+      </View>
+      <View style={styles.cardContent}>
+        <AppText variant="h4" style={styles.cardTitle}>
+          {item.title}
+        </AppText>
+        <AppText variant="body" color="tertiary" style={styles.cardDescription}>
+          {item.description}
+        </AppText>
+      </View>
+    </View>
+  );
 
   return (
     <SafeLayout>
@@ -26,45 +57,15 @@ export default function MessageFormScreen({ navigation }) {
             Nos tomará solo un momento
           </AppText>
 
-          <AppText variant="body" color="secondary" style={styles.message}>
-            Estas preguntas son solo para tu primer ingreso.
-          </AppText>
-
           {/* Cards con las características */}
-          <View style={styles.cardsContainer}>
-            {/* Card 1: Totalmente anónimo */}
-            <View style={[components.card, styles.featureCard]}>
-              <View style={components.iconContainerSmall}>
-                <Ionicons
-                  name="eye-off"
-                  size={24}
-                  color={colors.lavender[600]}
-                />
-              </View>
-              <View style={styles.cardContent}>
-                <AppText variant="h4" style={styles.cardTitle}>
-                  Totalmente anónimo
-                </AppText>
-                <AppText variant="body" color="tertiary">
-                  No asociamos tus respuestas con tu identidad
-                </AppText>
-              </View>
-            </View>
-
-            {/* Card 2: Menos de 2 minutos */}
-            <View style={[components.card, styles.featureCard]}>
-              <View style={components.iconContainerSmall}>
-                <Ionicons name="time" size={24} color={colors.lavender[600]} />
-              </View>
-              <View style={styles.cardContent}>
-                <AppText variant="h4" style={styles.cardTitle}>
-                  Solo sera un momento
-                </AppText>
-                <AppText variant="body" color="tertiary">
-                  Rápido y sencillo de completar
-                </AppText>
-              </View>
-            </View>
+          <View style={styles.sliderContainer}>
+            <AppSlider
+              data={FEATURES}
+              renderItem={renderFeatureCard}
+              dotColor={colors.lavender[200]}
+              activeDotColor={colors.lavender[600]}
+              autoplay={true}
+            />
           </View>
         </View>
 
@@ -105,12 +106,13 @@ const styles = StyleSheet.create({
   title: {
     textAlign: "center",
     marginBottom: spacing.md,
-    color: colors.lavender[800],
+    color: colors.lavender[600],
   },
   message: {
     marginBottom: spacing.xl,
     lineHeight: 24,
     paddingHorizontal: spacing.sm,
+    color: colors.neutral[600],
   },
   // Mensaje principal destacado
   principalMessage: {
@@ -130,25 +132,25 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: colors.lavender[800],
   },
-  // Contenedor de cards
-  cardsContainer: {
+  // Contenedor de slider
+  sliderContainer: {
     width: "100%",
-    gap: spacing.md,
-    marginBottom: spacing.md,
+    marginTop: spacing.md,
   },
-  // Card de característica
   featureCard: {
     flexDirection: "row",
     alignItems: "center",
-    padding: spacing.lg,
-    marginBottom: 0, // Usamos gap del contenedor
+    padding: spacing.sm,
   },
   cardContent: {
     flex: 1,
     marginLeft: spacing.md,
   },
   cardTitle: {
-    marginBottom: spacing.xxs,
+    marginBottom: spacing.xs,
+  },
+  cardDescription: {
+    color: colors.neutral[600],
   },
   buttonContainer: {
     width: "100%",

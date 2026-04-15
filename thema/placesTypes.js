@@ -1,6 +1,7 @@
 import SaludIcon from "../assets/icons/Salud";
 import ProteccionIcon from "../assets/icons/Protección";
 import JusticiaIcon from "../assets/icons/Justicia";
+import MPublicoIcon from "../assets/icons/ministerio_publico";
 import { colors } from "../thema/colors";
 
 export const TYPE_CONFIG = {
@@ -41,14 +42,14 @@ export const TYPE_CONFIG = {
     description: "Atención médica y hospitalaria para emergencias y consultas",
   },
   ministerio_publico: {
-    icon: "business-outline", // Ionicon name
-    isCustomIcon: false,
-    primary: colors.lavender[600],
-    background: colors.lavender[50],
-    border: colors.lavender[200],
-    badgeBg: colors.lavender[100],
+    icon: MPublicoIcon, // Ionicon name
+    isCustomIcon: true,
+    primary: colors.orange[600],
+    background: colors.orange[50],
+    border: colors.orange[200],
+    badgeBg: colors.orange[100],
     text: colors.neutral[600],
-    buttonBg: colors.lavender[600],
+    buttonBg: colors.orange[600],
     title: "Ministerio Público",
     description: "Procuraduría, Defensoría y Personería municipal",
   },

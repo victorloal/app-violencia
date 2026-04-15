@@ -9,7 +9,7 @@ export const buttonStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: borderWidth.none,
-    elevation:4
+    overflow: "hidden",
   },
   content: {
     flexDirection: "row",
@@ -114,6 +114,7 @@ export const buttonTypes = {
       backgroundColor: semanticColors.primary,
       borderColor: semanticColors.primary,
       borderWidth: borderWidth.none,
+      elevation: 4,
     },
     text: {
       color: semanticColors.text.inverse,
@@ -121,9 +122,10 @@ export const buttonTypes = {
   },
   primaryOutline: {
     container: {
-      backgroundColor: "transparent",
+      backgroundColor: semanticColors.surface,
       borderColor: semanticColors.primary,
       borderWidth: borderWidth.normal,
+      elevation: 4,
     },
     text: {
       color: semanticColors.primary,
@@ -154,6 +156,7 @@ export const buttonTypes = {
       backgroundColor: semanticColors.secondary,
       borderColor: semanticColors.secondary,
       borderWidth: borderWidth.none,
+      elevation: 4,
     },
     text: {
       color: semanticColors.text.inverse,
@@ -161,9 +164,10 @@ export const buttonTypes = {
   },
   secondaryOutline: {
     container: {
-      backgroundColor: "transparent",
+      backgroundColor: semanticColors.surface,
       borderColor: semanticColors.secondary,
       borderWidth: borderWidth.normal,
+      elevation: 4,
     },
     text: {
       color: semanticColors.secondary,
@@ -174,6 +178,7 @@ export const buttonTypes = {
       backgroundColor: semanticColors.success,
       borderColor: semanticColors.success,
       borderWidth: borderWidth.none,
+      elevation: 4,
     },
     text: {
       color: semanticColors.text.inverse,
@@ -184,6 +189,7 @@ export const buttonTypes = {
       backgroundColor: semanticColors.error,
       borderColor: semanticColors.error,
       borderWidth: borderWidth.none,
+      elevation: 4,
     },
     text: {
       color: semanticColors.text.inverse,
@@ -191,9 +197,10 @@ export const buttonTypes = {
   },
   dangerOutline: {
     container: {
-      backgroundColor: "transparent",
+      backgroundColor: semanticColors.surface,
       borderColor: semanticColors.error,
       borderWidth: borderWidth.normal,
+      elevation: 4,
     },
     text: {
       color: semanticColors.error,
@@ -204,6 +211,7 @@ export const buttonTypes = {
       backgroundColor: semanticColors.warning,
       borderColor: semanticColors.warning,
       borderWidth: borderWidth.none,
+      elevation: 4,
     },
     text: {
       color: semanticColors.text.inverse,

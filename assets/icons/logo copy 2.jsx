@@ -14,7 +14,7 @@ function SvgComponent(props) {
       id="Capa_1"
       data-name="Capa 1"
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 100 1080 1200"
+      viewBox="0 0 1080 1920"
       {...props}
     >
       <Defs>

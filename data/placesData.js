@@ -2,6 +2,7 @@
 import SaludIcon from "../assets/icons/Salud";
 import ProteccionIcon from "../assets/icons/Protección";
 import JusticiaIcon from "../assets/icons/Justicia";
+import MPublicoIcon from "../assets/icons/ministerio_publico";
 import { colors } from "../thema/colors";
 
 import { getTypeConfig } from "../thema/placesTypes";

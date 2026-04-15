@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import AppText from "../components/UI/AppText";
 import Button from "../components/UI/Button";
+import AppSlider from "../components/UI/AppSlider";
 import SvgComponent from "../assets/icons/logo.jsx";
 import styles from "../styles";
 import { components } from "../styles/components";
@@ -25,8 +26,6 @@ const WELCOME_MESSAGES = [
 export default function WelcomeScreen({ navigation, route }) {
   const { onMessageSeen } = route.params || {};
   const { width } = useWindowDimensions();
-  const [activeIndex, setActiveIndex] = useState(0);
-  const flatListRef = useRef(null);
 
   // Animaciones para cada elemento principal
   const logoAnim = useRef(new Animated.Value(0)).current;
@@ -47,23 +46,6 @@ export default function WelcomeScreen({ navigation, route }) {
     ]).start();
   }, []);
 
-  // Autoplay logic
-  useEffect(() => {
-    const interval = setInterval(() => {
-      let nextIndex = (activeIndex + 1) % WELCOME_MESSAGES.length;
-      setActiveIndex(nextIndex);
-
-      if (flatListRef.current) {
-        flatListRef.current.scrollToIndex({
-          index: nextIndex,
-          animated: true,
-        });
-      }
-    }, 4000); // 4 segundos por mensaje
-
-    return () => clearInterval(interval);
-  }, [activeIndex]);
-
   const handlePress = () => {
     if (onMessageSeen) {
       onMessageSeen();
@@ -71,30 +53,6 @@ export default function WelcomeScreen({ navigation, route }) {
       navigation.replace("MessageConfig");
     }
   };
-
-  const renderItem = ({ item }) => (
-    <View style={[screenStyles.slide, { width }]}>
-      <View style={[components.card, screenStyles.cardVariant]}>
-        <AppText variant="body" style={screenStyles.cardText}>
-          {item}
-        </AppText>
-      </View>
-    </View>
-  );
-
-  const Pagination = () => (
-    <View style={screenStyles.paginationContainer}>
-      {WELCOME_MESSAGES.map((_, i) => (
-        <View
-          key={i}
-          style={[
-            screenStyles.dot,
-            activeIndex === i && screenStyles.activeDot,
-          ]}
-        />
-      ))}
-    </View>
-  );
 
   return (
     <CenteredLayout style={{ backgroundColor: "#743688" }}>
@@ -111,20 +69,7 @@ export default function WelcomeScreen({ navigation, route }) {
 
       {/* Slider de mensajes */}
       <Animated.View style={[screenStyles.sliderWrapper, slideInX(sliderAnim)]}>
-        <FlatList
-          ref={flatListRef}
-          data={WELCOME_MESSAGES}
-          renderItem={renderItem}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={(e) => {
-            const index = Math.round(e.nativeEvent.contentOffset.x / width);
-            setActiveIndex(index);
-          }}
-          keyExtractor={(_, index) => index.toString()}
-        />
-        <Pagination />
+        <AppSlider data={WELCOME_MESSAGES} textStyle={screenStyles.cardText} />
       </Animated.View>
 
       <Animated.View
@@ -150,39 +95,10 @@ const screenStyles = StyleSheet.create({
     height: 180,
     width: "100%",
   },
-  slide: {
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: styles.spacing.md,
-  },
-  cardVariant: {
-    width: "100%",
-    minHeight: 100,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-  },
   cardText: {
     color: "#743688",
     textAlign: "center",
     paddingHorizontal: styles.spacing.lg,
-  },
-  paginationContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: styles.spacing.md,
-    gap: styles.spacing.sm,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "rgba(255, 255, 255, 0.4)",
-  },
-  activeDot: {
-    backgroundColor: colors.white,
-    width: 24, // Efecto pill para el activo
   },
   buttonContainer: {
     width: "90%",

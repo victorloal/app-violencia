@@ -88,15 +88,21 @@ export default function SettingsScreen({ navigation }) {
   };
 
   const handleSave = () => {
+    if (!tempPhoneNumber || tempPhoneNumber.length < 10) {
+      Alert.alert(
+        "Número requerido",
+        "Por favor ingresa un número de contacto válido de 10 dígitos para guardar los cambios. Esto es esencial para tu seguridad.",
+      );
+      return;
+    }
     // Guardar el número exactamente como está, sin modificar
     setPhoneNumber(tempPhoneNumber);
 
     Alert.alert(
       "Cambios guardados",
       "La configuración se ha actualizado correctamente",
-      [{ text: "OK" }],
+      [{ text: "OK", onPress: () => navigation.replace("Home") }],
     );
-    navigation.replace("Home");
   };
 
   const hasChanges = tempPhoneNumber !== phoneNumber;
@@ -210,7 +216,13 @@ export default function SettingsScreen({ navigation }) {
           accessibilityLabel="Texto de ejemplo con el tamaño seleccionado"
           accessibilityRole="text"
         >
-          <AppText variant="body" accessible={false}>
+          <AppText
+            variant="body"
+            accessible={false}
+            style={{
+              color: colors.neutral[600],
+            }}
+          >
             Texto de ejemplo con el tamaño seleccionado
           </AppText>
         </View>
@@ -233,7 +245,7 @@ export default function SettingsScreen({ navigation }) {
             />
           </View>
           <AppText variant="h2" style={styles.sectionTitle} accessible={false}>
-            ¿Tienes alguna discapacidad o dificultad?
+            ¿Tienes alguna discapacidad o dificultad visual?
           </AppText>
         </View>
 
@@ -252,25 +264,15 @@ export default function SettingsScreen({ navigation }) {
         <View style={styles.decisionButtons}>
           <Button
             type={hasAccessibilityNeeds ? "primary" : "primaryOutline"}
-            size="lg"
-            style={[
-              styles.decisionButton,
-              hasAccessibilityNeeds && styles.activeButton,
-            ]}
+            size="flex"
             onPress={() => setHasAccessibilityNeeds(true)}
-            textVariant="bold"
           >
             Sí
           </Button>
           <Button
             type={!hasAccessibilityNeeds ? "primary" : "primaryOutline"}
-            size="lg"
-            style={[
-              styles.decisionButton,
-              !hasAccessibilityNeeds && styles.activeButton,
-            ]}
+            size="flex"
             onPress={() => setHasAccessibilityNeeds(false)}
-            textVariant="bold"
           >
             No
           </Button>
@@ -311,7 +313,6 @@ export default function SettingsScreen({ navigation }) {
                 </View>
               </View>
             </Button>
-
             <Button
               style={styles.accessibilityCard}
               type="primaryOutline"
@@ -380,7 +381,13 @@ export default function SettingsScreen({ navigation }) {
           {
             "Guarda un número de contacto para enviar un mensaje por WhatsApp en caso de emergencias. \n"
           }
-          <AppText bold>Se agregará automáticamente el prefijo +57.</AppText>
+          <AppText
+            style={{
+              color: colors.neutral[600],
+            }}
+          >
+            Se agregará automáticamente el prefijo +57.
+          </AppText>
         </AppText>
 
         <View style={styles.inputCard} accessible={false}>
@@ -415,17 +422,25 @@ export default function SettingsScreen({ navigation }) {
             accessibilityLabel="Vista previa del mensaje que se enviará: 🚨 Me siento en peligro. Por favor, actúa ahora. 📍 Te envío mi ubicación en tiempo real."
             accessibilityRole="text"
           >
-            <AppText
-              variant="h4"
-              tone="muted"
-              style={styles.previewLabel}
-              accessible={false}
-            >
+            <AppText variant="h4" accessible={false}>
               Vista previa del mensaje:
             </AppText>
             <View style={styles.messageBubble} accessible={false}>
-              <AppText variant="body" accessible={false}>
-                <AppText variant="body" bold accessible={false}>
+              <AppText
+                variant="body"
+                accessible={false}
+                style={{
+                  color: colors.neutral[600],
+                }}
+              >
+                <AppText
+                  variant="body"
+                  bold
+                  accessible={false}
+                  style={{
+                    color: colors.neutral[600],
+                  }}
+                >
                   🚨 Me siento en peligro.
                 </AppText>{" "}
                 {
@@ -439,7 +454,6 @@ export default function SettingsScreen({ navigation }) {
           type="primaryOutline"
           variant="default"
           size="xl"
-          textVariant="bold"
           onPress={testWhatsApp}
           accessible={true}
           accessibilityLabel="Probar WhatsApp"
@@ -527,7 +541,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   sectionTitle: {
-    color: colors.lavender[900],
     flex: 1,
   },
   row: {
@@ -568,7 +581,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   prefixText: {
-    color: colors.lavender[800],
+    color: colors.neutral[600],
   },
   inputCard: {
     backgroundColor: colors.lavender[50],
@@ -598,13 +611,9 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   decisionButtons: {
-    flexDirection: "row",
     gap: 12,
-    marginTop: 8,
-  },
-  decisionButton: {
-    flex: 1,
-    height: 56,
+    marginTop: 12,
+    width: "100%",
   },
   activeButton: {
     elevation: 4,
@@ -616,6 +625,7 @@ const styles = StyleSheet.create({
   description: {
     marginBottom: 12,
     textAlign: "flex-start",
+    color: colors.neutral[600],
   },
   fixedButtonContainer: {
     flexDirection: "row",
@@ -642,7 +652,7 @@ const styles = StyleSheet.create({
   },
   previewLabel: {
     marginBottom: 8,
-    fontSize: 12,
+    color: colors.neutral[600],
     textTransform: "uppercase",
     letterSpacing: 0.5,
   },

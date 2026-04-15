@@ -8,10 +8,47 @@ import { components } from "../styles/components";
 import { colors } from "../thema/colors";
 import { spacing } from "../styles/tokens";
 
+import AppSlider from "../components/UI/AppSlider";
+
 export default function MessageConfigScreen({ navigation }) {
   const handleConfigure = () => {
     navigation.replace("Config");
   };
+
+  const FEATURES = [
+    {
+      title: "Tamaño de letra",
+      description: "Ajusta el texto para una mejor lectura",
+      icon: "text",
+    },
+    {
+      title: "Contacto de confianza",
+      description: "Guarda un número para emergencias",
+      icon: "shield",
+    },
+    {
+      title: "Accesibilidad",
+      description:
+        "Configura la pantalla y las ayudas visuales según tus necesidades",
+      icon: "accessibility",
+    },
+  ];
+
+  const renderFeatureCard = ({ item }) => (
+    <View style={[components.card, styles.featureCard]}>
+      <View style={components.iconContainerSmall}>
+        <Ionicons name={item.icon} size={24} color={colors.lavender[600]} />
+      </View>
+      <View style={styles.cardContent}>
+        <AppText variant="h4" style={styles.cardTitle}>
+          {item.title}
+        </AppText>
+        <AppText variant="body" style={styles.cardDescription}>
+          {item.description}
+        </AppText>
+      </View>
+    </View>
+  );
 
   return (
     <SafeLayout>
@@ -24,59 +61,14 @@ export default function MessageConfigScreen({ navigation }) {
             Configuremos tu experiencia
           </AppText>
 
-          <View style={styles.cardsContainer}>
-            {/* Card Tamaño de letra */}
-            <View style={[components.card, styles.featureCard]}>
-              <View style={components.iconContainerSmall}>
-                <Ionicons name="text" size={24} color={colors.lavender[600]} />
-              </View>
-              <View style={styles.cardContent}>
-                <AppText variant="h4" style={styles.cardTitle}>
-                  Tamaño de letra
-                </AppText>
-                <AppText variant="body" color="secondary">
-                  Ajusta el texto para una mejor lectura
-                </AppText>
-              </View>
-            </View>
-
-            {/* Card Contacto de confianza */}
-            <View style={[components.card, styles.featureCard]}>
-              <View style={components.iconContainerSmall}>
-                <Ionicons
-                  name="shield"
-                  size={24}
-                  color={colors.lavender[600]}
-                />
-              </View>
-              <View style={styles.cardContent}>
-                <AppText variant="h4" style={styles.cardTitle}>
-                  Contacto de confianza
-                </AppText>
-                <AppText variant="body" color="secondary">
-                  Guarda un número para emergencias
-                </AppText>
-              </View>
-            </View>
-
-            {/* Card Accesibilidad */}
-            <View style={[components.card, styles.featureCard]}>
-              <View style={components.iconContainerSmall}>
-                <Ionicons
-                  name="accessibility"
-                  size={24}
-                  color={colors.lavender[600]}
-                />
-              </View>
-              <View style={styles.cardContent}>
-                <AppText variant="h4" style={styles.cardTitle}>
-                  Accesibilidad
-                </AppText>
-                <AppText variant="body" color="secondary">
-                  Configura TalkBack/VoiceOver
-                </AppText>
-              </View>
-            </View>
+          <View style={styles.sliderContainer}>
+            <AppSlider
+              data={FEATURES}
+              renderItem={renderFeatureCard}
+              dotColor={colors.lavender[200]}
+              activeDotColor={colors.lavender[600]}
+              autoplay={true}
+            />
           </View>
         </View>
 
@@ -107,6 +99,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    gap: spacing.md,
   },
   iconCircle: {
     width: 80,
@@ -136,32 +129,35 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.lavender[600],
     gap: spacing.md,
-    width: "100%",
+    width: "80%",
   },
   principalMessageText: {
     flex: 1,
     textAlign: "center",
     color: colors.lavender[600],
   },
-  // Contenedor de cards
-  cardsContainer: {
+  // Contenedor de slider
+  sliderContainer: {
     width: "100%",
-    gap: spacing.md,
     marginBottom: spacing.md,
   },
   // Card de característica
   featureCard: {
     flexDirection: "row",
     alignItems: "center",
-    padding: spacing.lg,
-    marginBottom: 0, // Usamos gap del contenedor
+    padding: spacing.md,
+    flex: 1,
+    width: "100%",
   },
   cardContent: {
     flex: 1,
     marginLeft: spacing.md,
   },
   cardTitle: {
-    marginBottom: spacing.xxs,
+    marginBottom: spacing.none,
+  },
+  cardDescription: {
+    color: colors.neutral[600],
   },
   buttonContainer: {
     width: "100%",

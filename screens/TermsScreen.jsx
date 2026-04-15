@@ -57,11 +57,8 @@ export default function TermsScreen({ navigation }) {
 
           <AppText variant="body" style={styles.text}>
             La aplicación guía de manera general sobre cómo acceder a estos
-            servicios, pero{" "}
-            <AppText style={styles.bold}>
-              no presta atención directa ni reemplaza a las autoridades
-              competentes.
-            </AppText>
+            servicios, pero no presta atención directa ni reemplaza a las
+            autoridades competentes.
           </AppText>
         </View>
 
@@ -217,11 +214,11 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   subtitle: {
-    fontSize: 20,
     marginBottom: 12,
     fontWeight: "600",
   },
   text: {
+    color: colors.neutral[600],
     lineHeight: 24,
     marginBottom: 15,
   },
@@ -229,6 +226,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   highlight: {
+    color: colors.neutral[600],
     lineHeight: 24,
     marginBottom: 15,
     backgroundColor: colors.lavender[50],

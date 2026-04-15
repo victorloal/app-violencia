@@ -12,7 +12,8 @@ export function SettingsProvider({ children }) {
   const [isVoiceOn, setIsVoiceOnState] = useState(false);
   const [isCamouflageOn, setIsCamouflageOnState] = useState(false);
   const [phoneNumber, setPhoneNumberState] = useState("");
-  const [hasAccessibilityNeeds, setHasAccessibilityNeedsState] = useState(false);
+  const [hasAccessibilityNeeds, setHasAccessibilityNeedsState] =
+    useState(false);
 
   // Cargar valores guardados
   useEffect(() => {
@@ -40,7 +41,7 @@ export function SettingsProvider({ children }) {
   // Bloqueo de capturas y auto-cierre al ir a background
   useEffect(() => {
     // 1. Activar bloqueo de capturas (y ocultar en recientes de Android)
-    ScreenCapture.preventScreenCaptureAsync();
+    // ScreenCapture.preventScreenCaptureAsync();
 
     // 2. Listener de AppState para auto-cierre
     const subscription = AppState.addEventListener("change", (nextAppState) => {

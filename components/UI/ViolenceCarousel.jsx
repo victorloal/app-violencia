@@ -75,28 +75,6 @@ export default function ViolenceCarousel({ data, navigation }) {
     isDragging.current = true;
   };
 
-  // Cuando termina de arrastrar - calcular el índice más cercano
-  const handleScrollEndDrag = (event) => {
-    const rawIndex = Math.round(event.nativeEvent.contentOffset.x / CARD_WIDTH);
-    const prevIndex = currentIndexRef.current;
-
-    let newIndex = rawIndex;
-
-    if (rawIndex > prevIndex + 1) {
-      newIndex = prevIndex + 1;
-    } else if (rawIndex < prevIndex - 1) {
-      newIndex = prevIndex - 1;
-    }
-
-    flatListRef.current?.scrollToIndex({
-      index: newIndex,
-      animated: true,
-      viewPosition: 0.5,
-    });
-
-    updateIndices(newIndex);
-  };
-
   // Cuando termina el momentum (después del snap)
   const handleMomentumScrollEnd = (event) => {
     const newIndex = Math.round(event.nativeEvent.contentOffset.x / CARD_WIDTH);
@@ -160,10 +138,9 @@ export default function ViolenceCarousel({ data, navigation }) {
         showsHorizontalScrollIndicator={false}
         snapToInterval={CARD_WIDTH}
         snapToAlignment="center"
-        decelerationRate={0.995}
-        disableIntervalMomentum
+        decelerationRate="fast"
+        disableIntervalMomentum={true}
         onScrollBeginDrag={handleScrollBeginDrag}
-        onScrollEndDrag={handleScrollEndDrag}
         onMomentumScrollEnd={handleMomentumScrollEnd}
         scrollEventThrottle={16}
         getItemLayout={getItemLayout}

@@ -15,6 +15,7 @@ import { spacing, borderRadius, shadow, borderWidth } from "../styles/tokens";
 import SaludIcon from "../assets/icons/Salud";
 import ProteccionIcon from "../assets/icons/Protección";
 import JusticiaIcon from "../assets/icons/Justicia";
+import MPublicoIcon from "../assets/icons/ministerio_publico";
 import { getTypeConfig } from "../thema/placesTypes";
 import MainLayout from "../components/Layout/MainLayout";
 import { colors } from "../thema/colors";
@@ -80,7 +81,7 @@ const questions = [
     options: ["Sí", "No"],
     key: "derechos_vulnerados",
     placeType: "ministerio_publico",
-    icon: JusticiaIcon,
+    icon: MPublicoIcon,
     redirectTo: {
       tumaco: "defensoria_del_pueblo_tumaco",
       buenaventura: "defensoria_del_pueblo_buenaventura",
@@ -250,7 +251,12 @@ export default function ServicesScreen({ navigation }) {
                   key={option}
                   activeOpacity={0.7}
                   style={[
-                    styles.option,
+                    [
+                      styles.option,
+                      {
+                        borderColor: theme.border,
+                      },
+                    ],
                     isSelected && {
                       borderColor: theme.primary,
                       backgroundColor: theme.background,
@@ -261,7 +267,7 @@ export default function ServicesScreen({ navigation }) {
                   <AppText
                     variant="body"
                     style={{
-                      color: isSelected ? theme.primary : colors.lavender[600],
+                      color: isSelected ? theme.primary : colors.neutral[600],
                     }}
                   >
                     {option}
@@ -290,8 +296,14 @@ export default function ServicesScreen({ navigation }) {
                   <View
                     key={index}
                     style={[
-                      styles.progressItem,
-                      isPast && { backgroundColor: theme.border },
+                      [
+                        styles.progressItem,
+                        {
+                          backgroundColor: theme.badgeBg,
+                          borderRadius: borderRadius.circle,
+                        },
+                      ],
+                      isPast && { backgroundColor: theme.primary },
                       isCurrent && {
                         backgroundColor: theme.primary,
                         width: 48,
@@ -300,11 +312,13 @@ export default function ServicesScreen({ navigation }) {
                     ]}
                   >
                     {(isCurrent && (
-                      <q.icon fill={colors.white} width={40} height={40} />
+                      <q.icon fill={colors.white} width={38} height={38} />
                     )) ||
                       (isPast && (
-                        <q.icon fill={colors.white} width={35} height={35} />
-                      ))}
+                        <q.icon fill={colors.white} width={32} height={32} />
+                      )) || (
+                        <q.icon fill={theme.primary} width={32} height={32} />
+                      )}
                   </View>
                 );
               })}
@@ -400,7 +414,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: spacing.lg,
     borderWidth: 2,
-    borderColor: colors.lavender[100],
     borderRadius: borderRadius.lg,
     backgroundColor: colors.white,
   },
@@ -433,8 +446,6 @@ const styles = StyleSheet.create({
   progressItem: {
     width: 40,
     height: 40,
-    borderRadius: borderRadius.circle,
-    backgroundColor: colors.lavender[100],
     justifyContent: "center",
     alignItems: "center",
   },

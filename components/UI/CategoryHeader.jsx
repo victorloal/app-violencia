@@ -5,6 +5,7 @@ import AppText from "../UI/AppText";
 import { spacing, borderRadius, borderWidth } from "../../styles/tokens";
 import { getTypeConfig } from "../../thema/placesTypes";
 import { Ionicons } from "@expo/vector-icons";
+import { colors } from "../../thema/colors";
 
 const CategoryHeader = ({ type, title, description }) => {
   const theme = getTypeConfig(type);
@@ -14,14 +15,14 @@ const CategoryHeader = ({ type, title, description }) => {
       <View
         style={[
           styles.iconContainer,
-          { backgroundColor: theme.badgeBg, borderColor: theme.border },
+          { backgroundColor: colors.white, borderColor: theme.border },
         ]}
       >
         {theme.isCustomIcon ? (
           React.createElement(theme.icon, {
-            width: 32,
-            height: 32,
-            color: theme.primary,
+            width: 50,
+            height: 50,
+            fill: theme.primary,
           })
         ) : (
           <Ionicons name={theme.icon} size={32} color={theme.primary} />
