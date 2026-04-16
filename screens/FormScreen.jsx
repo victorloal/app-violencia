@@ -88,31 +88,67 @@ const questions = [
 
 // Componente para renderizar iconos en opciones (Soporta SVG personalizados)
 const OptionIcon = ({ icon, isSvg, color, size = 22 }) => {
-  if (isSvg) {
-    if (icon === "rural")
-      return <RuralIcon width={size} height={size} fill={color} />;
-    if (icon === "urbano")
-      return <UrbanoIcon width={size} height={size} fill={color} />;
-    if (icon === "mujer")
-      return <MujerIcon width={size} height={size} fill={color} />;
-  }
-  return <Ionicons name={icon} size={size} color={color} />;
+  const iconElement = (() => {
+    if (isSvg) {
+      if (icon === "rural") return <RuralIcon width={size} height={size} fill={color} />;
+      if (icon === "urbano") return <UrbanoIcon width={size} height={size} fill={color} />;
+      if (icon === "mujer") return <MujerIcon width={size} height={size} fill={color} />;
+    }
+    return <Ionicons name={icon} size={size} color={color} />;
+  })();
+
+  return (
+    <View
+      accessible={false}
+      importantForAccessibility="no-hide-descendants"
+      accessibilityElementsHidden={true}
+      style={{ display: 'flex' }}
+    >
+      {iconElement}
+    </View>
+  );
 };
 
 // Componente para el icono de la pregunta (soporta SVG e Ionicons)
 const QuestionIcon = ({ icon, isSvg, color, size = 28 }) => {
-  if (isSvg && icon === "mujer") {
-    return <MujerIcon width={size} height={size} fill={color} />;
-  }
-  return <Ionicons name={icon} size={size} color={color} />;
+  const iconElement = (() => {
+    if (isSvg && icon === "mujer") {
+      return <MujerIcon width={size} height={size} fill={color} />;
+    }
+    return <Ionicons name={icon} size={size} color={color} />;
+  })();
+
+  return (
+    <View
+      accessible={false}
+      importantForAccessibility="no-hide-descendants"
+      accessibilityElementsHidden={true}
+      style={{ display: 'flex' }}
+    >
+      {iconElement}
+    </View>
+  );
 };
 
 // Componente para el icono de progreso (tamaños más pequeños)
 const ProgressIcon = ({ icon, isSvg, color, size = 14 }) => {
-  if (isSvg && icon === "mujer") {
-    return <MujerIcon width={size} height={size} fill={color} />;
-  }
-  return <Ionicons name={icon} size={size} color={color} />;
+  const iconElement = (() => {
+    if (isSvg && icon === "mujer") {
+      return <MujerIcon width={size} height={size} fill={color} />;
+    }
+    return <Ionicons name={icon} size={size} color={color} />;
+  })();
+
+  return (
+    <View
+      accessible={false}
+      importantForAccessibility="no-hide-descendants"
+      accessibilityElementsHidden={true}
+      style={{ display: 'flex' }}
+    >
+      {iconElement}
+    </View>
+  );
 };
 
 export default function FormScreen({ navigation }) {
@@ -256,12 +292,18 @@ export default function FormScreen({ navigation }) {
           >
             {/* Header pregunta */}
             <View style={styles.questionHeader}>
-              <QuestionIcon
-                icon={item.icon}
-                isSvg={item.isSvgIcon}
-                color={colors.lavender[600]}
-                size={32}
-              />
+              <View
+                accessible={false}
+                importantForAccessibility="no-hide-descendants"
+                accessibilityElementsHidden={true}
+              >
+                <QuestionIcon
+                  icon={item.icon}
+                  isSvg={item.isSvgIcon}
+                  color={colors.lavender[600]}
+                  size={32}
+                />
+              </View>
               <AppText variant="h2" style={styles.question}>
                 {item.question}
               </AppText>
@@ -282,6 +324,9 @@ export default function FormScreen({ navigation }) {
                       handleSelect(item.key, option.value, option.hasInput)
                     }
                     style={[styles.option, isSelected && styles.selected]}
+                    accessibilityLabel={option.label}
+                    accessibilityHint={`Seleccionar ${option.label}`}
+                    accessibilityState={{ selected: isSelected }}
                   >
                     <View style={styles.optionContent}>
                       {option.icon && (
@@ -298,15 +343,23 @@ export default function FormScreen({ navigation }) {
                         variant="body"
                         color={isSelected ? "light" : "secondary"}
                         style={styles.optionLabel}
+                        accessible={false}
+                        importantForAccessibility="no"
                       >
                         {option.label}
                       </AppText>
                       {isSelected && !option.hasInput && (
-                        <Ionicons
-                          name="checkmark-circle"
-                          size={22}
-                          color={colors.white}
-                        />
+                        <View
+                          accessible={false}
+                          importantForAccessibility="no-hide-descendants"
+                          accessibilityElementsHidden={true}
+                        >
+                          <Ionicons
+                            name="checkmark-circle"
+                            size={22}
+                            color={colors.white}
+                          />
+                        </View>
                       )}
                     </View>
                   </Button>
@@ -325,12 +378,20 @@ export default function FormScreen({ navigation }) {
                   onChangeText={handleOtherTextChange}
                   value={otherText}
                   autoFocus={true}
+                  accessibilityLabel="Especificar otra opción"
+                  accessibilityHint="Escribe tu respuesta aquí"
                   leftIcon={
-                    <Ionicons
-                      name="create-outline"
-                      size={18}
-                      color={colors.lavender[500]}
-                    />
+                    <View
+                      accessible={false}
+                      importantForAccessibility="no-hide-descendants"
+                      accessibilityElementsHidden={true}
+                    >
+                      <Ionicons
+                        name="create-outline"
+                        size={18}
+                        color={colors.lavender[500]}
+                      />
+                    </View>
                   }
                 />
               </View>
@@ -340,7 +401,12 @@ export default function FormScreen({ navigation }) {
           {/* Footer */}
           <View style={styles.footer}>
             {/* Progreso */}
-            <View style={styles.progressContainer}>
+            <View style={styles.progressContainer}
+                  accessible={false}
+                  importantForAccessibility="no"
+                  accessibilityElementsHidden={true}
+
+            >
               {questions.map((q, index) => {
                 const isPast = index < currentIndex;
                 const isCurrent = index === currentIndex;
@@ -385,6 +451,8 @@ export default function FormScreen({ navigation }) {
               size="xl"
               onPress={handleNext}
               disabled={isNextDisabled()}
+              accessibilityLabel={isLastQuestion ? "Finalizar formulario" : "Siguiente pregunta"}
+              accessibilityHint={isLastQuestion ? "Completar y enviar el formulario" : "Avanzar a la siguiente pregunta"}
             >
               {isLastQuestion ? "Finalizar" : "Siguiente"}
             </Button>

@@ -29,9 +29,20 @@ export default function MessageFormScreen({ navigation }) {
   ];
 
   const renderFeatureCard = ({ item }) => (
-    <View style={[components.card, styles.featureCard]}>
-      <View style={components.iconContainerSmall}>
-        <Ionicons name={item.icon} size={24} color={colors.lavender[600]} />
+    <View style={[components.card, styles.featureCard]}
+          accessible={true}
+          accessibilityLabel={`${item.title}. ${item.description}`}
+          accessibilityRole="text"
+    >
+      <View style={components.iconContainerSmall}
+            accessible={false}
+            importantForAccessibility="no"
+            accessibilityElementsHidden={true}
+      >
+        <Ionicons name={item.icon} size={24} color={colors.lavender[600]} 
+                  accessible={false}
+                  importantForAccessibility="no"
+        />
       </View>
       <View style={styles.cardContent}>
         <AppText variant="h4" style={styles.cardTitle}>
@@ -49,8 +60,15 @@ export default function MessageFormScreen({ navigation }) {
       <View style={styles.container}>
         {/* Contenido principal */}
         <View style={styles.contentContainer}>
-          <View style={[components.iconContainerLarge, styles.iconCircle]}>
-            <Ionicons name="heart" size={32} color={colors.white} />
+          <View style={[components.iconContainerLarge, styles.iconCircle]}
+                accessible={false}
+                importantForAccessibility="no"
+                accessibilityElementsHidden={true}
+          >
+            <Ionicons name="heart" size={32} color={colors.white} 
+                      accessible={false}
+                      importantForAccessibility="no"
+            />
           </View>
 
           <AppText variant="h1" style={styles.title}>
@@ -76,6 +94,8 @@ export default function MessageFormScreen({ navigation }) {
             size="large"
             onPress={handleContinue}
             style={styles.continueButton}
+            accessibilityLabel="Continuar al siguiente paso"
+            accessibilityHint="Avanzar al formulario de preguntas"
           >
             Continuar
           </Button>

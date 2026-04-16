@@ -17,8 +17,7 @@ export function TutorialTooltip({ labels }) {
   const { setTutorialActive, markTutorialCompleted, openCalcDemoRef } =
     useTutorialContext();
 
-  const iconName =
-    currentStep?.name?.split(":")[0] ?? "information-circle-outline";
+  const iconName = currentStep?.name?.split(":")[0] ?? "information-circle-outline";
   const title = currentStep?.text?.split("|")[0] ?? "";
   const desc = currentStep?.text?.split("|")[1] ?? "";
 
@@ -45,38 +44,91 @@ export function TutorialTooltip({ labels }) {
   };
 
   return (
-    <View style={styles.tooltip}>
+    <View style={styles.tooltip}
+          accessible={true}
+          accessibilityLabel={`${title}. ${desc}`}
+          accessibilityRole="text"
+    >
       {/* Cabecera */}
-      <View style={styles.header}>
+      <View style={styles.header}
+            accessible={false}
+            importantForAccessibility="no-hide-descendants"
+            accessibilityElementsHidden={true}
+      >
         <View style={styles.iconWrap}>
-          <Ionicons name={iconName} size={18} color={colors.lavender[700]} />
+          <Ionicons name={iconName} 
+                    size={18} 
+                    color={colors.lavender[700]} 
+                    accessible={false}
+                    importantForAccessibility="no"
+          />
         </View>
-        <AppText variant="h3" bold style={styles.title}>
+        <AppText 
+          variant="h3" 
+          bold 
+          style={styles.title} 
+          accessible={false}
+          importantForAccessibility="no"
+        >
           {title}
         </AppText>
         <TouchableOpacity
           onPress={handleStop}
           style={styles.closeBtn}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          accessible={true}
+          accessibilityLabel="Cerrar tutorial"
+          accessibilityHint="Detiene el tutorial y lo marca como completado"
+          accessibilityRole="button"
         >
-          <Ionicons name="close" size={16} color={colors.neutral[500]} />
+          <Ionicons 
+            name="close" 
+            size={16} 
+            color={colors.neutral[500]} 
+            accessible={false}
+            importantForAccessibility="no"
+          />
         </TouchableOpacity>
       </View>
 
       {/* Descripción */}
-      <AppText variant="body" style={styles.desc}>
+      <AppText 
+        variant="body" 
+        style={styles.desc}
+        accessible={true}
+        importantForAccessibility="yes"
+      >
         {desc}
       </AppText>
 
       {/* Acciones */}
-      <View style={styles.actions}>
-        <TouchableOpacity onPress={handleStop} style={styles.skipBtn}>
+      <View 
+        style={styles.actions}
+        accessible={false}
+        importantForAccessibility="no-hide-descendants"
+        accessibilityElementsHidden={true}
+      >
+        <TouchableOpacity 
+          onPress={handleStop} 
+          style={styles.skipBtn}
+          accessible={true}
+          accessibilityLabel="Saltar tutorial"
+          accessibilityHint="Termina el tutorial ahora"
+          accessibilityRole="button"
+        >
           <AppText variant="caption" style={styles.skipText}>
             Saltar tutorial
           </AppText>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleNext} style={styles.nextBtn}>
+        <TouchableOpacity 
+          onPress={handleNext} 
+          style={styles.nextBtn}
+          accessible={true}
+          accessibilityLabel={isLastStep ? "Entendido, finalizar" : "Continuar tutorial"}
+          accessibilityHint={isLastStep ? "Completar el tutorial" : "Avanzar al siguiente paso"}
+          accessibilityRole="button"
+          >
           <AppText variant="body" bold style={styles.nextText}>
             {isLastStep ? "¡Entendido!" : "Continuar"}
           </AppText>
