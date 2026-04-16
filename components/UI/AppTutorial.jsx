@@ -1,6 +1,6 @@
 // components/UI/AppTutorial.jsx
 import React, { useEffect, useCallback } from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, AccessibilityInfo } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useCopilot } from "react-native-copilot";
 import AppText from "./AppText";
@@ -20,6 +20,14 @@ export function TutorialTooltip({ labels }) {
   const iconName = currentStep?.name?.split(":")[0] ?? "information-circle-outline";
   const title = currentStep?.text?.split("|")[0] ?? "";
   const desc = currentStep?.text?.split("|")[1] ?? "";
+
+  useEffect(() => {
+    if (!title && !desc) return;
+    const timer = setTimeout(() => {
+      AccessibilityInfo.announceForAccessibility(`${title}. ${desc}`);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [currentStep?.name]); 
 
   const handleNext = () => {
     // Step 5: Open calculator demo instead of just advancing
@@ -45,9 +53,7 @@ export function TutorialTooltip({ labels }) {
 
   return (
     <View style={styles.tooltip}
-          accessible={true}
-          accessibilityLabel={`${title}. ${desc}`}
-          accessibilityRole="text"
+          accessibilityViewIsModal={true}
     >
       {/* Cabecera */}
       <View style={styles.header}
@@ -77,6 +83,7 @@ export function TutorialTooltip({ labels }) {
           style={styles.closeBtn}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           accessible={true}
+          importantForAccessibility="yes"
           accessibilityLabel="Cerrar tutorial"
           accessibilityHint="Detiene el tutorial y lo marca como completado"
           accessibilityRole="button"
@@ -97,26 +104,27 @@ export function TutorialTooltip({ labels }) {
         style={styles.desc}
         accessible={true}
         importantForAccessibility="yes"
+        accessibilityLabel={`${title}. ${desc}`}
       >
         {desc}
       </AppText>
 
       {/* Acciones */}
-      <View 
-        style={styles.actions}
-        accessible={false}
-        importantForAccessibility="no-hide-descendants"
-        accessibilityElementsHidden={true}
-      >
+      <View style={styles.actions}>
         <TouchableOpacity 
           onPress={handleStop} 
           style={styles.skipBtn}
           accessible={true}
+          importantForAccessibility="yes"
           accessibilityLabel="Saltar tutorial"
           accessibilityHint="Termina el tutorial ahora"
           accessibilityRole="button"
         >
-          <AppText variant="caption" style={styles.skipText}>
+          <AppText 
+            variant="caption" 
+            style={styles.skipText}
+            accessible={false}
+            importantForAccessibility="no">
             Saltar tutorial
           </AppText>
         </TouchableOpacity>
@@ -125,11 +133,18 @@ export function TutorialTooltip({ labels }) {
           onPress={handleNext} 
           style={styles.nextBtn}
           accessible={true}
+          importantForAccessibility="yes"
           accessibilityLabel={isLastStep ? "Entendido, finalizar" : "Continuar tutorial"}
           accessibilityHint={isLastStep ? "Completar el tutorial" : "Avanzar al siguiente paso"}
           accessibilityRole="button"
           >
-          <AppText variant="body" bold style={styles.nextText}>
+          <AppText 
+            variant="body" 
+            bold 
+            style={styles.nextText}
+            accessible={false}
+            importantForAccessibility="no"
+            >
             {isLastStep ? "¡Entendido!" : "Continuar"}
           </AppText>
           {!isLastStep && (
@@ -138,6 +153,8 @@ export function TutorialTooltip({ labels }) {
               size={14}
               color={colors.white}
               style={{ marginLeft: 5 }}
+              accessible={false}
+              importantForAccessibility="no"
             />
           )}
         </TouchableOpacity>
