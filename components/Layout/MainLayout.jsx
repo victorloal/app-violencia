@@ -5,11 +5,7 @@ import React, {
   useCallback,
   useRef,
 } from "react";
-<<<<<<< HEAD
 import { View, StyleSheet, Modal, AppState, Animated } from "react-native";
-=======
-import { View, StyleSheet, Modal, AppState } from "react-native";
->>>>>>> 38e3fea80303ee6bfc5a59091f0e88260ad74e3f
 import { Ionicons } from "@expo/vector-icons";
 import { CopilotStep, walkthroughable, useCopilot } from "react-native-copilot";
 import Button from "../UI/Button";
@@ -25,7 +21,6 @@ import CalculatorScreen from "../../screens/CalculatorScreen";
 import { colors } from "../../thema/colors";
 import { linkingService } from "../../services/linkingService";
 import Call24 from "../../assets/icons/Call24";
-import { Animated } from "react-native";
 
 const WalkthroughView = walkthroughable(View);
 
@@ -219,31 +214,12 @@ export default function MainLayout({ children }) {
             <WalkthroughView style={layoutStyles.btnWrapper}>
               <Animated.View
                 style={{
-                  position: "absolute",
-                  height: "80%",
-                  aspectRatio: 1,
-                  backgroundColor: styles.semanticColors.primary,
-                  borderRadius: 100,
-                  transform: [{ scale: ringScale }],
-                  opacity: ringOpacity,
-                }}
-              />
-              <Animated.View
-                style={{
-<<<<<<< HEAD
                   height: "100%",
                   width: "100%",
                   alignItems: "center",
                   justifyContent: "center",
                   transform: [{ scale: pulseAnim }],
                 }}
-=======
-                height: "100%",
-                width: "100%",
-                alignItems: "center",
-                justifyContent: "center",
-                transform: [{ scale: pulseAnim }]}}
->>>>>>> 38e3fea80303ee6bfc5a59091f0e88260ad74e3f
               >
                 <Button
                   type="primary"
