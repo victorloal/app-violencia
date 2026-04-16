@@ -52,13 +52,15 @@ export const TUTORIAL_STEPS = {
 };
 
 export default function MainLayout({ children }) {
-  const { isCamouflageOn, setIsCamouflageOn, phoneNumber } = useContext(SettingsContext);
+  const { isCamouflageOn, setIsCamouflageOn, phoneNumber } =
+    useContext(SettingsContext);
   const navigation = useNavigation();
   const { goToNext } = useCopilot();
-  const { openCalcDemoRef, setTutorialActive, markTutorialCompleted } = useTutorialContext();
+  const { openCalcDemoRef, setTutorialActive, markTutorialCompleted } =
+    useTutorialContext();
 
   const [isTutorialDemo, setIsTutorialDemo] = useState(false);
-  const [isInactive, setIsInactive]         = useState(false);
+  const [isInactive, setIsInactive] = useState(false);
 
   useTutorialAutoStart();
 
@@ -70,7 +72,9 @@ export default function MainLayout({ children }) {
 
   useEffect(() => {
     openCalcDemoRef.current = openCalcDemo;
-    return () => { openCalcDemoRef.current = null; };
+    return () => {
+      openCalcDemoRef.current = null;
+    };
   }, [openCalcDemo, openCalcDemoRef]);
 
   useEffect(() => {
@@ -112,7 +116,6 @@ export default function MainLayout({ children }) {
   return (
     <SafeLayout scrollable={false}>
       <View style={layoutStyles.container}>
-
         <AppNavbar
           bienvenidaStep={TUTORIAL_STEPS.bienvenida}
           ajustesStep={TUTORIAL_STEPS.ajustes}
@@ -121,7 +124,6 @@ export default function MainLayout({ children }) {
         <View style={layoutStyles.content}>{children}</View>
 
         <View style={layoutStyles.bottomBar}>
-
           {/* Paso 3: Mensaje */}
           <CopilotStep {...TUTORIAL_STEPS.mensaje}>
             <WalkthroughView style={layoutStyles.btnWrapper}>
@@ -134,8 +136,14 @@ export default function MainLayout({ children }) {
                 accessibilityHint="Abre WhatsApp para enviar tu ubicación a tu contacto de confianza"
               >
                 <View style={layoutStyles.btnContent}>
-                  <Ionicons name="logo-whatsapp" size={30} color={styles.semanticColors.primary} />
-                  <AppText variant="body" bold color="secondary">Mensaje</AppText>
+                  <Ionicons
+                    name="logo-whatsapp"
+                    size={30}
+                    color={styles.semanticColors.primary}
+                  />
+                  <AppText variant="body" bold color="secondary">
+                    Mensaje
+                  </AppText>
                 </View>
               </Button>
             </WalkthroughView>
@@ -143,7 +151,12 @@ export default function MainLayout({ children }) {
 
           {/* Paso 4: Llamada */}
           <CopilotStep {...TUTORIAL_STEPS.llamada}>
-            <WalkthroughView style={[layoutStyles.btnWrapper, { alignItems: "center", justifyContent: "center" }]}>
+            <WalkthroughView
+              style={[
+                layoutStyles.btnWrapper,
+                { alignItems: "center", justifyContent: "center" },
+              ]}
+            >
               <Button
                 type="primary"
                 size="flex"
@@ -154,8 +167,17 @@ export default function MainLayout({ children }) {
                 accessibilityLabel="Llamada de emergencia"
                 accessibilityHint="Ver lugares de emergencia para realizar una llamada"
               >
-                <View style={[layoutStyles.btnContent, { height: "100%", width: "100%" }]}>
-                  <Call24 width={45} height={45} fill={styles.semanticColors.text.inverse} />
+                <View
+                  style={[
+                    layoutStyles.btnContent,
+                    { height: "100%", width: "100%" },
+                  ]}
+                >
+                  <Call24
+                    width={45}
+                    height={45}
+                    fill={styles.semanticColors.text.inverse}
+                  />
                 </View>
               </Button>
             </WalkthroughView>
@@ -173,13 +195,18 @@ export default function MainLayout({ children }) {
                 accessibilityHint="Abre una calculadora para ocultar la aplicación"
               >
                 <View style={layoutStyles.btnContent}>
-                  <Ionicons name="calculator" size={30} color={styles.semanticColors.primary} />
-                  <AppText variant="body" bold color="secondary">Camuflaje</AppText>
+                  <Ionicons
+                    name="calculator"
+                    size={30}
+                    color={styles.semanticColors.primary}
+                  />
+                  <AppText variant="body" bold color="secondary">
+                    Camuflaje
+                  </AppText>
                 </View>
               </Button>
             </WalkthroughView>
           </CopilotStep>
-
         </View>
       </View>
 
@@ -191,16 +218,17 @@ export default function MainLayout({ children }) {
         statusBarTranslucent={true}
         onRequestClose={() => {}}
       >
-        <CalculatorScreen
-          onUnlock={handleUnlock}
-          isTutorial={isTutorialDemo}
-        />
+        <CalculatorScreen onUnlock={handleUnlock} isTutorial={isTutorialDemo} />
       </Modal>
 
       {/* Overlay privacidad iOS App Switcher */}
       {isInactive && (
         <View style={[StyleSheet.absoluteFill, layoutStyles.privacyOverlay]}>
-          <Ionicons name="shield-checkmark" size={80} color={colors.lavender[600]} />
+          <Ionicons
+            name="shield-checkmark"
+            size={80}
+            color={colors.lavender[600]}
+          />
         </View>
       )}
     </SafeLayout>

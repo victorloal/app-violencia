@@ -54,14 +54,21 @@ const violenceTypes = [
     id: "5",
     title: "Violencia Digital",
     description:
-      "Acoso, suplantación de identidad, compartición de contenido íntimo sin consentimiento, ciberacoso o control mediante dispositivos digitales.",
+      "Es la violencia ejercida a través de redes sociales (WhatsApp, Facebook, Instagram, TikTok), páginas web o aplicaciones móviles, mediante mensajes, comentarios u otras formas de interacción digital.",
     icon: <ViolenciaDigitalIcon width={100} height={100} />,
   },
   {
     id: "6",
     title: "Violencia Vicaria",
     description:
-      "Violencia ejercida sobre hijos, hijas u otros integrantes de la familia como forma de causar daño a la mujer.",
+      "Es cuando el agresor utiliza a tus hijos, hijas o mascotas para causarte daño, amenazarte o ejercer control sobre ti.",
+    icon: <ViolenciaVicariaIcon width={100} height={100} />,
+  },
+  {
+    id: "7",
+    title: "Violencia Basada en Prejuicios",
+    description:
+      "Es todo tipo de violencia que se ejerce contra una persona por ideas, creencias, estereotipos negativos o prejuicios sobre su orientación sexual, su identidad o su expresión de género diversa.",
     icon: <ViolenciaVicariaIcon width={100} height={100} />,
   },
 ];

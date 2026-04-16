@@ -78,7 +78,12 @@ export default function WelcomeScreen({ navigation, route }) {
         accessibilityLabel="Comenzar"
         accessibilityRole="button"
       >
-        <Button type="inversePrimary" onPress={handlePress} size="xl">
+        <Button
+          type="inversePrimary"
+          onPress={handlePress}
+          size="xl"
+          accessible={false}
+        >
           Comenzar
         </Button>
       </Animated.View>

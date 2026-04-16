@@ -22,7 +22,7 @@ const { width, height } = Dimensions.get("window");
 const questions = [
   {
     id: "1",
-    question: "¿En qué distrito te encuentras?",
+    question: "¿En qué lugar te encuentras?",
     options: [
       { label: "Tumaco", value: "tumaco" },
       { label: "Buenaventura", value: "buenaventura" },
@@ -32,7 +32,7 @@ const questions = [
   },
   {
     id: "2",
-    question: "Seleccione su zona",
+    question: "Seleccione su zona de residencia",
     options: [
       { label: "Rural", value: "rural", icon: "rural", isSvg: true },
       { label: "Urbana", value: "urbana", icon: "urbano", isSvg: true },
@@ -55,9 +55,8 @@ const questions = [
   },
   {
     id: "4",
-    question: "¿En qué rango de edad se encuentra?",
+    question: "Rango de edad:",
     options: [
-      { label: "Menor de edad (10 - 17)", value: "menor" },
       { label: "Joven (18 - 28)", value: "joven" },
       { label: "Adulta (29 - 59)", value: "adulto" },
       { label: "Adulta mayor (60+)", value: "adulto_mayor" },
@@ -67,12 +66,12 @@ const questions = [
   },
   {
     id: "5",
-    question: "¿En qué situación laboral se encuentra?",
+    question: "¿Qué ocupación tienes?",
     options: [
       { label: "Empleada", value: "empleado", icon: "briefcase-outline" },
       {
-        label: "Desempleada",
-        value: "desempleado",
+        label: "Sin empleo",
+        value: "sin_empleo",
         icon: "remove-circle-outline",
       },
       { label: "Estudiante", value: "estudiante", icon: "school-outline" },
