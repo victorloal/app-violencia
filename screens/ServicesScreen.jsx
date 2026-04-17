@@ -177,7 +177,7 @@ export default function ServicesScreen({ navigation }) {
     }
   };
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item, index }) => {
     const isLastQuestion = currentIndex === questions.length - 1;
     const hasYes = hasAnyYesAnswer();
     const placeType = getPlaceTypeFromYesAnswer();
@@ -224,17 +224,23 @@ export default function ServicesScreen({ navigation }) {
                     borderColor: theme.border,
                   },
                 ]}
+                accessible={false}
               >
                 <item.icon
                   width={50}
                   height={50}
                   fill={theme.primary}
                   fillSecondary={theme.primary}
+                  accessible={false}
+                  importantForAccessibility="no"
                 />
               </View>
               <AppText
                 variant="h2"
                 style={[styles.question, { color: theme.text }]}
+                accessible={true}
+                accessibilityRole="header"
+                accessibilityLabel={`Pregunta ${index + 1} de ${questions.length}: ${item.question}`}
               >
                 {item.question}
               </AppText>
@@ -263,12 +269,18 @@ export default function ServicesScreen({ navigation }) {
                     },
                   ]}
                   onPress={() => handleSelect(item.key, option)}
+                  accessible={true}
+                  accessibilityRole="button"
+                  accessibilityHint={`${option} para la pregunta: ${item.question}`}
+                  accessibilityState={{ checked: isSelected }}
                 >
                   <AppText
                     variant="body"
                     style={{
                       color: isSelected ? theme.primary : colors.neutral[600],
                     }}
+                    accessible={false}
+                    importantForAccessibility="no"
                   >
                     {option}
                   </AppText>
@@ -277,6 +289,8 @@ export default function ServicesScreen({ navigation }) {
                       name="checkmark-circle"
                       size={24}
                       color={theme.primary}
+                      accessible={false}
+                      importantForAccessibility="no"
                     />
                   )}
                 </TouchableOpacity>
@@ -287,14 +301,21 @@ export default function ServicesScreen({ navigation }) {
           {/* Footer */}
           <View style={styles.footer}>
             {/* Indicador de progreso */}
-            <View style={styles.progressContainer}>
-              {questions.map((q, index) => {
-                const isPast = index < currentIndex;
-                const isCurrent = index === currentIndex;
+            <View 
+              style={styles.progressContainer}
+              accessible={true}
+              accessibilityRole="progressbar"
+              accessibilityLabel={`Progreso: pregunta ${currentIndex + 1} de ${questions.length}`}
+              accessibilityValue={{ now: currentIndex + 1, min: 1, max: questions.length }}
+            >
+              {questions.map((q, questionindex) => {
+                const isPast = questionindex < currentIndex;
+                const isCurrent = questionindex === currentIndex;
+                const QuestionIcon = q.icon;
 
                 return (
                   <View
-                    key={index}
+                    key={questionindex}
                     style={[
                       [
                         styles.progressItem,
@@ -310,14 +331,17 @@ export default function ServicesScreen({ navigation }) {
                         height: 48,
                       },
                     ]}
+                    accessible={true}
+                    accessibilityRole="image"
+                    accessibilityLabel={`Pregunta ${questionindex + 1} ${isCurrent ? 'actual' : isPast ? 'completada' : 'pendiente'}`}
                   >
                     {(isCurrent && (
-                      <q.icon fill={colors.white} width={38} height={38} />
+                      <q.icon fill={colors.white} width={38} height={38} accessible={false} importantForAccessibility="no"/>
                     )) ||
                       (isPast && (
-                        <q.icon fill={colors.white} width={32} height={32} />
+                        <q.icon fill={colors.white} width={32} height={32} accessible={false} importantForAccessibility="no"/>
                       )) || (
-                        <q.icon fill={theme.primary} width={32} height={32} />
+                        <q.icon fill={theme.primary} width={32} height={32} accessible={false} importantForAccessibility="no"/>
                       )}
                   </View>
                 );
@@ -330,6 +354,9 @@ export default function ServicesScreen({ navigation }) {
               onPress={handleNext}
               disabled={!formData[item.key]}
               style={{ backgroundColor: theme.primary }}
+              accessibilityLabel={getButtonTitle()}
+              accessibilityHint={`${!formData[item.key] ? 'Primero debes seleccionar una opción' : 'Presiona para continuar'}`}
+              accessibilityState={{ disabled: !formData[item.key] }}
             >
               {getButtonTitle()}
             </Button>

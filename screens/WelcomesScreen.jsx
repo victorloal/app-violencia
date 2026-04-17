@@ -68,21 +68,28 @@ export default function WelcomeScreen({ navigation, route }) {
       </Animated.View>
 
       {/* Slider de mensajes */}
-      <Animated.View style={[screenStyles.sliderWrapper, slideInX(sliderAnim)]}>
+      <Animated.View 
+        style={[screenStyles.sliderWrapper, slideInX(sliderAnim)]}
+        accessible={true}
+        accessibilityRole="text"
+        accessibilityLabel="Mensajes de bienvenida"
+      >
         <AppSlider data={WELCOME_MESSAGES} textStyle={screenStyles.cardText} />
       </Animated.View>
 
       <Animated.View
         style={[screenStyles.buttonContainer, slideInX(buttonAnim)]}
-        accessible={true}
-        accessibilityLabel="Comenzar"
-        accessibilityRole="button"
+        accessible={false}
+        importantForAccessibility="no-hide-descendants"
       >
         <Button
           type="inversePrimary"
           onPress={handlePress}
           size="xl"
-          accessible={false}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel="Comenzar"
+          accessibilityHint="Avanza a la configuración inicial de la aplicación"
         >
           Comenzar
         </Button>

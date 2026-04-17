@@ -26,16 +26,24 @@ export default function PlacesScreen({ route, navigation }) {
     userRegion,
   } = usePlaces(tipo, placeId);
 
-  // Debug region loading
-  // console.log("Current region in PlacesScreen:", userRegion);
-
   const theme = getTypeConfig(selectedType);
 
   if (isLoading) {
     return (
       <MainLayout>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.lavender[600]} />
+        <View 
+          style={styles.loadingContainer}
+          accessible={true}
+          accessibilityRole="progressbar"
+          accessibilityLabel="Cargando lugares disponibles"
+          accessibilityLiveRegion="polite"
+        >
+          <ActivityIndicator 
+            size="large"
+            color={colors.lavender[600]}
+            accessible={false}
+            importantForAccessibility="no"
+          />
           <AppText style={{ marginTop: spacing.md }}>
             Cargando lugares...
           </AppText>
@@ -48,16 +56,30 @@ export default function PlacesScreen({ route, navigation }) {
     return (
       <MainLayout>
         <View style={styles.emptyRegionContainer}>
-          <View style={styles.iconCircle}>
+          
+          <View 
+            style={styles.iconCircle}
+            accessible={true}
+            accessibilityRole="image"
+            accessibilityLabel="Icono de ubicación no seleccionada"
+          >
             <Ionicons
               name="location-outline"
               size={64}
               color={colors.lavender[600]}
+              accessible={false}
             />
           </View>
-          <AppText variant="h2" align="center" style={styles.emptyTitle}>
+
+          <AppText 
+            variant="h2" 
+            align="center" 
+            style={styles.emptyTitle}
+            accessibilityRole="header"
+          >
             Región No Seleccionada
           </AppText>
+
           <AppText
             variant="body"
             align="center"
@@ -66,14 +88,18 @@ export default function PlacesScreen({ route, navigation }) {
             Para mostrarte los lugares más cercanos, necesitamos saber si te
             encuentras en Tumaco o Buenaventura.
           </AppText>
+
           <Button
             type="primary"
             size="xl"
             style={styles.actionButton}
             onPress={() => navigation.navigate("Form")}
+            accessibilityLabel="Realizar encuesta"
+            accessibilityHint="Abre el formulario para encontrar ayuda"
           >
             Realizar Encuesta
           </Button>
+
         </View>
       </MainLayout>
     );
@@ -81,36 +107,74 @@ export default function PlacesScreen({ route, navigation }) {
 
   return (
     <MainLayout>
-      <ScrollView
-        style={[styles.container, { backgroundColor: theme.background }]}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.contentContainer}
-      >
-        {categoryInfo && (
-          <CategoryHeader
-            type={selectedType}
-            title={categoryInfo.title}
-            description={categoryInfo.description}
-            icon={categoryInfo.icon}
-          />
-        )}
-
-        <CategoryFilters
-          style={styles.filters}
-          selectedType={selectedType}
-          onSelectType={changeType}
-        />
-
-        <View style={styles.listContainer}>
-          {places.length > 0 ? (
-            places.map((place) => <PlaceCard key={place.id} place={place} />)
-          ) : (
-            <EmptyState type={selectedType} />
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.contentContainer}
+          accessible={false}
+        >
+          {/* Header */}
+          {categoryInfo && (
+            <View style={styles.categoryHeaderWrapper}>
+              <CategoryHeader
+                type={selectedType}
+                title={categoryInfo.title}
+                description={categoryInfo.description}
+                icon={categoryInfo.icon}
+              />
+            </View>
           )}
-        </View>
 
-        <HelpMessage type={selectedType} />
-      </ScrollView>
+          {/* Filtros */}
+          <View style={styles.filtersWrapper}>
+            <CategoryFilters
+              selectedType={selectedType}
+              onSelectType={changeType}
+            />
+          </View>
+
+          {/* Screen reader only */}
+          <View
+            accessible={true}
+            accessibilityRole="text"
+            accessibilityLiveRegion="polite"
+            style={styles.screenReaderOnly}
+          >
+            <AppText>
+              {places.length > 0 
+                ? `Se encontraron ${places.length} lugares de ayuda disponibles en tu región` 
+                : "No se encontraron lugares de ayuda disponibles en tu región"}
+            </AppText>
+          </View>
+
+          {/* Lista */}
+          <View style={styles.listContainer}>
+            {places.length > 0 ? (
+              places.map((place, index) => (
+                <View 
+                  key={place.id}
+                  style={styles.placeCardWrapper}
+                  accessible={false} // 🔑 clave
+                >
+                  <PlaceCard 
+                    place={place}
+                    accessibilityLabel={`Lugar ${index + 1} de ${places.length}: ${place.nombre}`}
+                  />
+                </View>
+              ))
+            ) : (
+              <View>
+                <EmptyState type={selectedType} />
+              </View>
+            )}
+          </View>
+
+          <View style={styles.helpMessageWrapper}>
+            <HelpMessage type={selectedType} />
+          </View>
+
+        </ScrollView>
+      </View>
     </MainLayout>
   );
 }

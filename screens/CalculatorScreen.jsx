@@ -9,6 +9,7 @@ import {
   Vibration,
   Dimensions,
   Modal,
+  SafeAreaView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
@@ -59,7 +60,16 @@ const BUTTONS = [
   ["0", ".", "="],
 ];
 
-// ── Helper: label accesible por botón ──────────────────────────
+export default function CalculatorScreen({ onUnlock, isTutorial = false }) {
+  const [display, setDisplay] = useState("0");
+  const [expression, setExpression] = useState("");
+  const [operand, setOperand] = useState(null);
+  const [operator, setOperator] = useState(null);
+  const [waitingNext, setWaitingNext] = useState(false);
+  const [activeOp, setActiveOp] = useState(null);
+  const [showInstructions, setShowInstructions] = useState(false);
+
+  // ── Helper: label accesible por botón ──────────────────────────
 const getAccessibilityLabel = (btn) => {
   const labels = {
     "AC":  "Limpiar todo",
@@ -81,15 +91,6 @@ const getAccessibilityHint = (btn) => {
   if (activeOp === btn) return "Operador activo";
   return undefined;
 };
-
-export default function CalculatorScreen({ onUnlock, isTutorial = false }) {
-  const [display, setDisplay] = useState("0");
-  const [expression, setExpression] = useState("");
-  const [operand, setOperand] = useState(null);
-  const [operator, setOperator] = useState(null);
-  const [waitingNext, setWaitingNext] = useState(false);
-  const [activeOp, setActiveOp] = useState(null);
-  const [showInstructions, setShowInstructions] = useState(false);
 
   // Mostrar instrucciones solo la primera vez que abre calculadora (independiente de main tutorial)
   useEffect(() => {
