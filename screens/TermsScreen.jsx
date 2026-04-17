@@ -89,7 +89,7 @@ export default function TermsScreen({ navigation }) {
             desde tu ubicación actual.
           </AppText>
           <AppText variant="body" style={styles.text}>
-            <AppText style={styles.bold}>
+            <AppText style={styles.text}>
               La ubicación no será almacenada
             </AppText>{" "}
             en la aplicación y podrás desactivar este permiso en cualquier
