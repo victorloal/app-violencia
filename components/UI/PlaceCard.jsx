@@ -16,7 +16,6 @@ import React from "react";
 
 const PlaceCard = ({ place }) => {
   const theme = getTypeConfig(place.tipo);
-  // Use only place.id - ignore category for matching
   const placeImage = getPlaceImage(place.id);
 
   const handleCall = () => {
@@ -52,19 +51,22 @@ const PlaceCard = ({ place }) => {
         styles.card,
         { borderLeftWidth: 4, borderLeftColor: theme.primary },
       ]}
+      accessible={false} // 🔑 CLAVE: evitar agrupación
     >
-      <View style={styles.header}>
+      <View style={styles.header} accessible={false}>
         <View
           style={[
             styles.iconContainer,
             { backgroundColor: colors.white, borderColor: theme.border },
           ]}
+          accessible={false}
         >
           {placeImage ? (
             <Image
               source={placeImage}
               style={styles.placeImage}
               resizeMode="contain"
+              accessible={false}
             />
           ) : theme.isCustomIcon ? (
             React.createElement(theme.icon, {
@@ -73,31 +75,34 @@ const PlaceCard = ({ place }) => {
               color: theme.primary,
             })
           ) : (
-            <Ionicons name={theme.icon} size={32} color={theme.primary} />
+            <Ionicons
+              name={theme.icon}
+              size={32}
+              color={theme.primary}
+              accessible={false}
+            />
           )}
         </View>
-        <View style={styles.titleContainer}>
+
+        <View style={styles.titleContainer} accessible={false}>
           <AppText
             variant="h4"
             numberOfLines={4}
             style={[styles.detailText, { color: theme.text }]}
+            accessibilityRole="header"
           >
             {place.nombre}
           </AppText>
         </View>
       </View>
 
-      <View style={styles.details}>
+      <View style={styles.details} accessible={false}>
         <DetailRow icon="time-outline" theme={theme} text={place.horario} />
-        <DetailRow
-          icon="location-outline"
-          theme={theme}
-          text={place.direccion}
-        />
+        <DetailRow icon="location-outline" theme={theme} text={place.direccion} />
         <DetailRow icon="call-outline" theme={theme} text={place.telefono} />
 
         {place.descripcion && (
-          <View style={styles.descriptionContainer}>
+          <View style={styles.descriptionContainer} accessible={false}>
             <AppText
               variant="body"
               style={[styles.detailText, { color: theme.text }]}
@@ -108,22 +113,29 @@ const PlaceCard = ({ place }) => {
         )}
       </View>
 
-      <View style={styles.actions}>
+      <View style={styles.actions} accessible={false}>
         <Button
           type="primary"
           size="flex"
-          onPress={handleCall}
+          onPress={handleCall} 
           style={[styles.button, { backgroundColor: theme.badgeBg }]}
           textStyle={{ color: theme.text }}
+          accessibilityRole="button"
+          accessibilityLabel={`Llamar a ${place.nombre}`}
+          accessibilityHint="Realiza una llamada telefónica"
         >
           Llamar
         </Button>
+
         <Button
           type="primary"
           size="flex"
           onPress={handleNavigate}
           style={[styles.button, { backgroundColor: theme.badgeBg }]}
           textStyle={{ color: theme.text }}
+          accessibilityRole="button"
+          accessibilityLabel={`Cómo llegar a ${place.nombre}`}
+          accessibilityHint="Abre la navegación en mapas"
         >
           Cómo llegar
         </Button>
@@ -133,8 +145,13 @@ const PlaceCard = ({ place }) => {
 };
 
 const DetailRow = ({ icon, theme, text }) => (
-  <View style={styles.detailRow}>
-    <Ionicons name={icon} size={24} color={theme.primary} />
+  <View style={styles.detailRow} accessible={false}>
+    <Ionicons
+      name={icon}
+      size={24}
+      color={theme.primary}
+      accessible={false}
+    />
     <AppText variant="body" style={[styles.detailText, { color: theme.text }]}>
       {text}
     </AppText>

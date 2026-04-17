@@ -62,7 +62,7 @@ export default function MainLayout({ children }) {
     useContext(SettingsContext);
   const navigation = useNavigation();
   const { goToNext } = useCopilot();
-  const { openCalcDemoRef, setTutorialActive, markTutorialCompleted } =
+  const { openCalcDemoRef, setTutorialActive, markTutorialCompleted, isTutorialActive, isTutorialCompleted } =
     useTutorialContext();
 
   const [isTutorialDemo, setIsTutorialDemo] = useState(false);
@@ -70,6 +70,14 @@ export default function MainLayout({ children }) {
 
   useTutorialAutoStart();
 
+  // Limpiar camuflaje si el tutorial se va a iniciar
+  useEffect(() => {
+    if (isTutorialActive && isCamouflageOn) {
+      setIsCamouflageOn(false);
+      setIsTutorialDemo(false);
+    }
+  }, [isTutorialActive]);
+  
   // Registra la función para que App.js pueda abrirla desde onStepChange
   const openCalcDemo = useCallback(() => {
     setIsTutorialDemo(true);
@@ -85,10 +93,23 @@ export default function MainLayout({ children }) {
 
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (nextAppState) => {
-      setIsInactive(nextAppState === "inactive");
+      // SOLUCIÓN TalkBack primera entrada + formulario
+      const isTutorialInProgress = isTutorialActive || isTutorialDemo;
+      const isTutorialPending = !isTutorialCompleted;
+      
+      if (isTutorialPending && !isTutorialInProgress) {
+        // Tutorial NO completado - NO camuflaje
+        return;
+      }
+      
+      if (nextAppState === "inactive" && !isTutorialInProgress) {
+        setIsInactive(true);
+      } else if (nextAppState === "active") {
+        setIsInactive(false);
+      }
     });
     return () => subscription?.remove();
-  }, []);
+  }, [isTutorialActive, isTutorialDemo, isTutorialCompleted]);
 
   const handleExitCamouflage = () => {
     setIsTutorialDemo(false);
@@ -211,15 +232,16 @@ export default function MainLayout({ children }) {
 
           {/* Paso 4: Llamada */}
           <CopilotStep {...TUTORIAL_STEPS.llamada}>
-            <WalkthroughView style={layoutStyles.btnWrapper}>
-              <Animated.View
-                style={{
-                  height: "100%",
-                  width: "100%",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  transform: [{ scale: pulseAnim }],
-                }}
+            <WalkthroughView style={[layoutStyles.btnWrapper, { alignItems: "center", justifyContent: "center" }]}>
+              <Button
+                type="primary"
+                size="flex"
+                variant="circle"
+                onPress={handleCallButtonPress}
+                onLongPress={() => linkingService.makePhoneCall(phoneNumber)}
+                style={{ height: "100%", width: "100%", elevation: 4 }}
+                accessibilityLabel="Llamada de emergencia"
+                accessibilityHint="Presiona para ver contáctos de ayuda. Mantén presionado para llamar a tu contacto de confianza"
               >
                 <Button
                   type="primary"
@@ -244,7 +266,7 @@ export default function MainLayout({ children }) {
                     />
                   </View>
                 </Button>
-              </Animated.View>
+              </Button>
             </WalkthroughView>
           </CopilotStep>
 
@@ -256,7 +278,7 @@ export default function MainLayout({ children }) {
                 size="flex"
                 onPress={handleExitCamouflage}
                 style={{ elevation: 0 }}
-                accessibilityLabel="Salir con camuflaje"
+                accessibilityLabel="Activar modo camuflaje"
                 accessibilityHint="Abre una calculadora para ocultar la aplicación"
               >
                 <View style={layoutStyles.btnContent}>

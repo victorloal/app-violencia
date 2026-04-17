@@ -19,12 +19,14 @@ export function TutorialProvider({ children }) {
   const openCalcDemoRef = useRef(null);
   const [isTutorialActive, setTutorialActive] = useState(false);
   const [isTutorialCompleted, setTutorialCompleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   // Cargar estado completado desde AsyncStorage al montar
   useEffect(() => {
     AsyncStorage.getItem(TUTORIAL_KEY).then((value) => {
       if (value === "true") {
         setTutorialCompleted(true);
       }
+      setIsLoading(false);
     });
   }, []);
   // Función helper para marcar completado (sync storage)
@@ -39,6 +41,7 @@ export function TutorialProvider({ children }) {
     isTutorialCompleted,
     setTutorialCompleted,
     markTutorialCompleted,
+    isLoading,
   };
   return (
     <TutorialContext.Provider value={value}>

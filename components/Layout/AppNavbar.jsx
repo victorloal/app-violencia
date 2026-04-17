@@ -49,8 +49,8 @@ export default function AppNavbar({ bienvenidaStep, ajustesStep }) {
       size="small"
       style={{ elevation: 0 }}
       onPress={() => navigation.replace("Settings")}
-      accessibilityLabel="Configuración"
-      accessibilityHint="Ir a la pantalla de configuración"
+      accessibilityLabel="Ajustes de la aplicación"
+      accessibilityHint="Ir a la pantalla de configuración para Configura tamaño de letra, accesibilidad, contraste y contacto de emergencia"
     >
       <Ionicons name="settings-outline" size={22} color={colors.lavender[800]} />
     </Button>

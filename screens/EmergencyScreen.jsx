@@ -27,19 +27,31 @@ export default function EmergencyScreen({ navigation }) {
 
   return (
     <MainLayout>
-      <ScrollView style={styles.scrollContent}>
+      <ScrollView 
+        style={styles.scrollContent}
+        accessible={false}
+      >
         <View style={styles.listContainer}>
           {/* Mensaje inicial */}
-          <View style={styles.initialMessage}>
+          <View 
+            style={styles.initialMessage}
+            accessible={true}
+            accessibilityRole="text"
+            accessibilityLabel="Estos números pueden ayudarte en caso de emergencia a cualquier hora"
+            >
             <Ionicons
               name="information-circle"
               size={30}
               color={colors.lavender[600]}
+              accessible={false}
+              importantForAccessibility="no"
             />
             <AppText
               variant="body"
               color="secondary"
               style={styles.initialMessageText}
+              accessible={false}
+              importantForAccessibility="no"
             >
               Estos números pueden ayudarte en caso de emergencia a cualquier
               hora
@@ -49,7 +61,11 @@ export default function EmergencyScreen({ navigation }) {
           {/* Número personalizado del usuario (si existe) */}
           {userEmergencyNumber && (
             <>
-              <View style={styles.sectionHeader}>
+              <View 
+                style={styles.sectionHeader}
+                accessible={false}
+                importantForAccessibility="no-hide-descendants"
+              >
                 <View style={styles.sectionHeaderLine} />
                 <View style={styles.sectionHeaderLabel}>
                   <AppText variant="body" color="primary" bold>
@@ -58,9 +74,28 @@ export default function EmergencyScreen({ navigation }) {
                 </View>
                 <View style={styles.sectionHeaderLine} />
               </View>
+              {/* Tarjeta de emergencia personalizada del usuario */}
+              <View
+                accessible={true}
+                accessibilityRole="text"
+                accessibilityLabel="Sección: Tu contacto de emergencia"
+                style={{ height: 0 }}
+              />
+
               <EmergencyCard place={userEmergencyNumber} />
             </>
           )}
+          
+          {/* Resto de números de emergencia */}
+          {userEmergencyNumber && (
+            <View
+              accessible={true}
+              accessibilityRole="text"
+              accessibilityLabel="Sección: Números de emergencia generales"
+              style={{ height: 0 }}
+            />
+          )}
+
           {otherNumbers.map((p) => (
             <EmergencyCard key={p.id} place={p} />
           ))}

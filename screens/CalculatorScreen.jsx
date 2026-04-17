@@ -69,6 +69,29 @@ export default function CalculatorScreen({ onUnlock, isTutorial = false }) {
   const [activeOp, setActiveOp] = useState(null);
   const [showInstructions, setShowInstructions] = useState(false);
 
+  // ── Helper: label accesible por botón ──────────────────────────
+const getAccessibilityLabel = (btn) => {
+  const labels = {
+    "AC":  "Limpiar todo",
+    "+/-": "Cambiar signo",
+    "%":   "Porcentaje",
+    "÷":   "Dividir",
+    "×":   "Multiplicar",
+    "−":   "Restar",
+    "+":   "Sumar",
+    "=":   "Igual, mantén presionado para volver a la app",
+    ".":   "Punto decimal",
+    "0":   "Cero",
+  };
+  return labels[btn] ?? btn; // dígitos 1-9 se leen solos
+};
+
+const getAccessibilityHint = (btn) => {
+  if (btn === "=") return "Mantén presionado 1 segundo para cerrar la calculadora";
+  if (activeOp === btn) return "Operador activo";
+  return undefined;
+};
+
   // Mostrar instrucciones solo la primera vez que abre calculadora (independiente de main tutorial)
   useEffect(() => {
     const checkFirstTime = async () => {
@@ -279,8 +302,14 @@ export default function CalculatorScreen({ onUnlock, isTutorial = false }) {
                       onLongPress={handleEqualLongPress}
                       delayLongPress={800}
                       activeOpacity={0.75}
+                      accessible={true}
+                      accessibilityRole="button"
+                      accessibilityLabel={getAccessibilityLabel(btn)}
+                      accessibilityHint={getAccessibilityHint(btn)}
                     >
-                      <Text style={textStyle}>{btn}</Text>
+                      <Text style={textStyle} accessible={false} importantForAccessibility="no">
+                        {btn}
+                      </Text>
                     </TouchableOpacity>
                   );
                 }
@@ -291,8 +320,14 @@ export default function CalculatorScreen({ onUnlock, isTutorial = false }) {
                     style={btnStyle}
                     onPress={() => handlePress(btn)}
                     activeOpacity={0.75}
+                    accessible={true}
+                    accessibilityRole="button"
+                    accessibilityLabel={getAccessibilityLabel(btn)}
+                    accessibilityHint={getAccessibilityHint(btn)}
                   >
-                    <Text style={textStyle}>{btn}</Text>
+                    <Text style={textStyle}accessible={false} importantForAccessibility="no">
+                      {btn}
+                    </Text>
                   </TouchableOpacity>
                 );
               })}
@@ -310,16 +345,23 @@ export default function CalculatorScreen({ onUnlock, isTutorial = false }) {
           onRequestClose={() => setShowInstructions(false)}
         >
           <SafeAreaView style={styles.instructionsOverlay}>
-            <View style={styles.instructionsContainer}>
+            <View style={styles.instructionsContainer}accessibilityViewIsModal={true}>
               {/* Instrucción 1: Uso normal */}
               <View style={styles.instructionCard}>
-                <View style={styles.instructionHeader}>
-                  <Ionicons name="calculator" size={28} color="#F31A73" />
-                  <Text style={styles.instructionTitle}>
+                <View 
+                  style={styles.instructionHeader}
+                  accessible={false}
+                  importantForAccessibility="no-hide-descendants"
+                >
+                  <Ionicons name="calculator" size={28} color="#F31A73" accessible={false}/>
+                  <Text style={styles.instructionTitle} accessible={false}>
                     Usa la calculadora normalmente
                   </Text>
                 </View>
-                <Text style={styles.instructionText}>
+                <Text 
+                  style={styles.instructionText}accessible={true}
+                  accessibilityLabel="Usa la calculadora normalmente. Realiza operaciones matemáticas como en una calculadora regular. Presiona los números, operadores y el botón igual para ver el resultado."
+                >
                   Realiza operaciones matemáticas como en una calculadora
                   regular. Presiona los números, operadores y el botón
                   &quot;=&quot; &quot;=&quot; ver el resultado.
@@ -328,13 +370,21 @@ export default function CalculatorScreen({ onUnlock, isTutorial = false }) {
 
               {/* Instrucción 2: Cerrar */}
               <View style={styles.instructionCard}>
-                <View style={styles.instructionHeader}>
-                  <Ionicons name="hand-left" size={28} color="#82368C" />
-                  <Text style={styles.instructionTitle}>
+                <View 
+                  style={styles.instructionHeader}
+                  accessible={false}
+                  importantForAccessibility="no-hide-descendants"
+                >
+                  <Ionicons name="hand-left" size={28} color="#82368C" accessible={false}/>
+                  <Text style={styles.instructionTitle} accessible={false}>
                     Para volver a la app
                   </Text>
                 </View>
-                <Text style={styles.instructionText}>
+                <Text 
+                  style={styles.instructionText}
+                  accessible={true}
+                  accessibilityLabel="Para volver a la app. Mantén presionado el botón igual durante 1 segundo y verás un patrón de vibración. Así cerrarás la calculadora y regresarás a Perla."
+                >
                   Mantén presionado el botón &quot;=&quot; durante 1 segundo y
                   verás un patrón de vibración. ¡Así cerrarás la calculadora y
                   regresarás a Perla!
@@ -345,8 +395,11 @@ export default function CalculatorScreen({ onUnlock, isTutorial = false }) {
               <TouchableOpacity
                 style={styles.dismissButton}
                 onPress={() => setShowInstructions(false)}
+                accessible={true}
+                accessibilityRole="button"
+                accessibilityLabel="Entendido, cerrar instrucciones"
               >
-                <Text style={styles.dismissButtonText}>Entendido</Text>
+                <Text style={styles.dismissButtonText} accessible={false}>Entendido</Text>
               </TouchableOpacity>
             </View>
           </SafeAreaView>
