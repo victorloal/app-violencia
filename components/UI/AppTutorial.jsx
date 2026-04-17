@@ -14,14 +14,15 @@ const TUTORIAL_KEY = "@Perla/tutorial_completed";
 // La navegación se controla con useCopilot() desde adentro.
 export function TutorialTooltip({ labels }) {
   const { goToNext, stop, currentStep, isLastStep } = useCopilot();
-const { setTutorialActive, markTutorialCompleted, openCalcDemoRef } = useTutorialContext();
+  const { setTutorialActive, markTutorialCompleted, openCalcDemoRef } =
+    useTutorialContext();
 
   const iconName =
     currentStep?.name?.split(":")[0] ?? "information-circle-outline";
   const title = currentStep?.text?.split("|")[0] ?? "";
-  const desc  = currentStep?.text?.split("|")[1] ?? "";
+  const desc = currentStep?.text?.split("|")[1] ?? "";
 
-const handleNext = () => {
+  const handleNext = () => {
     // Step 5: Open calculator demo instead of just advancing
     if (currentStep?.name === "calculator-outline:camuflaje") {
       openCalcDemoRef.current?.();
@@ -42,7 +43,6 @@ const handleNext = () => {
     markTutorialCompleted();
     stop();
   };
-
 
   return (
     <View style={styles.tooltip}>

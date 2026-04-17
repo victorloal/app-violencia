@@ -45,20 +45,20 @@ export async function enviarPerfil(formData) {
   // Normalizar edad
   const edadMap = {
     "Menor de edad (menos de 18)": "menor",
-    "Joven (18 - 28)":             "joven",
-    "Adulto (29 - 59)":            "adulto",
-    "Adulto mayor (60+)":          "adulto_mayor",
+    "Joven (18 - 28)": "joven",
+    "Adulto (29 - 59)": "adulto",
+    "Adulto mayor (60+)": "adulto_mayor",
   };
   const edad = edadMap[formData.edad] || formData.edad;
 
   return apiFetch("/perfiles", {
     method: "POST",
     body: JSON.stringify({
-      region:    formData.region,
-      zona:      formData.zona,
-      etnia:     formData.etnia,
+      region: formData.region,
+      zona: formData.zona,
+      etnia: formData.etnia,
       edad,
-      laboral:   formData.laboral,
+      laboral: formData.laboral,
       dispositivo_id,
       plataforma: Platform.OS,
     }),
@@ -84,14 +84,14 @@ export async function enviarSolicitud(formData, lugarRedirigido) {
   return apiFetch("/solicitudes", {
     method: "POST",
     body: JSON.stringify({
-      atencion_medica:    formData.atencion_medica    || "No",
-      apoyo_psicologico:  formData.apoyo_psicologico  || "No",
-      denuncia:           formData.denuncia            || "No",
-      hablar_con_policia: formData.hablar_con_policia  || "No",
-      proteccion:         formData.proteccion          || "No",
-      asesoria_legal:     formData.asesoria_legal      || "No",
-      apoyo_ninos:        formData.apoyo_ninos         || "No",
-      lugar_redirigido:   lugarRedirigido              || "otro",
+      atencion_medica: formData.atencion_medica || "No",
+      apoyo_psicologico: formData.apoyo_psicologico || "No",
+      denuncia: formData.denuncia || "No",
+      hablar_con_policia: formData.hablar_con_policia || "No",
+      proteccion: formData.proteccion || "No",
+      asesoria_legal: formData.asesoria_legal || "No",
+      apoyo_ninos: formData.apoyo_ninos || "No",
+      lugar_redirigido: lugarRedirigido || "otro",
       dispositivo_id,
       plataforma: Platform.OS,
     }),

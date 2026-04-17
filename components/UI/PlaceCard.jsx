@@ -113,7 +113,7 @@ const PlaceCard = ({ place }) => {
           type="primary"
           size="flex"
           onPress={handleNavigate}
-          style={[styles.button, { backgroundColor: theme.badgeBg} ]}
+          style={[styles.button, { backgroundColor: theme.badgeBg }]}
           textStyle={{ color: theme.text }}
         >
           Llamar
@@ -122,7 +122,7 @@ const PlaceCard = ({ place }) => {
           type="primary"
           size="flex"
           onPress={handleNavigate}
-          style={[styles.button, { backgroundColor: theme.badgeBg} ]}
+          style={[styles.button, { backgroundColor: theme.badgeBg }]}
           textStyle={{ color: theme.text }}
         >
           Cómo llegar
@@ -135,10 +135,7 @@ const PlaceCard = ({ place }) => {
 const DetailRow = ({ icon, theme, text }) => (
   <View style={styles.detailRow}>
     <Ionicons name={icon} size={24} color={theme.primary} />
-    <AppText
-      variant="body"
-      style={[styles.detailText, { color: theme.text }]}
-    >
+    <AppText variant="body" style={[styles.detailText, { color: theme.text }]}>
       {text}
     </AppText>
   </View>
@@ -175,7 +172,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     flex: 1,
     gap: spacing.xxs,
-    textAlignVertical: 'center'
+    textAlignVertical: "center",
   },
   typeBadge: {
     paddingHorizontal: spacing.sm,
@@ -195,7 +192,7 @@ const styles = StyleSheet.create({
   detailText: {
     flex: 1,
     flexWrap: "wrap",
-    textAlignVertical: 'center'
+    textAlignVertical: "center",
   },
   descriptionContainer: {
     marginTop: spacing.xs,
@@ -211,7 +208,7 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    elevation:3,
+    elevation: 3,
     height: "100%",
     width: "100%",
   },

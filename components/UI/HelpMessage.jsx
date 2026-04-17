@@ -1,9 +1,8 @@
 // components/Places/HelpMessage.jsx
 import React from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AppText from "../UI/AppText";
-import { colors } from "../../thema/colors";
 import { spacing, borderRadius, borderWidth } from "../../styles/tokens";
 import { linkingService } from "../../services/linkingService";
 import { getTypeConfig } from "../../thema/placesTypes";
@@ -27,11 +26,7 @@ const HelpMessage = ({ type = "salud" }) => {
       accessibilityLabel="Ayuda inmediata, llamar al 155 o 123"
       accessibilityRole="button"
     >
-      <Ionicons
-        name="help-buoy-outline"
-        size={20}
-        color={theme.primary}
-      />
+      <Ionicons name="help-buoy-outline" size={20} color={theme.primary} />
       <AppText variant="body" color="secondary" style={styles.text}>
         Si necesitas ayuda inmediata, llama al 155 o al 123
       </AppText>

@@ -1,5 +1,11 @@
-import React, { useState, useContext, useEffect, useCallback } from "react";
-import { View, StyleSheet, Modal, AppState } from "react-native";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
+import { View, StyleSheet, Modal, AppState, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { CopilotStep, walkthroughable, useCopilot } from "react-native-copilot";
 import Button from "../UI/Button";
@@ -112,7 +118,61 @@ export default function MainLayout({ children }) {
 
   const handleCallButtonPress = () =>
     navigation.navigate("Emergency", { tipo: "emergencia" });
+  // Animación para el botón de llamada
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const ringAnim = useRef(new Animated.Value(0)).current;
 
+  // Efecto de pulso continuo para llamar la atención
+  useEffect(() => {
+    const pulse = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 1.02,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+    pulse.start();
+
+    return () => pulse.stop();
+  }, []);
+
+  // Efecto de anillo/sombra pulsante
+  useEffect(() => {
+    const ring = Animated.loop(
+      Animated.sequence([
+        Animated.timing(ringAnim, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: false,
+        }),
+        Animated.timing(ringAnim, {
+          toValue: 0,
+          duration: 600,
+          useNativeDriver: false,
+        }),
+      ]),
+    );
+    ring.start();
+
+    return () => ring.stop();
+  }, []);
+  // Interpolación para el efecto de anillo
+  const ringScale = ringAnim.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [1, 1.15, 1],
+  });
+
+  const ringOpacity = ringAnim.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [0.3, 0.1, 0.3],
+  });
   return (
     <SafeLayout scrollable={false}>
       <View style={layoutStyles.container}>
@@ -151,35 +211,51 @@ export default function MainLayout({ children }) {
 
           {/* Paso 4: Llamada */}
           <CopilotStep {...TUTORIAL_STEPS.llamada}>
-            <WalkthroughView
-              style={[
-                layoutStyles.btnWrapper,
-                { alignItems: "center", justifyContent: "center" },
-              ]}
-            >
-              <Button
-                type="primary"
-                size="flex"
-                variant="circle"
-                onPress={handleCallButtonPress}
-                onLongPress={() => linkingService.makePhoneCall(phoneNumber)}
-                style={{ height: "100%", width: "100%", elevation: 4 }}
-                accessibilityLabel="Llamada de emergencia"
-                accessibilityHint="Ver lugares de emergencia para realizar una llamada"
+            <WalkthroughView style={layoutStyles.btnWrapper}>
+              <Animated.View
+                style={{
+                  position: "absolute",
+                  height: "80%",
+                  aspectRatio: 1,
+                  backgroundColor: styles.semanticColors.primary,
+                  borderRadius: 100,
+                  transform: [{ scale: ringScale }],
+                  opacity: ringOpacity,
+                }}
+              />
+              <Animated.View
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transform: [{ scale: pulseAnim }],
+                }}
               >
-                <View
-                  style={[
-                    layoutStyles.btnContent,
-                    { height: "100%", width: "100%" },
-                  ]}
+                <Button
+                  type="primary"
+                  size="flex"
+                  variant="circle"
+                  onPress={handleCallButtonPress}
+                  onLongPress={() => linkingService.makePhoneCall(phoneNumber)}
+                  style={{ height: "100%", width: "100%", elevation: 4 }}
+                  accessibilityLabel="Llamada de emergencia"
+                  accessibilityHint="Ver lugares de emergencia para realizar una llamada"
                 >
-                  <Call24
-                    width={45}
-                    height={45}
-                    fill={styles.semanticColors.text.inverse}
-                  />
-                </View>
-              </Button>
+                  <View
+                    style={[
+                      layoutStyles.btnContent,
+                      { height: "100%", width: "100%" },
+                    ]}
+                  >
+                    <Call24
+                      width={45}
+                      height={45}
+                      fill={styles.semanticColors.text.inverse}
+                    />
+                  </View>
+                </Button>
+              </Animated.View>
             </WalkthroughView>
           </CopilotStep>
 
