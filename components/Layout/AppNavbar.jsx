@@ -100,14 +100,16 @@ export default function AppNavbar({ bienvenidaStep, ajustesStep }) {
         {bienvenidaStep ? (
           <CopilotStep {...bienvenidaStep}>
             <WalkthroughView style={[styles.centerInner, { width: "100%" }]}>
-              <AppText
-                variant="body"
-                center
-                color="tertiary"
-                style={styles.messageText}
-              >
-                Bienvenida a Perla
-              </AppText>
+              <Animated.View style={{ opacity: fadeAnim }}>
+            <AppText
+              variant="body"
+              center
+              color="tertiary"
+              style={styles.messageText}
+            >
+              {messages[currentIndex]}
+            </AppText>
+          </Animated.View>
             </WalkthroughView>
           </CopilotStep>
         ) : (

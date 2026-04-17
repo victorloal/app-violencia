@@ -43,7 +43,7 @@ export const TUTORIAL_STEPS = {
   llamada: {
     order: 4,
     name: "call-outline:llamada",
-    text: "Botón de Llamada 24/7|Accede a los centros de atención de emergencia. Mantén presionado para llamar directamente a tu contacto de confianza.",
+    text: "Botón de Llamada 24/7|Accede al directorio de atención de emergencias. Mantén presionado para llamar directamente a tu contacto de confianza.",
   },
   camuflaje: {
     order: 5,
