@@ -43,7 +43,7 @@ export const TUTORIAL_STEPS = {
   llamada: {
     order: 4,
     name: "call-outline:llamada",
-    text: "Botón 24/7|Accede a los centros de atención de emergencia. Mantén presionado para llamar directamente a tu contacto de confianza.",
+    text: "Botón de Llamada 24/7|Accede a los centros de atención de emergencia. Mantén presionado para llamar directamente a tu contacto de confianza.",
   },
   camuflaje: {
     order: 5,
@@ -53,7 +53,7 @@ export const TUTORIAL_STEPS = {
   carrusel: {
     order: 6,
     name: "apps-outline:carrusel",
-    text: "Carrusel de violencias|Desliza las tarjetas para conocer los tipos de violencia. En cada una puedes ver más información y solicitar ayuda.",
+    text: "Tipos de Violencias|Desliza las tarjetas que aparecen debajo de este titulo, para conocer los tipos de violencia. En cada una puedes ver la descripción y visualizar las rutas de atención.",
   },
 };
 
@@ -62,8 +62,13 @@ export default function MainLayout({ children }) {
     useContext(SettingsContext);
   const navigation = useNavigation();
   const { goToNext } = useCopilot();
-  const { openCalcDemoRef, setTutorialActive, markTutorialCompleted, isTutorialActive, isTutorialCompleted } =
-    useTutorialContext();
+  const {
+    openCalcDemoRef,
+    setTutorialActive,
+    markTutorialCompleted,
+    isTutorialActive,
+    isTutorialCompleted,
+  } = useTutorialContext();
 
   const [isTutorialDemo, setIsTutorialDemo] = useState(false);
   const [isInactive, setIsInactive] = useState(false);
@@ -77,7 +82,7 @@ export default function MainLayout({ children }) {
       setIsTutorialDemo(false);
     }
   }, [isTutorialActive]);
-  
+
   // Registra la función para que App.js pueda abrirla desde onStepChange
   const openCalcDemo = useCallback(() => {
     setIsTutorialDemo(true);
@@ -96,12 +101,12 @@ export default function MainLayout({ children }) {
       // SOLUCIÓN TalkBack primera entrada + formulario
       const isTutorialInProgress = isTutorialActive || isTutorialDemo;
       const isTutorialPending = !isTutorialCompleted;
-      
+
       if (isTutorialPending && !isTutorialInProgress) {
         // Tutorial NO completado - NO camuflaje
         return;
       }
-      
+
       if (nextAppState === "inactive" && !isTutorialInProgress) {
         setIsInactive(true);
       } else if (nextAppState === "active") {
@@ -148,7 +153,7 @@ export default function MainLayout({ children }) {
     const pulse = Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, {
-          toValue: 1.02,
+          toValue: 1.015,
           duration: 600,
           useNativeDriver: true,
         }),
@@ -232,16 +237,20 @@ export default function MainLayout({ children }) {
 
           {/* Paso 4: Llamada */}
           <CopilotStep {...TUTORIAL_STEPS.llamada}>
-            <WalkthroughView style={[layoutStyles.btnWrapper, { alignItems: "center", justifyContent: "center" }]}>
-              <Button
-                type="primary"
-                size="flex"
-                variant="circle"
-                onPress={handleCallButtonPress}
-                onLongPress={() => linkingService.makePhoneCall(phoneNumber)}
-                style={{ height: "100%", width: "100%", elevation: 4 }}
-                accessibilityLabel="Llamada de emergencia"
-                accessibilityHint="Presiona para ver contáctos de ayuda. Mantén presionado para llamar a tu contacto de confianza"
+            <WalkthroughView
+              style={[
+                layoutStyles.btnWrapper,
+                { alignItems: "center", justifyContent: "center" },
+              ]}
+            >
+              <Animated.View
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transform: [{ scale: pulseAnim }],
+                }}
               >
                 <Button
                   type="primary"
@@ -249,24 +258,17 @@ export default function MainLayout({ children }) {
                   variant="circle"
                   onPress={handleCallButtonPress}
                   onLongPress={() => linkingService.makePhoneCall(phoneNumber)}
-                  style={{ height: "100%", width: "100%", elevation: 4 }}
+                  style={{ height: "90%", width: "90%", elevation: 4 }}
                   accessibilityLabel="Llamada de emergencia"
                   accessibilityHint="Ver lugares de emergencia para realizar una llamada"
                 >
-                  <View
-                    style={[
-                      layoutStyles.btnContent,
-                      { height: "100%", width: "100%" },
-                    ]}
-                  >
-                    <Call24
-                      width={45}
-                      height={45}
-                      fill={styles.semanticColors.text.inverse}
-                    />
-                  </View>
+                  <Call24
+                    width={55}
+                    height={55}
+                    fill={styles.semanticColors.text.inverse}
+                  />
                 </Button>
-              </Button>
+              </Animated.View>
             </WalkthroughView>
           </CopilotStep>
 

@@ -23,7 +23,7 @@ export default function AppNavbar({ bienvenidaStep, ajustesStep }) {
   ];
 
   const [currentIndex, setCurrentIndex] = useState(
-    Math.floor(Math.random() * messages.length)
+    Math.floor(Math.random() * messages.length),
   );
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
@@ -31,13 +31,24 @@ export default function AppNavbar({ bienvenidaStep, ajustesStep }) {
     let isMounted = true;
     const interval = setInterval(() => {
       if (!isMounted) return;
-      Animated.timing(fadeAnim, { toValue: 0, duration: 300, useNativeDriver: true }).start(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => {
         if (!isMounted) return;
         setCurrentIndex((prev) => (prev + 1) % messages.length);
-        Animated.timing(fadeAnim, { toValue: 1, duration: 300, useNativeDriver: true }).start();
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
       });
     }, 5000);
-    return () => { isMounted = false; clearInterval(interval); };
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, [fadeAnim, messages.length]);
 
   const canGoBack = navigation.canGoBack() && route.name !== "Home";
@@ -52,13 +63,16 @@ export default function AppNavbar({ bienvenidaStep, ajustesStep }) {
       accessibilityLabel="Ajustes de la aplicación"
       accessibilityHint="Ir a la pantalla de configuración para Configura tamaño de letra, accesibilidad, contraste y contacto de emergencia"
     >
-      <Ionicons name="settings-outline" size={22} color={colors.lavender[800]} />
+      <Ionicons
+        name="settings-outline"
+        size={22}
+        color={colors.lavender[800]}
+      />
     </Button>
   );
 
   return (
     <View style={styles.container}>
-
       {/* Izquierda: botón atrás */}
       <View style={styles.side}>
         {canGoBack ? (
@@ -70,7 +84,11 @@ export default function AppNavbar({ bienvenidaStep, ajustesStep }) {
             onPress={() => navigation.goBack()}
             accessibilityLabel="Volver atrás"
           >
-            <Ionicons name="arrow-back" size={22} color={colors.lavender[800]} />
+            <Ionicons
+              name="arrow-back"
+              size={22}
+              color={colors.lavender[800]}
+            />
           </Button>
         ) : (
           <View style={{ width: 36, height: 36 }} />
@@ -81,17 +99,25 @@ export default function AppNavbar({ bienvenidaStep, ajustesStep }) {
       <View style={styles.center}>
         {bienvenidaStep ? (
           <CopilotStep {...bienvenidaStep}>
-            <WalkthroughView style={styles.centerInner}>
-              <Animated.View style={{ opacity: fadeAnim }}>
-                <AppText variant="body" center color="tertiary" style={styles.messageText}>
-                  {messages[currentIndex]}
-                </AppText>
-              </Animated.View>
+            <WalkthroughView style={[styles.centerInner, { width: "100%" }]}>
+              <AppText
+                variant="body"
+                center
+                color="tertiary"
+                style={styles.messageText}
+              >
+                Bienvenida a Perla
+              </AppText>
             </WalkthroughView>
           </CopilotStep>
         ) : (
           <Animated.View style={{ opacity: fadeAnim }}>
-            <AppText variant="body" center color="tertiary" style={styles.messageText}>
+            <AppText
+              variant="body"
+              center
+              color="tertiary"
+              style={styles.messageText}
+            >
               {messages[currentIndex]}
             </AppText>
           </Animated.View>
@@ -110,7 +136,6 @@ export default function AppNavbar({ bienvenidaStep, ajustesStep }) {
           settingsBtn
         )}
       </View>
-
     </View>
   );
 }

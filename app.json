@@ -18,7 +18,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.victorloal.sororaapp",
+      "bundleIdentifier": "com.victorloal.perlaapp",
       "buildNumber": "1.0.0"
     },
     "android": {
@@ -27,7 +27,7 @@
         "backgroundColor": "#481e4d"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.victorloal.sororaapp",
+      "package": "com.victorloal.perlaapp",
       "versionCode": 1
     },
     "web": {

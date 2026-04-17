@@ -70,27 +70,27 @@ const violenceTypes = [
     title: "Violencia Basada en Prejuicios",
     description:
       "Es todo tipo de violencia que se ejerce contra una persona por ideas, creencias, estereotipos negativos o prejuicios sobre su orientación sexual, su identidad o su expresión de género diversa.",
-    icon: <ViolenciaBasadaPrejuiciosIcon width={200} height={200} />,
+    icon: <ViolenciaBasadaPrejuiciosIcon width={100} height={100} />,
   },
 ];
 
 export default function HomeScreen({ navigation }) {
   return (
     <MainLayout>
-      <View style={styles.header}>
-        <AppText variant="h1" style={styles.mainTitle}>
-          Tipos de Violencia
-        </AppText>
-        <AppText variant="body" style={styles.mainTitle}>
-          (Ley 1257 de 2008 - Colombia)
-        </AppText>
-      </View>
-
       <CopilotStep {...TUTORIAL_STEPS.carrusel}>
-        <WalkthroughView style={styles.carouselAnchor} />
+        <WalkthroughView style={styles.header}>
+          <View style={styles.header}>
+            <AppText variant="h1" style={styles.mainTitle}>
+              Tipos de Violencia
+            </AppText>
+            <AppText variant="body" style={styles.mainTitle}>
+              (Ley 1257 de 2008 - Colombia)
+            </AppText>
+          </View>
+        </WalkthroughView>
       </CopilotStep>
-
       <ViolenceCarousel data={violenceTypes} navigation={navigation} />
+
       {/* Carrusel real — fuera del CopilotStep para no interferir con la medición */}
     </MainLayout>
   );
@@ -102,10 +102,5 @@ const styles = StyleSheet.create({
   },
   mainTitle: {
     textAlign: "center",
-  },
-  carouselAnchor: {
-    height: 8,
-    width: "80%",
-    alignSelf: "center",
   },
 });

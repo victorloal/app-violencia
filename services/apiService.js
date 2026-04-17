@@ -7,10 +7,10 @@ const BASE_URL = "http://192.168.1.7:3000/api";
 // ── Device ID persistente y anónimo ──────────────────────────────
 export async function getDeviceId() {
   try {
-    let id = await AsyncStorage.getItem("sorora_device_id");
+    let id = await AsyncStorage.getItem("perla_device_id");
     if (!id) {
       id = `${Platform.OS}-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-      await AsyncStorage.setItem("sorora_device_id", id);
+      await AsyncStorage.setItem("perla_device_id", id);
     }
     return id;
   } catch {

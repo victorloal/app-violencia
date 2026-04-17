@@ -31,14 +31,14 @@ export default function PlacesScreen({ route, navigation }) {
   if (isLoading) {
     return (
       <MainLayout>
-        <View 
+        <View
           style={styles.loadingContainer}
           accessible={true}
           accessibilityRole="progressbar"
           accessibilityLabel="Cargando lugares disponibles"
           accessibilityLiveRegion="polite"
         >
-          <ActivityIndicator 
+          <ActivityIndicator
             size="large"
             color={colors.lavender[600]}
             accessible={false}
@@ -56,8 +56,7 @@ export default function PlacesScreen({ route, navigation }) {
     return (
       <MainLayout>
         <View style={styles.emptyRegionContainer}>
-          
-          <View 
+          <View
             style={styles.iconCircle}
             accessible={true}
             accessibilityRole="image"
@@ -71,9 +70,9 @@ export default function PlacesScreen({ route, navigation }) {
             />
           </View>
 
-          <AppText 
-            variant="h2" 
-            align="center" 
+          <AppText
+            variant="h2"
+            align="center"
             style={styles.emptyTitle}
             accessibilityRole="header"
           >
@@ -99,7 +98,6 @@ export default function PlacesScreen({ route, navigation }) {
           >
             Realizar Encuesta
           </Button>
-
         </View>
       </MainLayout>
     );
@@ -133,30 +131,16 @@ export default function PlacesScreen({ route, navigation }) {
             />
           </View>
 
-          {/* Screen reader only */}
-          <View
-            accessible={true}
-            accessibilityRole="text"
-            accessibilityLiveRegion="polite"
-            style={styles.screenReaderOnly}
-          >
-            <AppText>
-              {places.length > 0 
-                ? `Se encontraron ${places.length} lugares de ayuda disponibles en tu región` 
-                : "No se encontraron lugares de ayuda disponibles en tu región"}
-            </AppText>
-          </View>
-
           {/* Lista */}
           <View style={styles.listContainer}>
             {places.length > 0 ? (
               places.map((place, index) => (
-                <View 
+                <View
                   key={place.id}
                   style={styles.placeCardWrapper}
                   accessible={false} // 🔑 clave
                 >
-                  <PlaceCard 
+                  <PlaceCard
                     place={place}
                     accessibilityLabel={`Lugar ${index + 1} de ${places.length}: ${place.nombre}`}
                   />
@@ -172,7 +156,6 @@ export default function PlacesScreen({ route, navigation }) {
           <View style={styles.helpMessageWrapper}>
             <HelpMessage type={selectedType} />
           </View>
-
         </ScrollView>
       </View>
     </MainLayout>

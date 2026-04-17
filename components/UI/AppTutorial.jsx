@@ -1,12 +1,13 @@
 // components/UI/AppTutorial.jsx
 import React, { useEffect, useCallback } from "react";
-import { View, StyleSheet, TouchableOpacity, AccessibilityInfo } from "react-native";
+import { View, StyleSheet, AccessibilityInfo } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useCopilot } from "react-native-copilot";
 import AppText from "./AppText";
 import { colors } from "../../thema/colors";
 import { useTutorialContext } from "../../context/TutorialContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Button from "./Button";
 
 const TUTORIAL_KEY = "@Perla/tutorial_completed";
 // ── Tooltip personalizado ────────────────────────────────────────
@@ -17,7 +18,8 @@ export function TutorialTooltip({ labels }) {
   const { setTutorialActive, markTutorialCompleted, openCalcDemoRef } =
     useTutorialContext();
 
-  const iconName = currentStep?.name?.split(":")[0] ?? "information-circle-outline";
+  const iconName =
+    currentStep?.name?.split(":")[0] ?? "information-circle-outline";
   const title = currentStep?.text?.split("|")[0] ?? "";
   const desc = currentStep?.text?.split("|")[1] ?? "";
 
@@ -27,7 +29,7 @@ export function TutorialTooltip({ labels }) {
       AccessibilityInfo.announceForAccessibility(`${title}. ${desc}`);
     }, 400);
     return () => clearTimeout(timer);
-  }, [currentStep?.name]); 
+  }, [currentStep?.name]);
 
   const handleNext = () => {
     // Step 5: Open calculator demo instead of just advancing
@@ -52,55 +54,36 @@ export function TutorialTooltip({ labels }) {
   };
 
   return (
-    <View style={styles.tooltip}
-          accessibilityViewIsModal={true}
-    >
+    <View style={styles.tooltip} accessibilityViewIsModal={true}>
       {/* Cabecera */}
-      <View style={styles.header}
-            accessible={false}
-            importantForAccessibility="no-hide-descendants"
-            accessibilityElementsHidden={true}
+      <View
+        style={styles.header}
+        accessible={false}
+        importantForAccessibility="no-hide-descendants"
+        accessibilityElementsHidden={true}
       >
         <View style={styles.iconWrap}>
-          <Ionicons name={iconName} 
-                    size={18} 
-                    color={colors.lavender[700]} 
-                    accessible={false}
-                    importantForAccessibility="no"
+          <Ionicons
+            name={iconName}
+            size={18}
+            color={colors.lavender[700]}
+            accessible={false}
+            importantForAccessibility="no"
           />
         </View>
-        <AppText 
-          variant="h3" 
-          bold 
-          style={styles.title} 
+        <AppText
+          variant="h3"
+          style={styles.title}
           accessible={false}
           importantForAccessibility="no"
         >
           {title}
         </AppText>
-        <TouchableOpacity
-          onPress={handleStop}
-          style={styles.closeBtn}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-          accessible={true}
-          importantForAccessibility="yes"
-          accessibilityLabel="Cerrar tutorial"
-          accessibilityHint="Detiene el tutorial y lo marca como completado"
-          accessibilityRole="button"
-        >
-          <Ionicons 
-            name="close" 
-            size={16} 
-            color={colors.neutral[500]} 
-            accessible={false}
-            importantForAccessibility="no"
-          />
-        </TouchableOpacity>
       </View>
 
       {/* Descripción */}
-      <AppText 
-        variant="body" 
+      <AppText
+        variant="body"
         style={styles.desc}
         accessible={true}
         importantForAccessibility="yes"
@@ -111,53 +94,35 @@ export function TutorialTooltip({ labels }) {
 
       {/* Acciones */}
       <View style={styles.actions}>
-        <TouchableOpacity 
-          onPress={handleStop} 
-          style={styles.skipBtn}
-          accessible={true}
+        <Button
+          type="ghost"
+          size="sm"
           importantForAccessibility="yes"
           accessibilityLabel="Saltar tutorial"
           accessibilityHint="Termina el tutorial ahora"
           accessibilityRole="button"
+          accessible={true}
+          onPress={handleStop}
         >
-          <AppText 
-            variant="caption" 
-            style={styles.skipText}
-            accessible={false}
-            importantForAccessibility="no">
-            Saltar tutorial
-          </AppText>
-        </TouchableOpacity>
+          Saltar
+        </Button>
 
-        <TouchableOpacity 
-          onPress={handleNext} 
-          style={styles.nextBtn}
+        <Button
+          onPress={handleNext}
+          type="primary"
+          size="lg"
           accessible={true}
           importantForAccessibility="yes"
-          accessibilityLabel={isLastStep ? "Entendido, finalizar" : "Continuar tutorial"}
-          accessibilityHint={isLastStep ? "Completar el tutorial" : "Avanzar al siguiente paso"}
+          accessibilityLabel={
+            isLastStep ? "Entendido, finalizar" : "Continuar tutorial"
+          }
+          accessibilityHint={
+            isLastStep ? "Completar el tutorial" : "Avanzar al siguiente paso"
+          }
           accessibilityRole="button"
-          >
-          <AppText 
-            variant="body" 
-            bold 
-            style={styles.nextText}
-            accessible={false}
-            importantForAccessibility="no"
-            >
-            {isLastStep ? "¡Entendido!" : "Continuar"}
-          </AppText>
-          {!isLastStep && (
-            <Ionicons
-              name="arrow-forward"
-              size={14}
-              color={colors.white}
-              style={{ marginLeft: 5 }}
-              accessible={false}
-              importantForAccessibility="no"
-            />
-          )}
-        </TouchableOpacity>
+        >
+          {isLastStep ? "¡Entendido!" : "Continuar"}
+        </Button>
       </View>
     </View>
   );
@@ -189,13 +154,13 @@ export async function resetTutorial() {
 }
 
 // ── Estilos ──────────────────────────────────────────────────────
+
 const styles = StyleSheet.create({
   tooltip: {
     backgroundColor: colors.white,
     borderRadius: 20,
-    padding: 18,
-    minWidth: 280,
-    maxWidth: 340,
+    padding: 10,
+    width: "100%",
   },
   header: {
     flexDirection: "row",
@@ -213,44 +178,21 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    color: colors.lavender[900],
-    fontSize: 14,
   },
   closeBtn: {
     width: 26,
     height: 26,
     borderRadius: 8,
-    backgroundColor: colors.neutral[100],
+    backgroundColor: colors.lavender[100],
     alignItems: "center",
     justifyContent: "center",
   },
   desc: {
     color: colors.neutral[600],
-    lineHeight: 21,
     marginBottom: 14,
-    fontSize: 13,
   },
   actions: {
+    gap: 10,
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  skipBtn: { padding: 8 },
-  skipText: {
-    color: colors.neutral[400],
-    textDecorationLine: "underline",
-    fontSize: 12,
-  },
-  nextBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: colors.lavender[600],
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 9,
-  },
-  nextText: {
-    color: colors.white,
-    fontSize: 13,
   },
 });

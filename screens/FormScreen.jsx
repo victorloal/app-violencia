@@ -90,9 +90,12 @@ const questions = [
 const OptionIcon = ({ icon, isSvg, color, size = 22 }) => {
   const iconElement = (() => {
     if (isSvg) {
-      if (icon === "rural") return <RuralIcon width={size} height={size} fill={color} />;
-      if (icon === "urbano") return <UrbanoIcon width={size} height={size} fill={color} />;
-      if (icon === "mujer") return <MujerIcon width={size} height={size} fill={color} />;
+      if (icon === "rural")
+        return <RuralIcon width={size} height={size} fill={color} />;
+      if (icon === "urbano")
+        return <UrbanoIcon width={size} height={size} fill={color} />;
+      if (icon === "mujer")
+        return <MujerIcon width={size} height={size} fill={color} />;
     }
     return <Ionicons name={icon} size={size} color={color} />;
   })();
@@ -102,7 +105,7 @@ const OptionIcon = ({ icon, isSvg, color, size = 22 }) => {
       accessible={false}
       importantForAccessibility="no-hide-descendants"
       accessibilityElementsHidden={true}
-      style={{ display: 'flex' }}
+      style={{ display: "flex" }}
     >
       {iconElement}
     </View>
@@ -123,7 +126,7 @@ const QuestionIcon = ({ icon, isSvg, color, size = 28 }) => {
       accessible={false}
       importantForAccessibility="no-hide-descendants"
       accessibilityElementsHidden={true}
-      style={{ display: 'flex' }}
+      style={{ display: "flex" }}
     >
       {iconElement}
     </View>
@@ -144,7 +147,7 @@ const ProgressIcon = ({ icon, isSvg, color, size = 14 }) => {
       accessible={false}
       importantForAccessibility="no-hide-descendants"
       accessibilityElementsHidden={true}
-      style={{ display: 'flex' }}
+      style={{ display: "flex" }}
     >
       {iconElement}
     </View>
@@ -401,11 +404,11 @@ export default function FormScreen({ navigation }) {
           {/* Footer */}
           <View style={styles.footer}>
             {/* Progreso */}
-            <View style={styles.progressContainer}
-                  accessible={false}
-                  importantForAccessibility="no"
-                  accessibilityElementsHidden={true}
-
+            <View
+              style={styles.progressContainer}
+              accessible={false}
+              importantForAccessibility="no"
+              accessibilityElementsHidden={true}
             >
               {questions.map((q, index) => {
                 const isPast = index < currentIndex;
@@ -451,8 +454,14 @@ export default function FormScreen({ navigation }) {
               size="xl"
               onPress={handleNext}
               disabled={isNextDisabled()}
-              accessibilityLabel={isLastQuestion ? "Finalizar formulario" : "Siguiente pregunta"}
-              accessibilityHint={isLastQuestion ? "Completar y enviar el formulario" : "Avanzar a la siguiente pregunta"}
+              accessibilityLabel={
+                isLastQuestion ? "Finalizar formulario" : "Siguiente pregunta"
+              }
+              accessibilityHint={
+                isLastQuestion
+                  ? "Completar y enviar el formulario"
+                  : "Avanzar a la siguiente pregunta"
+              }
             >
               {isLastQuestion ? "Finalizar" : "Siguiente"}
             </Button>

@@ -6,6 +6,7 @@ import AppText from "../UI/AppText";
 import { spacing, borderRadius, borderWidth } from "../../styles/tokens";
 import { linkingService } from "../../services/linkingService";
 import { getTypeConfig } from "../../thema/placesTypes";
+import { colors } from "../../thema/colors";
 
 const HelpMessage = ({ type = "salud" }) => {
   const theme = getTypeConfig(type);
@@ -27,10 +28,10 @@ const HelpMessage = ({ type = "salud" }) => {
       accessibilityRole="button"
     >
       <Ionicons name="help-buoy-outline" size={20} color={theme.primary} />
-      <AppText variant="body" color="secondary" style={styles.text}>
+      <AppText variant="body" style={styles.text}>
         Si necesitas ayuda inmediata, llama al 155 o al 123
       </AppText>
-      <Ionicons name="chevron-forward" size={16} color={theme.text} />
+      <Ionicons name="chevron-forward" size={16} color={theme.primary} />
     </TouchableOpacity>
   );
 };
@@ -49,6 +50,7 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
+    color: colors.neutral[600],
   },
 });
 
