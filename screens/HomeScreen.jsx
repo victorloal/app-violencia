@@ -11,6 +11,7 @@ import ViolenciaEconómicaIcon from "../assets/icons/ViolenciaEconómica";
 import ViolenciaPatrimonialIcon from "../assets/icons/ViolenciaPatrimonial";
 import ViolenciaDigitalIcon from "../assets/icons/ViolenciaDigital";
 import ViolenciaVicariaIcon from "../assets/icons/ViolenciaVicaria";
+import ViolenciaBasadaPrejuiciosIcon from "../assets/icons/ViolenciaPrejuicio";
 
 // walkthroughable sobre View nativo — siempre funciona porque View acepta ref
 const WalkthroughView = walkthroughable(View);
@@ -69,7 +70,7 @@ const violenceTypes = [
     title: "Violencia Basada en Prejuicios",
     description:
       "Es todo tipo de violencia que se ejerce contra una persona por ideas, creencias, estereotipos negativos o prejuicios sobre su orientación sexual, su identidad o su expresión de género diversa.",
-    icon: <ViolenciaVicariaIcon width={100} height={100} />,
+    icon: <ViolenciaBasadaPrejuiciosIcon width={200} height={200} />,
   },
 ];
 

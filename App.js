@@ -1,20 +1,18 @@
-// App.js
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import AppStack from "./navigation/AppStack";
 import { StatusBar } from "expo-status-bar";
 import { SettingsProvider } from "./context/SettingsContext";
-import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import { CopilotProvider } from "react-native-copilot";
 import { TutorialTooltip } from "./components/UI/AppTutorial";
 import { TutorialProvider, useTutorialContext } from "./context/TutorialContext";
+import SplashScreenComponent from "./screens/SplashScreen";
 
-SplashScreen.preventAutoHideAsync();
-
-function AppWithCopilot() {
+function AppContent({ fontsLoaded }) {
   const { openCalcDemoRef, setTutorialActive, markTutorialCompleted } = useTutorialContext();
+  const [showSplash, setShowSplash] = useState(true);
 
   const handleTutorialFinish = () => {
     markTutorialCompleted();
@@ -24,8 +22,6 @@ function AppWithCopilot() {
     setTutorialActive(true);
   };
 
-  // Cuando Copilot avanza al paso camuflaje, abre la calculadora demo.
-  // El paso carrusel lo maneja goToNext() desde MainLayout.handleUnlock.
   const handleStepChange = (step) => {
     if (step?.name?.includes("camuflaje")) {
       setTimeout(() => {
@@ -33,6 +29,14 @@ function AppWithCopilot() {
       }, 1200);
     }
   };
+
+  const handleSplashFinish = () => {
+    setShowSplash(false);
+  };
+
+  if (showSplash) {
+    return <SplashScreenComponent onFinish={handleSplashFinish} />;
+  }
 
   return (
     <CopilotProvider
@@ -59,12 +63,8 @@ export function App() {
   });
 
   const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded || fontError) {
-      await SplashScreen.hideAsync();
-    }
+    // Las fuentes ya están cargadas en este punto
   }, [fontsLoaded, fontError]);
-
-  if (!fontsLoaded && !fontError) return null;
 
   return (
     <NavigationContainer onReady={onLayoutRootView}>
@@ -72,7 +72,7 @@ export function App() {
         <StatusBar style="auto" />
         <SettingsProvider>
           <TutorialProvider>
-            <AppWithCopilot />
+            <AppContent fontsLoaded={fontsLoaded} />
           </TutorialProvider>
         </SettingsProvider>
       </SafeAreaProvider>

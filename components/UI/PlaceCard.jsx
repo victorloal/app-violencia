@@ -112,7 +112,7 @@ const PlaceCard = ({ place }) => {
         <Button
           type="primary"
           size="flex"
-          onPress={handleNavigate}
+          onPress={handleCall}
           style={[styles.button, { backgroundColor: theme.badgeBg }]}
           textStyle={{ color: theme.text }}
         >
