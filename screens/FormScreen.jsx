@@ -57,9 +57,10 @@ const questions = [
     id: "4",
     question: "Rango de edad:",
     options: [
-      { label: "Joven (18 - 28)", value: "joven" },
-      { label: "Adulta (29 - 59)", value: "adulto" },
-      { label: "Adulta mayor (60+)", value: "adulto_mayor" },
+      { label: "Joven (14 - 17)", value: "joven" },
+      { label: "Adulta Joven (18 - 28)", value: "adulta_joven" },
+      { label: "Adulta (29 - 59)", value: "adulta" },
+      { label: "Adulta mayor (60+)", value: "adulta_mayor" },
     ],
     key: "edad",
     icon: "calendar-outline",
