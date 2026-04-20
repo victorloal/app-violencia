@@ -386,6 +386,36 @@ export const placesData = {
       longitud: -77.00463557473458,
     },
   ],
+  duplas: [
+    {
+      id: "dupla_tumaco",
+      ciudad: "Tumaco",
+      nombre: "Dupla de Atención a Víctimas",
+      horario: "Lunes a Viernes\n8:00am-12:00m\n2:00pm-6:00pm",
+      direccion: "Alcaldía Municipal de Tumaco, Cl. 11 #9-2",
+      telefono: "(572)7276156",
+      tipo: "duplas",
+      whatsapp: "3170820627", // o el número real de WhatsApp
+      descripcion:
+        "Establece medidas para cuidar, proteger y ayudar a las mujeres que son víctimas de violencia dentro de la familia, para que se respeten y se recuperen sus derechos. También busca que se vuelvan a garantizar los derechos de todas las personas de la familia cuando hay violencia en el hogar.",
+      latitud: 1.807628096720489,
+      longitud: -78.76544270423693,
+    },
+    {
+      id: "dupla_buenaventura",
+      ciudad: "Buenaventura",
+      nombre: "Dupla de Atención a Víctimas",
+      horario: "Lunes a Viernes\n8:00am-12:00m\n2:00pm-5:00pm",
+      direccion: "Calle 4 sur Cra 73 esquina, Barrio Nueva Granada",
+      telefono: "3170820627",
+      tipo: "duplas",
+      whatsapp: "3170820627", // o el número real de WhatsApp
+      descripcion:
+        "Establece medidas para cuidar, proteger y ayudar a las mujeres que son víctimas de violencia dentro de la familia, para que se respeten y se recuperen sus derechos. También busca que se vuelvan a garantizar los derechos de todas las personas de la familia cuando hay violencia en el hogar.",
+      latitud: 3.8636936635472394,
+      longitud: -76.99349771772933,
+    },
+  ],
 };
 
 // Utilidades para los datos
@@ -409,5 +439,6 @@ export const getAllPlaces = () => {
     ...placesData.protección,
     ...placesData.justicia,
     ...(placesData.ministerio_publico || []),
+    ...(placesData.duplas || []),
   ];
 };

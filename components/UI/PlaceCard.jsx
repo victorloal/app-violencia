@@ -98,7 +98,11 @@ const PlaceCard = ({ place }) => {
 
       <View style={styles.details} accessible={false}>
         <DetailRow icon="time-outline" theme={theme} text={place.horario} />
-        <DetailRow icon="location-outline" theme={theme} text={place.direccion} />
+        <DetailRow
+          icon="location-outline"
+          theme={theme}
+          text={place.direccion}
+        />
         <DetailRow icon="call-outline" theme={theme} text={place.telefono} />
 
         {place.descripcion && (
@@ -117,7 +121,7 @@ const PlaceCard = ({ place }) => {
         <Button
           type="primary"
           size="flex"
-          onPress={handleCall} 
+          onPress={handleCall}
           style={[styles.button, { backgroundColor: theme.badgeBg }]}
           textStyle={{ color: theme.text }}
           accessibilityRole="button"
@@ -126,6 +130,21 @@ const PlaceCard = ({ place }) => {
         >
           Llamar
         </Button>
+
+        {place.whatsapp && (
+          <Button
+            type="primary"
+            size="flex"
+            onPress={() => linkingService.openWhatsApp(place.whatsapp)}
+            style={[styles.button, { backgroundColor: colors.green[100] }]}
+            textStyle={{ color: colors.green[800] }}
+            accessibilityRole="button"
+            accessibilityLabel={`Enviar WhatsApp a ${place.nombre}`}
+            accessibilityHint="Abre un chat de WhatsApp"
+          >
+            WhatsApp
+          </Button>
+        )}
 
         <Button
           type="primary"
@@ -146,12 +165,7 @@ const PlaceCard = ({ place }) => {
 
 const DetailRow = ({ icon, theme, text }) => (
   <View style={styles.detailRow} accessible={false}>
-    <Ionicons
-      name={icon}
-      size={24}
-      color={theme.primary}
-      accessible={false}
-    />
+    <Ionicons name={icon} size={24} color={theme.primary} accessible={false} />
     <AppText variant="body" style={[styles.detailText, { color: theme.text }]}>
       {text}
     </AppText>

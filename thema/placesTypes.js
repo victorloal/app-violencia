@@ -53,6 +53,18 @@ export const TYPE_CONFIG = {
     title: "Ministerio Público",
     description: "Procuraduría, Defensoría y Personería municipal",
   },
+  duplas: {
+    icon: "people-outline",
+    isCustomIcon: false,
+    primary: colors.blue[600],
+    background: colors.blue[50],
+    border: colors.blue[200],
+    badgeBg: colors.blue[100],
+    text: colors.neutral[600],
+    buttonBg: colors.blue[600],
+    title: "Duplas de Atención",
+    description: "Atención psicosocial y jurídica para víctimas de violencia",
+  },
 };
 
 export const getTypeConfig = (tipo) =>
@@ -74,4 +86,5 @@ export const CATEGORIES = [
   { id: "protección", label: "Protección" },
   { id: "justicia", label: "Justicia" },
   { id: "ministerio_publico", label: "Ministerio Público" },
+  { id: "duplas", label: "Duplas" },
 ];

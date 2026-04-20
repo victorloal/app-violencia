@@ -2,7 +2,46 @@ import * as Location from "expo-location";
 import { Linking, Alert, Platform } from "react-native";
 
 export const linkingService = {
-  // ===== WHATSAPP =====
+  // ===== WHATSAPP CHAT =====
+  openWhatsApp: async (phoneNumber) => {
+    try {
+      if (!phoneNumber || phoneNumber.trim() === "") {
+        Alert.alert(
+          "Error",
+          "No hay número de WhatsApp configurado para este lugar.",
+        );
+        return false;
+      }
+      let cleanNumber = phoneNumber.replace(/[^0-9]/g, "");
+      if (!cleanNumber.startsWith("57")) {
+        cleanNumber = "57" + cleanNumber;
+      }
+      const url = `https://wa.me/${cleanNumber}`;
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+        return true;
+      } else {
+        Alert.alert("WhatsApp no instalado", "¿Quieres abrir WhatsApp Web?", [
+          { text: "Cancelar", style: "cancel" },
+          {
+            text: "WhatsApp Web",
+            onPress: () =>
+              Linking.openURL(
+                `https://web.whatsapp.com/send?phone=${cleanNumber}`,
+              ),
+          },
+        ]);
+        return false;
+      }
+    } catch (error) {
+      console.error("Error en openWhatsApp:", error);
+      Alert.alert("Error", "No se pudo abrir WhatsApp.");
+      return false;
+    }
+  },
+
+  // ===== WHATSAPP LOCATION =====
   sendLocationWhatsApp: async (phoneNumber) => {
     try {
       // 1. VERIFICAR PERMISOS - Esperar resultado
