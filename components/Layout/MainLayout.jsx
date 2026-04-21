@@ -289,9 +289,7 @@ export default function MainLayout({ children }) {
                     size={30}
                     color={styles.semanticColors.primary}
                   />
-                  <AppText variant="body" bold color="secondary">
-                    Camuflaje
-                  </AppText>
+                  <AppText variant="body" bold color="secondary"></AppText>
                 </View>
               </Button>
             </WalkthroughView>

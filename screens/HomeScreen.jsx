@@ -1,5 +1,7 @@
 // screens/HomeScreen.jsx
-import { View, StyleSheet } from "react-native";
+import React, { useCallback } from "react";
+import { View, StyleSheet, BackHandler } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { CopilotStep, walkthroughable } from "react-native-copilot";
 import MainLayout, { TUTORIAL_STEPS } from "../components/Layout/MainLayout";
 import AppText from "../components/UI/AppText";
@@ -75,6 +77,22 @@ const violenceTypes = [
 ];
 
 export default function HomeScreen({ navigation }) {
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        BackHandler.exitApp();
+        return true;
+      };
+
+      const subscription = BackHandler.addEventListener(
+        "hardwareBackPress",
+        onBackPress,
+      );
+
+      return () => subscription.remove();
+    }, []),
+  );
+
   return (
     <MainLayout>
       <CopilotStep {...TUTORIAL_STEPS.carrusel}>

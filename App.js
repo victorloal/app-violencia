@@ -7,11 +7,16 @@ import { SettingsProvider } from "./context/SettingsContext";
 import { useFonts } from "expo-font";
 import { CopilotProvider } from "react-native-copilot";
 import { TutorialTooltip } from "./components/UI/AppTutorial";
-import { TutorialProvider, useTutorialContext } from "./context/TutorialContext";
+import {
+  TutorialProvider,
+  useTutorialContext,
+} from "./context/TutorialContext";
 import SplashScreenComponent from "./screens/SplashScreen";
+import { DialogProvider } from "./context/DialogContext";
 
 function AppContent({ fontsLoaded }) {
-  const { openCalcDemoRef, setTutorialActive, markTutorialCompleted } = useTutorialContext();
+  const { openCalcDemoRef, setTutorialActive, markTutorialCompleted } =
+    useTutorialContext();
   const [showSplash, setShowSplash] = useState(true);
 
   const handleTutorialFinish = () => {
@@ -72,7 +77,9 @@ export function App() {
         <StatusBar style="auto" />
         <SettingsProvider>
           <TutorialProvider>
-            <AppContent fontsLoaded={fontsLoaded} />
+            <DialogProvider>
+              <AppContent fontsLoaded={fontsLoaded} />
+            </DialogProvider>
           </TutorialProvider>
         </SettingsProvider>
       </SafeAreaProvider>

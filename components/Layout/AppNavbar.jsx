@@ -1,4 +1,10 @@
-import { View, StyleSheet, Animated, Platform } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Animated,
+  Platform,
+  BackHandler,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { CopilotStep, walkthroughable } from "react-native-copilot";
 import Button from "../UI/Button";
@@ -51,8 +57,6 @@ export default function AppNavbar({ bienvenidaStep, ajustesStep }) {
     };
   }, [fadeAnim, messages.length]);
 
-  const canGoBack = navigation.canGoBack() && route.name !== "Home";
-
   const settingsBtn = (
     <Button
       type="primaryGhost"
@@ -66,7 +70,7 @@ export default function AppNavbar({ bienvenidaStep, ajustesStep }) {
       <Ionicons
         name="settings-outline"
         size={22}
-        color={colors.lavender[800]}
+        color={colors.lavender[600]}
       />
     </Button>
   );
@@ -75,23 +79,14 @@ export default function AppNavbar({ bienvenidaStep, ajustesStep }) {
     <View style={styles.container}>
       {/* Izquierda: botón atrás */}
       <View style={styles.side}>
-        {canGoBack ? (
-          <Button
-            type="primaryGhost"
-            variant="circle"
-            size="small"
-            style={{ elevation: 0 }}
-            onPress={() => navigation.goBack()}
-            accessibilityLabel="Volver atrás"
-          >
-            <Ionicons
-              name="arrow-back"
-              size={22}
-              color={colors.lavender[800]}
-            />
-          </Button>
+        {ajustesStep ? (
+          <CopilotStep {...ajustesStep}>
+            <WalkthroughView style={styles.sideInner}>
+              {settingsBtn}
+            </WalkthroughView>
+          </CopilotStep>
         ) : (
-          <View style={{ width: 36, height: 36 }} />
+          settingsBtn
         )}
       </View>
 
@@ -101,15 +96,15 @@ export default function AppNavbar({ bienvenidaStep, ajustesStep }) {
           <CopilotStep {...bienvenidaStep}>
             <WalkthroughView style={[styles.centerInner, { width: "100%" }]}>
               <Animated.View style={{ opacity: fadeAnim }}>
-            <AppText
-              variant="body"
-              center
-              color="tertiary"
-              style={styles.messageText}
-            >
-              {messages[currentIndex]}
-            </AppText>
-          </Animated.View>
+                <AppText
+                  variant="body"
+                  center
+                  color="tertiary"
+                  style={styles.messageText}
+                >
+                  {messages[currentIndex]}
+                </AppText>
+              </Animated.View>
             </WalkthroughView>
           </CopilotStep>
         ) : (
@@ -126,17 +121,22 @@ export default function AppNavbar({ bienvenidaStep, ajustesStep }) {
         )}
       </View>
 
-      {/* Derecha: ajustes — paso 2 */}
+      {/* Derecha: paso 2 */}
       <View style={styles.side}>
-        {ajustesStep ? (
-          <CopilotStep {...ajustesStep}>
-            <WalkthroughView style={styles.sideInner}>
-              {settingsBtn}
-            </WalkthroughView>
-          </CopilotStep>
-        ) : (
-          settingsBtn
-        )}
+        <Button
+          type="primaryGhost"
+          variant="circle"
+          size="small"
+          style={{ elevation: 0 }}
+          onPress={() => BackHandler.exitApp()}
+          accessibilityLabel="Salir de la aplicación"
+        >
+          <Ionicons
+            name="exit-outline"
+            size={22}
+            color={colors.lavender[600]}
+          />
+        </Button>
       </View>
     </View>
   );

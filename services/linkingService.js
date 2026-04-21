@@ -1,12 +1,13 @@
 import * as Location from "expo-location";
-import { Linking, Alert, Platform } from "react-native";
+import { Linking, Platform } from "react-native";
+import { DialogService } from "./dialogService";
 
 export const linkingService = {
   // ===== WHATSAPP CHAT =====
   openWhatsApp: async (phoneNumber) => {
     try {
       if (!phoneNumber || phoneNumber.trim() === "") {
-        Alert.alert(
+        DialogService.show(
           "Error",
           "No hay número de WhatsApp configurado para este lugar.",
         );
@@ -22,21 +23,25 @@ export const linkingService = {
         await Linking.openURL(url);
         return true;
       } else {
-        Alert.alert("WhatsApp no instalado", "¿Quieres abrir WhatsApp Web?", [
-          { text: "Cancelar", style: "cancel" },
-          {
-            text: "WhatsApp Web",
-            onPress: () =>
-              Linking.openURL(
-                `https://web.whatsapp.com/send?phone=${cleanNumber}`,
-              ),
-          },
-        ]);
+        DialogService.show(
+          "WhatsApp no instalado",
+          "¿Quieres abrir WhatsApp Web?",
+          [
+            { text: "Cancelar", style: "cancel" },
+            {
+              text: "WhatsApp Web",
+              onPress: () =>
+                Linking.openURL(
+                  `https://web.whatsapp.com/send?phone=${cleanNumber}`,
+                ),
+            },
+          ],
+        );
         return false;
       }
     } catch (error) {
       console.error("Error en openWhatsApp:", error);
-      Alert.alert("Error", "No se pudo abrir WhatsApp.");
+      DialogService.show("Error", "No se pudo abrir WhatsApp.");
       return false;
     }
   },
@@ -48,7 +53,7 @@ export const linkingService = {
       const permissionResult = await requestLocationPermission();
 
       if (!permissionResult) {
-        Alert.alert(
+        DialogService.show(
           "Permiso denegado",
           "Necesitamos acceso a tu ubicación para enviar tu posición",
         );
@@ -57,7 +62,7 @@ export const linkingService = {
 
       // 2. VERIFICAR NÚMERO DE TELÉFONO
       if (!phoneNumber || phoneNumber.trim() === "") {
-        Alert.alert(
+        DialogService.show(
           "Número no configurado",
           "Por favor, configura tu número de contacto en la pantalla de Configuración.",
           [
@@ -79,7 +84,7 @@ export const linkingService = {
         });
       } catch (locationError) {
         console.error("Error obteniendo ubicación:", locationError);
-        Alert.alert(
+        DialogService.show(
           "Error de ubicación",
           "No se pudo obtener tu ubicación actual. Verifica que el GPS esté activado.",
         );
@@ -88,7 +93,7 @@ export const linkingService = {
 
       // 4. VERIFICAR QUE TENEMOS COORDENADAS VÁLIDAS
       if (!location?.coords?.latitude || !location?.coords?.longitude) {
-        Alert.alert(
+        DialogService.show(
           "Ubicación no disponible",
           "No se pudieron obtener coordenadas válidas",
         );
@@ -125,7 +130,7 @@ export const linkingService = {
         return true;
       } else {
         // WhatsApp no instalado - Ofrecer alternativas
-        Alert.alert(
+        DialogService.show(
           "WhatsApp no instalado",
           "¿Quieres abrir WhatsApp Web o enviar un SMS?",
           [
@@ -147,7 +152,7 @@ export const linkingService = {
       }
     } catch (error) {
       console.error("Error en sendLocationWhatsApp:", error);
-      Alert.alert(
+      DialogService.show(
         "Error",
         "No se pudo completar la operación. Intenta de nuevo.",
       );
@@ -159,7 +164,7 @@ export const linkingService = {
   makePhoneCall: async (phoneNumber) => {
     try {
       if (!phoneNumber || phoneNumber.trim() === "") {
-        Alert.alert(
+        DialogService.show(
           "Número no configurado",
           "Por favor, configura tu número de contacto en la pantalla de Configuración.",
           [
@@ -179,7 +184,7 @@ export const linkingService = {
       await Linking.openURL(url);
     } catch (error) {
       console.error("Error en makePhoneCall:", error);
-      Alert.alert("Error", "No se pudo realizar la llamada");
+      DialogService.show("Error", "No se pudo realizar la llamada");
       return false;
     }
   },
@@ -188,7 +193,7 @@ export const linkingService = {
   sendSMS: async (phoneNumber, message = "🚨 ¡Necesito ayuda!") => {
     try {
       if (!phoneNumber) {
-        Alert.alert("Error", "No hay número de teléfono configurado");
+        DialogService.show("Error", "No hay número de teléfono configurado");
         return false;
       }
 
@@ -201,12 +206,15 @@ export const linkingService = {
         await Linking.openURL(url);
         return true;
       } else {
-        Alert.alert("Error", "No se pueden enviar SMS desde este dispositivo");
+        DialogService.show(
+          "Error",
+          "No se pueden enviar SMS desde este dispositivo",
+        );
         return false;
       }
     } catch (error) {
       console.error("Error en sendSMS:", error);
-      Alert.alert("Error", "No se pudo enviar el SMS");
+      DialogService.show("Error", "No se pudo enviar el SMS");
       return false;
     }
   },
@@ -221,12 +229,12 @@ export const linkingService = {
         await Linking.openURL(url);
         return true;
       } else {
-        Alert.alert("Error", "No se pudo abrir Google Maps");
+        DialogService.show("Error", "No se pudo abrir Google Maps");
         return false;
       }
     } catch (error) {
       console.error("Error en openMapsNavigation:", error);
-      Alert.alert("Error", "No se pudo abrir Google Maps");
+      DialogService.show("Error", "No se pudo abrir Google Maps");
       return false;
     }
   },

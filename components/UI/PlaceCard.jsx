@@ -10,6 +10,7 @@ import {
   shadow,
 } from "../../styles/tokens";
 import { linkingService } from "../../services/linkingService";
+import { DialogService } from "../../services/dialogService";
 import { getTypeConfig } from "../../thema/placesTypes";
 import { getPlaceImage } from "../../constants/placeIconsConfig";
 import React from "react";
@@ -19,25 +20,39 @@ const PlaceCard = ({ place }) => {
   const placeImage = getPlaceImage(place.id);
 
   const handleCall = () => {
-    if (!place.telefono) return;
+    const options = [];
 
-    const phones = place.telefono.split("\n").map((num) => num.trim());
+    if (place.telefono) {
+      const phones = place.telefono.split("\n").map((num) => num.trim());
+      phones.forEach((phone) => {
+        options.push({
+          text: `Llamar a ${phone}`,
+          onPress: () => linkingService.makePhoneCall(phone),
+        });
+      });
+    }
 
-    if (phones.length > 1) {
-      Alert.alert(
-        "Seleccionar número",
-        "Esta entidad tiene múltiples números de contacto:",
-        [
-          ...phones.map((phone) => ({
-            text: `Llamar a ${phone}`,
-            onPress: () => linkingService.makePhoneCall(phone),
-          })),
-          { text: "Cancelar", style: "cancel" },
-        ],
-        { cancelable: true },
+    if (place.whatsapp) {
+      options.push({
+        text: "Escribir por WhatsApp",
+        onPress: () => linkingService.openWhatsApp(place.whatsapp),
+      });
+    }
+
+    if (options.length > 1) {
+      options.push({ text: "Cancelar", style: "cancel" });
+      DialogService.show(
+        "Opciones de contacto",
+        "Selecciona cómo deseas contactar a esta entidad:",
+        options,
       );
+    } else if (options.length === 1) {
+      options[0].onPress();
     } else {
-      linkingService.makePhoneCall(phones[0]);
+      DialogService.show(
+        "Aviso",
+        "No hay información de contacto disponible para este lugar.",
+      );
     }
   };
 
@@ -125,26 +140,11 @@ const PlaceCard = ({ place }) => {
           style={[styles.button, { backgroundColor: theme.badgeBg }]}
           textStyle={{ color: theme.text }}
           accessibilityRole="button"
-          accessibilityLabel={`Llamar a ${place.nombre}`}
-          accessibilityHint="Realiza una llamada telefónica"
+          accessibilityLabel={`Contactar a ${place.nombre}`}
+          accessibilityHint="Muestra opciones para llamar o escribir por WhatsApp"
         >
-          Llamar
+          Contactar
         </Button>
-
-        {place.whatsapp && (
-          <Button
-            type="primary"
-            size="flex"
-            onPress={() => linkingService.openWhatsApp(place.whatsapp)}
-            style={[styles.button, { backgroundColor: colors.green[100] }]}
-            textStyle={{ color: colors.green[800] }}
-            accessibilityRole="button"
-            accessibilityLabel={`Enviar WhatsApp a ${place.nombre}`}
-            accessibilityHint="Abre un chat de WhatsApp"
-          >
-            WhatsApp
-          </Button>
-        )}
 
         <Button
           type="primary"

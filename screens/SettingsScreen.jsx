@@ -7,6 +7,7 @@ import { colors } from "../thema/colors";
 import { SettingsContext } from "../context/SettingsContext";
 import SafeLayout from "../components/Layout/SafeLayout";
 import { linkingService } from "../services/linkingService";
+import { DialogService } from "../services/dialogService";
 import AppTextInput from "../components/UI/AppTextInput";
 
 export default function SettingsScreen({ navigation }) {
@@ -25,7 +26,7 @@ export default function SettingsScreen({ navigation }) {
     if (Platform.OS === "android") {
       Linking.sendIntent("android.settings.ACCESSIBILITY_SETTINGS").catch(
         () => {
-          Alert.alert(
+          DialogService.show(
             "Error",
             "No se pudo abrir configuración de accesibilidad",
           );
@@ -50,7 +51,7 @@ export default function SettingsScreen({ navigation }) {
 
   const testWhatsApp = async () => {
     if (!tempPhoneNumber) {
-      Alert.alert(
+      DialogService.show(
         "Número requerido",
         "Por favor ingresa un número de teléfono",
       );
@@ -65,7 +66,7 @@ export default function SettingsScreen({ navigation }) {
 
     const result = await linkingService.sendLocationWhatsApp(cleanNumber);
     if (result === true) {
-      Alert.alert(
+      DialogService.show(
         "WhatsApp abierto",
         "Se abrió WhatsApp con tu ubicación. Por favor envía el mensaje.",
         [{ text: "OK" }],
@@ -89,7 +90,7 @@ export default function SettingsScreen({ navigation }) {
 
   const handleSave = () => {
     if (!tempPhoneNumber || tempPhoneNumber.length < 10) {
-      Alert.alert(
+      DialogService.show(
         "Número requerido",
         "Por favor ingresa un número de contacto válido de 10 dígitos para guardar los cambios. Esto es esencial para tu seguridad.",
       );
@@ -98,7 +99,7 @@ export default function SettingsScreen({ navigation }) {
     // Guardar el número exactamente como está, sin modificar
     setPhoneNumber(tempPhoneNumber);
 
-    Alert.alert(
+    DialogService.show(
       "Cambios guardados",
       "La configuración se ha actualizado correctamente",
       [{ text: "OK", onPress: () => navigation.replace("Home") }],
