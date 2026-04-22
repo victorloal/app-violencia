@@ -35,23 +35,28 @@ export const TUTORIAL_STEPS = {
     name: "settings-outline:ajustes",
     text: "Ajustes|Toca el ícono de engranaje para configurar la app: tamaño de letra, accesibilidad, contraste y el número de tu contacto de emergencia.",
   },
-  mensaje: {
+  salir: {
     order: 3,
+    name: "exit-outline:salir",
+    text: "Botón Salir|Toca aquí para salir de la aplicación de forma segura.",
+  },
+  mensaje: {
+    order: 4,
     name: "logo-whatsapp:mensaje",
     text: "Botón Mensaje|Envía tu ubicación por WhatsApp a tu contacto de confianza con un solo toque. Úsalo cuando necesites que alguien sepa dónde estás.",
   },
   llamada: {
-    order: 4,
+    order: 5,
     name: "call-outline:llamada",
     text: "Botón de Llamada 24/7|Accede al directorio de atención de emergencias. Mantén presionado para llamar directamente a tu contacto de confianza.",
   },
   camuflaje: {
-    order: 5,
+    order: 6,
     name: "calculator-outline:camuflaje",
     text: "Botón Camuflaje|Ahora verás la calculadora en acción. Pruébala y cuando quieras volver, mantén presionado el botón '=' durante 1 segundo.",
   },
   carrusel: {
-    order: 6,
+    order: 7,
     name: "apps-outline:carrusel",
     text: "Tipos de Violencias|Desliza las tarjetas que aparecen debajo de este titulo, para conocer los tipos de violencia. En cada una puedes ver la descripción y visualizar las rutas de atención.",
   },
@@ -205,6 +210,7 @@ export default function MainLayout({ children }) {
         <AppNavbar
           bienvenidaStep={TUTORIAL_STEPS.bienvenida}
           ajustesStep={TUTORIAL_STEPS.ajustes}
+          salirStep={TUTORIAL_STEPS.salir}
         />
 
         <View style={layoutStyles.content}>{children}</View>

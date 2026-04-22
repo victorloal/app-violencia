@@ -15,7 +15,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 
 const WalkthroughView = walkthroughable(View);
 
-export default function AppNavbar({ bienvenidaStep, ajustesStep }) {
+export default function AppNavbar({ bienvenidaStep, ajustesStep, salirStep }) {
   const navigation = useNavigation();
   const route = useRoute();
 
@@ -121,22 +121,43 @@ export default function AppNavbar({ bienvenidaStep, ajustesStep }) {
         )}
       </View>
 
-      {/* Derecha: paso 2 */}
+      {/* Derecha: botón salir */}
       <View style={styles.side}>
-        <Button
-          type="primaryGhost"
-          variant="circle"
-          size="small"
-          style={{ elevation: 0 }}
-          onPress={() => BackHandler.exitApp()}
-          accessibilityLabel="Salir de la aplicación"
-        >
-          <Ionicons
-            name="exit-outline"
-            size={22}
-            color={colors.lavender[600]}
-          />
-        </Button>
+        {salirStep ? (
+          <CopilotStep {...salirStep}>
+            <WalkthroughView style={styles.sideInner}>
+              <Button
+                type="primaryGhost"
+                variant="circle"
+                size="small"
+                style={{ elevation: 0 }}
+                onPress={() => BackHandler.exitApp()}
+                accessibilityLabel="Salir de la aplicación"
+              >
+                <Ionicons
+                  name="exit-outline"
+                  size={22}
+                  color={colors.lavender[600]}
+                />
+              </Button>
+            </WalkthroughView>
+          </CopilotStep>
+        ) : (
+          <Button
+            type="primaryGhost"
+            variant="circle"
+            size="small"
+            style={{ elevation: 0 }}
+            onPress={() => BackHandler.exitApp()}
+            accessibilityLabel="Salir de la aplicación"
+          >
+            <Ionicons
+              name="exit-outline"
+              size={22}
+              color={colors.lavender[600]}
+            />
+          </Button>
+        )}
       </View>
     </View>
   );

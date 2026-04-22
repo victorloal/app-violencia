@@ -58,15 +58,13 @@ export default function PlacesScreen({ route, navigation }) {
         <View style={styles.emptyRegionContainer}>
           <View
             style={styles.iconCircle}
-            accessible={true}
-            accessibilityRole="image"
-            accessibilityLabel="Icono de ubicación no seleccionada"
+            importantForAccessibility="no-hide-descendants"
+            accessibilityElementsHidden={true}
           >
             <Ionicons
               name="location-outline"
               size={64}
               color={colors.lavender[600]}
-              accessible={false}
             />
           </View>
 
@@ -109,11 +107,13 @@ export default function PlacesScreen({ route, navigation }) {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.contentContainer}
-          accessible={false}
         >
-          {/* Header */}
+          {/* Header de categoría*/}
           {categoryInfo && (
-            <View style={styles.categoryHeaderWrapper}>
+            <View style={styles.categoryHeaderWrapper}
+              importantForAccessibility="no"
+              accessibilityElementsHidden={false}
+            >
               <CategoryHeader
                 type={selectedType}
                 title={categoryInfo.title}
@@ -131,25 +131,34 @@ export default function PlacesScreen({ route, navigation }) {
             />
           </View>
 
-          {/* Lista */}
-          <View style={styles.listContainer}>
+          {/* Lista de lugares */}
+          <View style={styles.listContainer}
+            accessibilityRole="list"
+          >
             {places.length > 0 ? (
               places.map((place, index) => (
                 <View
                   key={place.id}
                   style={styles.placeCardWrapper}
-                  accessible={false} // 🔑 clave
+                  accessible={false}
+                  importantForAccessibility="no"
+                  accessibilityElementsHidden={false}
                 >
                   <PlaceCard
                     place={place}
-                    accessibilityLabel={`Lugar ${index + 1} de ${places.length}: ${place.nombre}`}
+                    accessibilityLabel={
+                      `Lugar ${index + 1} de ${places.length}: ${place.nombre}.` +
+                      (place.direccion ? ` Dirección: ${place.direccion}.` : "") +
+                      (place.telefono ? ` Teléfono: ${place.telefono}.` : "")
+                    }
+                    accessibilityRole="button"
+                    accessibilityHint="Toca dos veces para ver más detalles"
                   />
                 </View>
               ))
             ) : (
-              <View>
-                <EmptyState type={selectedType} />
-              </View>
+              
+              <EmptyState type={selectedType} />
             )}
           </View>
 
@@ -208,5 +217,17 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     width: "100%",
+  },
+  categoryHeaderWrapper: {
+    // sin cambios visuales
+  },
+  filtersWrapper: {
+    // sin cambios visuales
+  },
+  placeCardWrapper: {
+    // sin cambios visuales
+  },
+  helpMessageWrapper: {
+    // sin cambios visuales
   },
 });

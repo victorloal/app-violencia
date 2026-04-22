@@ -1,4 +1,4 @@
-import { Alert, View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AppText from "./AppText";
 import Button from "./Button";
@@ -17,7 +17,10 @@ import React from "react";
 
 const PlaceCard = ({ place }) => {
   const theme = getTypeConfig(place.tipo);
-  const placeImage = getPlaceImage(place.id);
+  const API_BASE = "http://192.168.1.6:3000";
+  const placeImage = place.icono_url
+    ? { uri: `${API_BASE}${place.icono_url}` }
+    : getPlaceImage(place.id);
 
   const handleCall = () => {
     const options = [];
@@ -60,85 +63,106 @@ const PlaceCard = ({ place }) => {
     linkingService.openMapsNavigation(place.latitud, place.longitud);
   };
 
+  const cardAccessibilityLabel = [
+    place.nombre,
+    place.horario     ? `Horario: ${place.horario}`     : null,
+    place.direccion   ? `Dirección: ${place.direccion}` : null,
+    place.telefono    ? `Teléfono: ${place.telefono}`   : null,
+    place.descripcion ? place.descripcion               : null,
+  ]
+    .filter(Boolean)
+    .join(". ");
+
   return (
+    // Contenedor raíz: invisible para TalkBack, solo layout
     <View
-      style={[
-        styles.card,
-        { borderLeftWidth: 4, borderLeftColor: theme.primary },
-      ]}
-      accessible={false} // 🔑 CLAVE: evitar agrupación
+      style={[styles.card, { borderLeftWidth: 4, borderLeftColor: theme.primary }]}
+      accessible={false}
+      importantForAccessibility="no"
     >
-      <View style={styles.header} accessible={false}>
+
+      {/* ── BLOQUE DE INFORMACIÓN ──*/}
+      <View
+        style={styles.infoBlock}
+        accessible={true}
+        accessibilityRole="text"
+        accessibilityLabel={cardAccessibilityLabel}
+      >
+        {/* Cabecera: ícono + nombre */}
         <View
-          style={[
-            styles.iconContainer,
-            { backgroundColor: colors.white, borderColor: theme.border },
-          ]}
-          accessible={false}
+          style={styles.header}
+          accessibilityElementsHidden={true}
+          importantForAccessibility="no-hide-descendants"
         >
-          {placeImage ? (
-            <Image
-              source={placeImage}
-              style={styles.placeImage}
-              resizeMode="contain"
-              accessible={false}
-            />
-          ) : theme.isCustomIcon ? (
-            React.createElement(theme.icon, {
-              width: 32,
-              height: 32,
-              color: theme.primary,
-            })
-          ) : (
-            <Ionicons
-              name={theme.icon}
-              size={32}
-              color={theme.primary}
-              accessible={false}
-            />
-          )}
-        </View>
-
-        <View style={styles.titleContainer} accessible={false}>
-          <AppText
-            variant="h4"
-            numberOfLines={4}
-            style={[styles.detailText, { color: theme.text }]}
-            accessibilityRole="header"
+          <View
+            style={[
+              styles.iconContainer,
+              { backgroundColor: colors.white, borderColor: theme.border },
+            ]}
           >
-            {place.nombre}
-          </AppText>
-        </View>
-      </View>
+            {placeImage ? (
+              <Image
+                source={placeImage}
+                style={styles.placeImage}
+                resizeMode="contain"
+              />
+            ) : theme.isCustomIcon ? (
+              React.createElement(theme.icon, {
+                width: 32,
+                height: 32,
+                color: theme.primary,
+              })
+            ) : (
+              <Ionicons name={theme.icon} size={32} color={theme.primary} />
+            )}
+          </View>
 
-      <View style={styles.details} accessible={false}>
-        <DetailRow icon="time-outline" theme={theme} text={place.horario} />
-        <DetailRow
-          icon="location-outline"
-          theme={theme}
-          text={place.direccion}
-        />
-        <DetailRow icon="call-outline" theme={theme} text={place.telefono} />
-
-        {place.descripcion && (
-          <View style={styles.descriptionContainer} accessible={false}>
+          <View style={styles.titleContainer}>
             <AppText
-              variant="body"
+              variant="h4"
+              numberOfLines={4}
               style={[styles.detailText, { color: theme.text }]}
             >
-              {place.descripcion}
+              {place.nombre}
             </AppText>
           </View>
-        )}
+        </View>
+
+        {/* Detalles: horario, dirección, teléfono, descripción */}
+        <View
+          style={styles.details}
+          accessibilityElementsHidden={true}
+          importantForAccessibility="no-hide-descendants"
+        >
+          <DetailRow icon="time-outline"     theme={theme} text={place.horario}   />
+          <DetailRow icon="location-outline" theme={theme} text={place.direccion} />
+          <DetailRow icon="call-outline"     theme={theme} text={place.telefono}  />
+
+          {place.descripcion && (
+            <View style={styles.descriptionContainer}>
+              <AppText
+                variant="body"
+                style={[styles.detailText, { color: theme.text }]}
+              >
+                {place.descripcion}
+              </AppText>
+            </View>
+          )}
+        </View>
       </View>
 
-      <View style={styles.actions} accessible={false}>
+      <View
+        style={styles.actions}
+        accessible={false}
+        importantForAccessibility="no"
+      >
         <Button
           type="primary"
           size="flex"
           onPress={handleCall}
           style={[styles.button, { backgroundColor: theme.badgeBg }]}
           textStyle={{ color: theme.text }}
+          accessible={true}
           accessibilityRole="button"
           accessibilityLabel={`Contactar a ${place.nombre}`}
           accessibilityHint="Muestra opciones para llamar o escribir por WhatsApp"
@@ -152,6 +176,7 @@ const PlaceCard = ({ place }) => {
           onPress={handleNavigate}
           style={[styles.button, { backgroundColor: theme.badgeBg }]}
           textStyle={{ color: theme.text }}
+          accessible={true}
           accessibilityRole="button"
           accessibilityLabel={`Cómo llegar a ${place.nombre}`}
           accessibilityHint="Abre la navegación en mapas"
@@ -159,12 +184,14 @@ const PlaceCard = ({ place }) => {
           Cómo llegar
         </Button>
       </View>
+
     </View>
   );
 };
 
+// Puramente visual, el infoBlock padre ya comunica su contenido
 const DetailRow = ({ icon, theme, text }) => (
-  <View style={styles.detailRow} accessible={false}>
+  <View style={styles.detailRow}>
     <Ionicons name={icon} size={24} color={theme.primary} accessible={false} />
     <AppText variant="body" style={[styles.detailText, { color: theme.text }]}>
       {text}
@@ -180,6 +207,9 @@ const styles = StyleSheet.create({
     ...shadow.sm,
     borderWidth: borderWidth.thin,
     borderColor: "#f0f0f0",
+  },
+  infoBlock: {
+    marginBottom: spacing.md,
   },
   header: {
     flexDirection: "row",
@@ -204,12 +234,6 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: spacing.xxs,
     textAlignVertical: "center",
-  },
-  typeBadge: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xxs,
-    borderRadius: borderRadius.pill,
-    alignSelf: "flex-start",
   },
   details: {
     gap: spacing.sm,

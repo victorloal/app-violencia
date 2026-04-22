@@ -1,5 +1,5 @@
 // components/UI/ViolenceTypeCard.jsx
-import { useState } from "react";
+import react, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -20,19 +20,19 @@ import {
   shadow,
 } from "../../styles/tokens";
 import { colors } from "../../thema/colors";
+import { registrarEvento } from "../../services/apiService";
 
 export default function ViolenceTypeCard({
   title,
   description,
   icon,
   onPressServices,
-  onPressInfo,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleInfoPress = () => {
-    setModalVisible(true);
-    if (onPressInfo) onPressInfo();
+  const handleNecesitaAtencion = () => {
+    registrarEvento("necesita_atencion", title, "HomeScreen");
+    onPressServices?.();
   };
 
   return (
@@ -61,21 +61,13 @@ export default function ViolenceTypeCard({
 
         {/* ── Botones inferiores ── */}
         <View style={cardStyles.buttonsContainer}>
-          {/* <Button
-            type="primaryGhost"
-            variant="circle"
-            size="xs"
-            onPress={handleInfoPress}
-            iconLeft={
-              <Ionicons
-                name="information-circle-outline"
-                size={20}
-                color={semanticColors.primary}
-              />
-            }
-          ></Button> */}
-
-          <Button type="primary" size="xxl" onPress={onPressServices}>
+          <Button
+            type="primary"
+            size="xxl"
+            onPress={handleNecesitaAtencion}
+            accessibilityLabel={`¿Necesitas atención por ${title}?`}
+            accessibilityHint="Presiona para buscar lugares de ayuda"
+          >
             ¿Necesitas Atención?
           </Button>
         </View>
@@ -89,7 +81,6 @@ export default function ViolenceTypeCard({
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={cardStyles.modalOverlay}>
-          {/* Fondo: capa absoluta, tap para cerrar */}
           <TouchableOpacity
             style={cardStyles.modalBackdrop}
             activeOpacity={1}
@@ -152,8 +143,7 @@ export default function ViolenceTypeCard({
                   </AppText>
                 </View>
                 <AppText variant="body" style={cardStyles.modalSectionText}>
-                  Si identificas estas situaciones en tu vida o en la de alguien
-                  cercano, no dudes en buscar ayuda. No estás sola/solo.
+                  Si identificas estas situaciones en tu vida o en la de alguien cercano, no dudes en buscar ayuda. No estás sola.
                 </AppText>
               </View>
 
@@ -169,9 +159,7 @@ export default function ViolenceTypeCard({
                   </AppText>
                 </View>
                 <AppText variant="body" style={cardStyles.modalSectionText}>
-                  Habla con alguien de confianza, documenta los hechos si es
-                  seguro hacerlo y comunícate con una línea de apoyo o centro
-                  especializado.
+                  Habla con alguien de confianza, documenta los hechos si es seguro hacerlo y comunícate con una línea de apoyo o centro especializado.
                 </AppText>
               </View>
             </ScrollView>

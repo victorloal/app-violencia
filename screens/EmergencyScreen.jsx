@@ -1,17 +1,30 @@
 // screens/EmergencyScreen.jsx
-import React, { useContext } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { View, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MainLayout from "../components/Layout/MainLayout";
 import AppText from "../components/UI/AppText";
 import EmergencyCard from "../components/UI/EmergencyCard";
-import { emergencyNumbers } from "../data/emergencyData";
+import { fetchEmergencyNumbers } from "../data/emergencyData";
 import { SettingsContext } from "../context/SettingsContext";
 import { colors } from "../thema/colors";
 import { spacing, borderRadius, borderWidth } from "../styles/tokens";
 
 export default function EmergencyScreen({ navigation }) {
   const { phoneNumber } = useContext(SettingsContext);
+  const [numeros, setNumeros]   = useState([]);
+  const [cargando, setCargando] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    fetchEmergencyNumbers().then((data) => {
+      if (mounted) {
+        setNumeros(data);
+        setCargando(false);
+      }
+    });
+    return () => { mounted = false; };
+  }, []);
 
   // Número de emergencia personalizado (el del usuario)
   const userEmergencyNumber = phoneNumber
@@ -22,23 +35,21 @@ export default function EmergencyScreen({ navigation }) {
       }
     : null;
 
-  // Resto de números de emergencia (generales)
-  const otherNumbers = emergencyNumbers;
-
   return (
     <MainLayout>
-      <ScrollView 
+      <ScrollView
         style={styles.scrollContent}
         accessible={false}
       >
         <View style={styles.listContainer}>
+
           {/* Mensaje inicial */}
-          <View 
+          <View
             style={styles.initialMessage}
             accessible={true}
             accessibilityRole="text"
             accessibilityLabel="Estos números pueden ayudarte en caso de emergencia a cualquier hora"
-            >
+          >
             <Ionicons
               name="information-circle"
               size={30}
@@ -53,15 +64,14 @@ export default function EmergencyScreen({ navigation }) {
               accessible={false}
               importantForAccessibility="no"
             >
-              Estos números pueden ayudarte en caso de emergencia a cualquier
-              hora
+              Estos números pueden ayudarte en caso de emergencia a cualquier hora
             </AppText>
           </View>
 
           {/* Número personalizado del usuario (si existe) */}
           {userEmergencyNumber && (
             <>
-              <View 
+              <View
                 style={styles.sectionHeader}
                 accessible={false}
                 importantForAccessibility="no-hide-descendants"
@@ -74,7 +84,7 @@ export default function EmergencyScreen({ navigation }) {
                 </View>
                 <View style={styles.sectionHeaderLine} />
               </View>
-              {/* Tarjeta de emergencia personalizada del usuario */}
+
               <View
                 accessible={true}
                 accessibilityRole="text"
@@ -85,20 +95,21 @@ export default function EmergencyScreen({ navigation }) {
               <EmergencyCard place={userEmergencyNumber} />
             </>
           )}
-          
-          {/* Resto de números de emergencia */}
-          {userEmergencyNumber && (
-            <View
-              accessible={true}
-              accessibilityRole="text"
-              accessibilityLabel="Sección: Números de emergencia generales"
-              style={{ height: 0 }}
+
+          {/* Números desde la API (con fallback automático si falla) */}
+          {cargando ? (
+            <ActivityIndicator
+              size="large"
+              color={colors.lavender[600]}
+              style={styles.loader}
+              accessibilityLabel="Cargando números de emergencia"
             />
+          ) : (
+            numeros.map((p) => (
+              <EmergencyCard key={p.id} place={p} />
+            ))
           )}
 
-          {otherNumbers.map((p) => (
-            <EmergencyCard key={p.id} place={p} />
-          ))}
         </View>
       </ScrollView>
     </MainLayout>
@@ -111,14 +122,11 @@ const styles = StyleSheet.create({
     padding: spacing.xxl,
     backgroundColor: colors.white,
   },
-  // Lista
   listContainer: {
     flex: 1,
     gap: spacing.md,
     marginBottom: spacing.xxxl,
   },
-
-  // Mensaje inicial
   initialMessage: {
     width: "100%",
     flexDirection: "row",
@@ -129,13 +137,10 @@ const styles = StyleSheet.create({
     borderWidth: borderWidth.thin,
     borderColor: colors.magenta[100],
   },
-
   initialMessageText: {
     flex: 1,
     flexWrap: "wrap",
   },
-
-  // Separador de sección
   sectionHeader: {
     flexDirection: "row",
     alignItems: "center",
@@ -153,5 +158,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.xs,
+  },
+  loader: {
+    marginTop: spacing.xl,
   },
 });

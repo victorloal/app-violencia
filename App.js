@@ -3,6 +3,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import AppStack from "./navigation/AppStack";
 import { StatusBar } from "expo-status-bar";
+import { StatusBar as RNStatusBar } from "react-native"
 import { SettingsProvider } from "./context/SettingsContext";
 import { useFonts } from "expo-font";
 import { CopilotProvider } from "react-native-copilot";
@@ -51,6 +52,7 @@ function AppContent({ fontsLoaded }) {
       animated
       backdropColor="rgba(0,0,0,0.74)"
       stopOnOutsideClick={false}
+      verticalOffset={RNStatusBar.currentHeight ?? 0}
       onStart={handleStart}
       onStop={handleTutorialFinish}
       onFinish={handleTutorialFinish}
@@ -72,8 +74,8 @@ export function App() {
   }, [fontsLoaded, fontError]);
 
   return (
-    <NavigationContainer onReady={onLayoutRootView}>
-      <SafeAreaProvider>
+    <SafeAreaProvider>
+      <NavigationContainer onReady={onLayoutRootView}>
         <StatusBar style="auto" />
         <SettingsProvider>
           <TutorialProvider>
@@ -82,7 +84,7 @@ export function App() {
             </DialogProvider>
           </TutorialProvider>
         </SettingsProvider>
-      </SafeAreaProvider>
-    </NavigationContainer>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }

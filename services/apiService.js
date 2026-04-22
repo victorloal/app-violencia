@@ -1,8 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 
-// 🔧 Cambia por tu IP
-const BASE_URL = "http://192.168.1.7:3000/api";
+// ── URL del backend ────────────────────────────────────────────────────────────
+// Cambia por tu IP
+const BASE_URL = "http://192.168.1.6:3000/api";
+export const API_URL = BASE_URL;
 
 // ── Device ID persistente y anónimo ──────────────────────────────
 export async function getDeviceId() {
@@ -19,10 +21,13 @@ export async function getDeviceId() {
 }
 
 // ── Fetch helper ─────────────────────────────────────────────────
-async function apiFetch(endpoint, options = {}) {
+async function apiFetch(endpoint, options = {}, ms = 8000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
   try {
     const res = await fetch(`${BASE_URL}${endpoint}`, {
       ...options,
+      signal: controller.signal,
       headers: { "Content-Type": "application/json", ...options.headers },
     });
     const data = await res.json();
@@ -34,31 +39,55 @@ async function apiFetch(endpoint, options = {}) {
   } catch (err) {
     console.warn(`[API ${endpoint}] Error de red:`, err.message);
     return null;
+  } finally {
+    clearTimeout(timer);
   }
 }
 
 // ── 1. Enviar perfil — FormScreen ─────────────────────────────────
-// formData contiene: region, zona, etnia, edad, laboral
+// Normaliza los valores que vienen del formulario a los que espera el backend
 export async function enviarPerfil(formData) {
   const dispositivo_id = await getDeviceId();
 
-  // Normalizar edad
   const edadMap = {
     "Menor de edad (menos de 18)": "menor",
     "Joven (18 - 28)": "joven",
+     "joven":          "joven",
     "Adulto (29 - 59)": "adulto",
+    "adulto":           "adulto",
     "Adulto mayor (60+)": "adulto_mayor",
+    "adulto_mayor":       "adulto_mayor",
   };
-  const edad = edadMap[formData.edad] || formData.edad;
+
+  const laboralMap = {
+    "Empleada":      "Empleado",
+    "empleado":      "Empleado",
+    "Sin empleo":    "Desempleado",
+    "sin_empleo":    "Desempleado",
+    "Estudiante":    "Estudiante",
+    "estudiante":    "Estudiante",
+    "Independiente": "Independiente",
+    "independiente": "Independiente",
+  };
+ 
+  const regionMap = {
+    "tumaco":       "Tumaco",
+    "buenaventura": "Buenaventura",
+  };
+ 
+  const zonaMap = {
+    "rural":  "Rural",
+    "urbana": "Urbana",
+  };
 
   return apiFetch("/perfiles", {
     method: "POST",
     body: JSON.stringify({
-      region: formData.region,
-      zona: formData.zona,
-      etnia: formData.etnia,
-      edad,
-      laboral: formData.laboral,
+      region:        regionMap[formData.region]  || formData.region,
+      zona:          zonaMap[formData.zona]       || formData.zona,
+      etnia:         formData.etnia,
+      edad:          edadMap[formData.edad]       || formData.edad,
+      laboral:       laboralMap[formData.laboral] || formData.laboral,
       dispositivo_id,
       plataforma: Platform.OS,
     }),
@@ -84,14 +113,12 @@ export async function enviarSolicitud(formData, lugarRedirigido) {
   return apiFetch("/solicitudes", {
     method: "POST",
     body: JSON.stringify({
-      atencion_medica: formData.atencion_medica || "No",
-      apoyo_psicologico: formData.apoyo_psicologico || "No",
-      denuncia: formData.denuncia || "No",
-      hablar_con_policia: formData.hablar_con_policia || "No",
-      proteccion: formData.proteccion || "No",
-      asesoria_legal: formData.asesoria_legal || "No",
-      apoyo_ninos: formData.apoyo_ninos || "No",
-      lugar_redirigido: lugarRedirigido || "otro",
+      atencion_medica:     formData.atencion_medica     || "No",
+      denuncia:            formData.denuncia            || "No",
+      agresor:             formData.agresor             || "No",
+      amenaza_hijos:       formData.amenaza_hijos       || "No",
+      derechos_vulnerados: formData.derechos_vulnerados || "No",
+      lugar_redirigido:    lugarRedirigido              || "otro",
       dispositivo_id,
       plataforma: Platform.OS,
     }),

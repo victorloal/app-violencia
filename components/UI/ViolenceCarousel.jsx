@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import ViolenceTypeCard from "./ViolenceTypeCard";
-import styles from "../../styles";
 import { spacing, borderRadius, semanticColors } from "../../styles/tokens";
 import Button from "./Button";
 
@@ -121,8 +120,12 @@ export default function ViolenceCarousel({ data, navigation }) {
 
   const navigateToServices = (item) => {
     navigation.navigate("Services", {
-      violenceType: item,
-      title: item.title,
+      violenceType: {
+        id:          item.id,
+        title:       item.title,
+        description: item.description,
+      },
+      title:       item.title,
       description: item.description,
     });
   };

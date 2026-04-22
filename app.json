@@ -7,6 +7,11 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#481e4d"
+    },
     "plugins": [
       [
         "expo-location",
@@ -28,10 +33,19 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.victorloal.perlaapp",
-      "versionCode": 1
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "eb3a7c27-69a1-413a-b8e8-13b0900482f5"
+      }
     }
   }
 }

@@ -17,12 +17,15 @@ export const usePlaces = (initialType = "salud", placeId = null) => {
   const [userRegion, setUserRegion] = useState(null);
 
   useEffect(() => {
-    const loadUserDataAndFilter = async () => {
+    let cancelled = false;
+
+    const loadUserData = async () => {
       try {
         setIsLoading(true);
-        const userDataJson = await AsyncStorage.getItem("userData");
-        let region = null;
 
+        // ── 1. Leer región del usuario ──────────────────────────────────────
+        let region = null;
+        const userDataJson = await AsyncStorage.getItem("userData");
         if (userDataJson) {
           const userData = JSON.parse(userDataJson);
           region = userData.region;
@@ -33,39 +36,42 @@ export const usePlaces = (initialType = "salud", placeId = null) => {
           region = await AsyncStorage.getItem("region");
         }
 
-        // Only accept Tumaco or Buenaventura
-        const validRegions = ["tumaco", "buenaventura"];
-        const normalizedRegion = region ? region.trim().toLowerCase() : null;
+        // ── 2. Normalizar región ────────────────────────────────────────────
+        const capitalize = (s) =>
+          s ? s.trim().charAt(0).toUpperCase() + s.trim().slice(1).toLowerCase() : null;
 
-        const finalRegion = validRegions.includes(normalizedRegion)
-          ? region.trim()
+        const VALID_REGIONS = ["Tumaco", "Buenaventura"];
+        const normalizedRegion = capitalize(region);
+
+        const finalRegion = VALID_REGIONS.includes(normalizedRegion)
+          ? normalizedRegion
           : null;
+
+        if (cancelled) return;  
         setUserRegion(finalRegion);
 
-        const allTypePlaces = getPlacesByType(selectedType);
+        // ── 3. Cargar lugares (ASYNC — puede venir de API o fallback) ───────
+        const allTypePlaces = await getPlacesByType(selectedType, finalRegion);
+
         const info = getCategoryInfo(selectedType);
 
-        // Filter by region if available
+        if (cancelled) return;
+
+        // ── 4. Filtrar por región ────────────────────────────────────────────
         let filteredPlaces = finalRegion
           ? allTypePlaces.filter(
               (p) =>
                 p.ciudad &&
                 p.ciudad.toLowerCase() === finalRegion.toLowerCase(),
             )
-          : [];
+          : allTypePlaces;
 
-        // 🔥 NUEVO: Si hay placeId, mover ese lugar al principio (no filtrar exclusivamente)
+        // ── 5. Priorizar placeId específico ──────────────────────────────────
         if (placeId && filteredPlaces.length > 0) {
-          const specificPlaceIndex = filteredPlaces.findIndex(
-            (p) => p.id === placeId,
-          );
-
-          if (specificPlaceIndex !== -1) {
-            const specificPlace = filteredPlaces[specificPlaceIndex];
-            // Remover el lugar de su posición actual
-            filteredPlaces.splice(specificPlaceIndex, 1);
-            // Insertarlo al principio del array
-            filteredPlaces.unshift(specificPlace);
+          const idx = filteredPlaces.findIndex((p) => p.id === placeId);
+          if (idx !== -1) {
+            const [specific] = filteredPlaces.splice(idx, 1);
+            filteredPlaces.unshift(specific);
           }
         }
 
@@ -73,12 +79,14 @@ export const usePlaces = (initialType = "salud", placeId = null) => {
         setCategoryInfo(info);
       } catch (error) {
         console.error("Error loading usePlaces data:", error);
+        setPlaces([]);
       } finally {
-        setIsLoading(false);
+        if (!cancelled) setIsLoading(false);
       }
     };
 
-    loadUserDataAndFilter();
+    loadUserData();
+    return () => { cancelled = true; };
   }, [selectedType, placeId]);
 
   const changeType = (type) => {
