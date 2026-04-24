@@ -58,12 +58,12 @@ export const TYPE_CONFIG = {
   duplas: {
     icon: DuplaIcon,
     isCustomIcon: true,
-    primary: colors.blue[600],
-    background: colors.blue[50],
-    border: colors.blue[200],
-    badgeBg: colors.blue[100],
+    primary: colors.duplas[600],
+    background: colors.duplas[50],
+    border: colors.duplas[200],
+    badgeBg: colors.duplas[100],
     text: colors.neutral[600],
-    buttonBg: colors.blue[600],
+    buttonBg: colors.duplas[600],
     title: "Duplas de Atención",
     description:
       "Orientacion psicosocial y juridica para mujeres victimas de violencia",

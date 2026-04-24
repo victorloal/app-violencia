@@ -38,7 +38,9 @@ export const usePlaces = (initialType = "salud", placeId = null) => {
 
         // ── 2. Normalizar región ────────────────────────────────────────────
         const capitalize = (s) =>
-          s ? s.trim().charAt(0).toUpperCase() + s.trim().slice(1).toLowerCase() : null;
+          s
+            ? s.trim().charAt(0).toUpperCase() + s.trim().slice(1).toLowerCase()
+            : null;
 
         const VALID_REGIONS = ["Tumaco", "Buenaventura"];
         const normalizedRegion = capitalize(region);
@@ -47,7 +49,7 @@ export const usePlaces = (initialType = "salud", placeId = null) => {
           ? normalizedRegion
           : null;
 
-        if (cancelled) return;  
+        if (cancelled) return;
         setUserRegion(finalRegion);
 
         // ── 3. Cargar lugares (ASYNC — puede venir de API o fallback) ───────
@@ -86,7 +88,9 @@ export const usePlaces = (initialType = "salud", placeId = null) => {
     };
 
     loadUserData();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [selectedType, placeId]);
 
   const changeType = (type) => {

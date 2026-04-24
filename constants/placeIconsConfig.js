@@ -19,50 +19,55 @@ const IMAGE_MAP = {
   ipslosangeles: require("../assets/images/places/ipslosangeles.png"),
   personeriabuenaventura: require("../assets/images/places/personeriabuenaventura.png"),
   personeriatumaco: require("../assets/images/places/personeriatumaco.png"),
+  dupla: require("../assets/images/places/dupla.png"),
 };
 
 /** Direct ID → Image - ALL places covered */
 const placeToImage = {
   // Salud
-  'hospital_san_andres': "hospital_san_andres",
-  'ips_puente_medio': "ips_puente_medio",
-  'divino_nino': "divino_nino",
-  'clinica_santa_sofia': "clinicasantasofia",
-  'ips_los_angeles': "ipslosangeles",
-  'hospital_luis_ablanque_independencia': "hospitalluisablanque",
-  'hospital_luis_ablanque_bellavista': "hospitalluisablanque",
-  'hospital_luis_ablanque_distrital': "hospitalluisablanque",
-  'hospital_luis_ablanque_modelo': "hospitalluisablanque",
-  'hospital_departamental_buenaventura': "hospitalluisablanque",
-  
+  hospital_san_andres: "hospital_san_andres",
+  ips_puente_medio: "ips_puente_medio",
+  divino_nino: "divino_nino",
+  clinica_santa_sofia: "clinicasantasofia",
+  ips_los_angeles: "ipslosangeles",
+  hospital_luis_ablanque_independencia: "hospitalluisablanque",
+  hospital_luis_ablanque_bellavista: "hospitalluisablanque",
+  hospital_luis_ablanque_distrital: "hospitalluisablanque",
+  hospital_luis_ablanque_modelo: "hospitalluisablanque",
+  hospital_departamental_buenaventura: "hospitalluisablanque",
+
   // Protección - FIXED Buenaventura variants
-  'comisaria_tumaco': "comisaria",
-  'comisaria_buenaventura': "comisaria",
-  'policia_tumaco': "policia_nacional",
-  'policia_buenaventura': "policia_nacional",     
-  'icbf_tumaco': "icbf",
-  'icbf_buenaventura': "icbf",                    
-  
-  // Justicia  
-  'fiscalia_tumaco': "fiscalia",
-  'fiscalia_buenaventura': "fiscalia",
-  'cti_tumaco': "cti",
-  'cti_buenaventura': "cti",
-  'medicina_legal_tumaco': "medicina_legal",
-  'medicina_legal_buenaventura': "medicina_legal",
-  
+  comisaria_tumaco: "comisaria",
+  comisaria_buenaventura: "comisaria",
+  policia_tumaco: "policia_nacional",
+  policia_buenaventura: "policia_nacional",
+  icbf_tumaco: "icbf",
+  icbf_buenaventura: "icbf",
+
+  // Justicia
+  fiscalia_tumaco: "fiscalia",
+  fiscalia_buenaventura: "fiscalia",
+  cti_tumaco: "cti",
+  cti_buenaventura: "cti",
+  medicina_legal_tumaco: "medicina_legal",
+  medicina_legal_buenaventura: "medicina_legal",
+
   // Ministerio Público - FIXED
-  'procuraduria_general_de_nacion_tumaco': "procuraduria",
-  'procuraduria_general_de_nacion_buenaventura': "procuraduria",  
-  'defensoria_del_pueblo_tumaco': "defensoriadelpueblo",
-  'defensoria_del_pueblo_buenaventura': "defensoriadelpueblo",
-  'personería_municipal_tumaco': "personeriatumaco",
-  'personería_municipal_buenaventura': "personeriabuenaventura", 
+  procuraduria_general_de_nacion_tumaco: "procuraduria",
+  procuraduria_general_de_nacion_buenaventura: "procuraduria",
+  defensoria_del_pueblo_tumaco: "defensoriadelpueblo",
+  defensoria_del_pueblo_buenaventura: "defensoriadelpueblo",
+  personería_municipal_tumaco: "personeriatumaco",
+  personería_municipal_buenaventura: "personeriabuenaventura",
+
+  // Duplas
+  dupla_tumaco: "dupla",
+  dupla_buenaventura: "dupla",
 };
 
 export const getPlaceImageName = (placeId) => placeToImage[placeId] || null;
 
-export const getPlaceImage = (placeId) => IMAGE_MAP[getPlaceImageName(placeId)] || null;
+export const getPlaceImage = (placeId) =>
+  IMAGE_MAP[getPlaceImageName(placeId)] || null;
 
 export const getCategoryImages = () => ({});
-
