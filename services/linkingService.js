@@ -18,14 +18,16 @@ export const linkingService = {
         cleanNumber = "57" + cleanNumber;
       }
       const url = `https://wa.me/${cleanNumber}`;
-      const supported = await Linking.canOpenURL(url);
-      if (supported) {
+
+      // En Android 11+ canOpenURL puede fallar en APKs si no se declaran queries.
+      // Intentamos abrir directamente y capturamos el error.
+      try {
         await Linking.openURL(url);
         return true;
-      } else {
+      } catch (e) {
         DialogService.show(
           "WhatsApp no instalado",
-          "¿Quieres abrir WhatsApp Web?",
+          "No pudimos abrir WhatsApp. ¿Quieres intentar abrir WhatsApp Web?",
           [
             { text: "Cancelar", style: "cancel" },
             {
@@ -121,24 +123,17 @@ export const linkingService = {
       // 7. CREAR URL DE WHATSAPP
       const url = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
 
-      // 8. VERIFICAR SI WHATSAPP ESTÁ DISPONIBLE
-      const supported = await Linking.canOpenURL(url);
-
-      if (supported) {
-        // TODO LISTO - Abrir WhatsApp
+      // 8. ABRIR WHATSAPP DIRECTAMENTE (Más fiable en APK)
+      try {
         await Linking.openURL(url);
         return true;
-      } else {
-        // WhatsApp no instalado - Ofrecer alternativas
+      } catch (error) {
+        // WhatsApp no instalado o error al abrir
         DialogService.show(
-          "WhatsApp no instalado",
-          "¿Quieres abrir WhatsApp Web o enviar un SMS?",
+          "Error al abrir WhatsApp",
+          "¿Quieres intentar enviar un SMS en su lugar?",
           [
             { text: "Cancelar", style: "cancel" },
-            {
-              text: "WhatsApp Web",
-              onPress: () => Linking.openURL("https://web.whatsapp.com"),
-            },
             {
               text: "Enviar SMS",
               onPress: () => {
@@ -200,15 +195,14 @@ export const linkingService = {
       let cleanNumber = phoneNumber.replace(/[^0-9]/g, "");
 
       const url = `sms:${cleanNumber}?body=${encodeURIComponent(message)}`;
-      const supported = await Linking.canOpenURL(url);
 
-      if (supported) {
+      try {
         await Linking.openURL(url);
         return true;
-      } else {
+      } catch (error) {
         DialogService.show(
           "Error",
-          "No se pueden enviar SMS desde este dispositivo",
+          "No se pueden enviar SMS desde este dispositivo o no hay una aplicación configurada.",
         );
         return false;
       }
@@ -223,13 +217,15 @@ export const linkingService = {
   openMapsNavigation: async (latitude, longitude) => {
     try {
       const url = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
-      const supported = await Linking.canOpenURL(url);
 
-      if (supported) {
+      try {
         await Linking.openURL(url);
         return true;
-      } else {
-        DialogService.show("Error", "No se pudo abrir Google Maps");
+      } catch (error) {
+        DialogService.show(
+          "Error",
+          "No se pudo abrir una aplicación de mapas.",
+        );
         return false;
       }
     } catch (error) {
