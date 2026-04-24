@@ -18,9 +18,10 @@ const CACHE_KEY_LUGARES = "perla_cache_lugares_v2";
 const CACHE_KEY_EMERGENCIAS = "perla_cache_emergencias_v2";
 const CACHE_TTL_MS = 1000 * 60 * 60 * 24; // 24 horas
 let _cache = null;
+let _isOffline = false;
 
 // ── Helper: timeout compatible con Hermes ───────────────────────
-const fetchConTimeout = (url, ms = 8000) => {
+const fetchConTimeout = (url, ms = 3000) => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), ms);
   return fetch(url, { signal: controller.signal }).finally(() =>
@@ -539,8 +540,9 @@ export const fetchPlacesData = async () => {
     }
     throw new Error("Respuesta vacía");
   } catch (err) {
+    _isOffline = true;
     console.warn(
-      "[placesData] API no disponible, usando fallback:",
+      "[placesData] API no disponible, activando modo offline:",
       err.message,
     );
   }
@@ -553,6 +555,7 @@ export const fetchPlacesData = async () => {
   }
 
   console.warn("[placesData] Usando fallback estático");
+  _cache = FALLBACK_DATA;
   return FALLBACK_DATA;
 };
 
@@ -560,6 +563,7 @@ export const fetchPlacesData = async () => {
 export const fetchPlacesByType = async (tipo, ciudad = null) => {
   const tipoNorm = normalizarTipo(tipo);
   try {
+    if (_isOffline) throw new Error("Modo offline activo");
     const url = ciudad
       ? `${API_URL}/lugares/${encodeURIComponent(tipoNorm)}?ciudad=${encodeURIComponent(ciudad)}`
       : `${API_URL}/lugares/${encodeURIComponent(tipoNorm)}`;

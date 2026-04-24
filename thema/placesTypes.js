@@ -28,7 +28,7 @@ export const TYPE_CONFIG = {
     text: colors.neutral[600],
     buttonBg: colors.magenta[600],
     title: "Sector Protección",
-    description: "Refugios y espacios seguros para víctimas de violencia",
+    description: "Entidades de protección para mujeres víctimas de violencia",
   },
   justicia: {
     icon: JusticiaIcon,
@@ -40,7 +40,8 @@ export const TYPE_CONFIG = {
     text: colors.neutral[600],
     buttonBg: colors.lime[600],
     title: "Sector Justicia",
-    description: "Atención médica y hospitalaria para emergencias y consultas",
+    description:
+      "Centros de justicia y puntos de atención jurídica para víctimas de violencia",
   },
   ministerio_publico: {
     icon: MPublicoIcon, // Ionicon name
@@ -64,7 +65,8 @@ export const TYPE_CONFIG = {
     text: colors.neutral[600],
     buttonBg: colors.blue[600],
     title: "Duplas de Atención",
-    description: "Atención psicosocial y jurídica para víctimas de violencia",
+    description:
+      "Orientacion psicosocial y juridica para mujeres victimas de violencia",
   },
 };
 

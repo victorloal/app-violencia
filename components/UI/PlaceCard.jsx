@@ -17,7 +17,7 @@ import React from "react";
 
 const PlaceCard = ({ place }) => {
   const theme = getTypeConfig(place.tipo);
-  const API_BASE = "http://192.168.1.6:3000";
+  const API_BASE = "https://1swcx78z-3000.use2.devtunnels.ms/";
   const placeImage = place.icono_url
     ? { uri: `${API_BASE}${place.icono_url}` }
     : getPlaceImage(place.id);

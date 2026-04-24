@@ -6,10 +6,10 @@
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { API_URL } from "../services/apiService";
+let _isOffline = false;
 
-// ── Helper: timeout compatible con React Native / Hermes ──────────────────────
-// AbortSignal.timeout() NO existe en Hermes — usamos AbortController manual.
-const fetchConTimeout = (url, ms = 8000) => {
+// ── Helper: timeout compatible con Hermes ───────────────────────
+const fetchConTimeout = (url, ms = 3000) => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), ms);
   return fetch(url, { signal: controller.signal }).finally(() =>
@@ -98,6 +98,11 @@ const enriquecer = (row) => ({ ...row, icon: buildIcon(row.icono_nombre) });
 // ── fetchEmergencyNumbers ─────────────────────────────────────────────────────
 // Carga los números desde la API. Si falla, devuelve el fallback estático.
 export const fetchEmergencyNumbers = async () => {
+  if (_isOffline) {
+    console.warn("[emergencyData] Modo offline activo, usando fallback");
+    return FALLBACK.map(enriquecer);
+  }
+
   try {
     const res = await fetchConTimeout(`${API_URL}/emergencias`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -105,9 +110,17 @@ export const fetchEmergencyNumbers = async () => {
     if (Array.isArray(rows) && rows.length > 0) {
       return rows.map(enriquecer);
     }
-    throw new Error("Respuesta vacía o inválida");
+    throw new Error("Respuesta inválida de API");
   } catch (err) {
-    console.warn("[emergencyData] Usando fallback estático:", err.message);
+    _isOffline = true;
+    console.warn(
+      "[emergencyData] API no disponible, activando modo offline:",
+      err.message,
+    );
+    // Intentar reactivar después de 1 minuto
+    setTimeout(() => {
+      _isOffline = false;
+    }, 60000);
     return FALLBACK.map(enriquecer);
   }
 };

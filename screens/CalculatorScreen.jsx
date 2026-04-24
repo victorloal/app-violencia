@@ -518,7 +518,6 @@ const styles = StyleSheet.create({
     color: "#ffffff", // Blanco 100% en vez de 75%
     fontSize: 15, // Un poco más grande
     lineHeight: 22,
-
   },
   dismissButton: {
     backgroundColor: "#F31A73",
