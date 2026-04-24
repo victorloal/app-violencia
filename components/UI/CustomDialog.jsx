@@ -11,6 +11,7 @@ export default function CustomDialog({
   message,
   buttons = [],
   onClose,
+  Icon,
 }) {
   if (!visible) return null;
 
@@ -23,6 +24,11 @@ export default function CustomDialog({
     >
       <View style={styles.overlay}>
         <View style={styles.dialog}>
+          {Icon && (
+            <View style={styles.iconContainer}>
+              <Icon width={250} height={128} />
+            </View>
+          )}
           {title ? (
             <AppText variant="h3" style={styles.title}>
               {title}
@@ -79,6 +85,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+  },
+  iconContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: spacing.md,
   },
   title: {
     color: colors.lavender[900],

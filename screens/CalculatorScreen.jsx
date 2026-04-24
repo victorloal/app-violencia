@@ -10,11 +10,12 @@ import {
   Dimensions,
   Modal,
 } from "react-native";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 
 import SafeLayout from "../components/Layout/SafeLayout";
+import AppText from "../components/UI/AppText";
 
 // ── Medidas responsive ──────────────────────────────────────────
 const { width: W, height: H } = Dimensions.get("window");
@@ -70,27 +71,28 @@ export default function CalculatorScreen({ onUnlock, isTutorial = false }) {
   const [showInstructions, setShowInstructions] = useState(false);
 
   // ── Helper: label accesible por botón ──────────────────────────
-const getAccessibilityLabel = (btn) => {
-  const labels = {
-    "AC":  "Limpiar todo",
-    "+/-": "Cambiar signo",
-    "%":   "Porcentaje",
-    "÷":   "Dividir",
-    "×":   "Multiplicar",
-    "−":   "Restar",
-    "+":   "Sumar",
-    "=":   "Igual, mantén presionado para volver a la app",
-    ".":   "Punto decimal",
-    "0":   "Cero",
+  const getAccessibilityLabel = (btn) => {
+    const labels = {
+      AC: "Limpiar todo",
+      "+/-": "Cambiar signo",
+      "%": "Porcentaje",
+      "÷": "Dividir",
+      "×": "Multiplicar",
+      "−": "Restar",
+      "+": "Sumar",
+      "=": "Igual, mantén presionado para volver a la app",
+      ".": "Punto decimal",
+      0: "Cero",
+    };
+    return labels[btn] ?? btn; // dígitos 1-9 se leen solos
   };
-  return labels[btn] ?? btn; // dígitos 1-9 se leen solos
-};
 
-const getAccessibilityHint = (btn) => {
-  if (btn === "=") return "Mantén presionado 1 segundo para cerrar la calculadora";
-  if (activeOp === btn) return "Operador activo";
-  return undefined;
-};
+  const getAccessibilityHint = (btn) => {
+    if (btn === "=")
+      return "Mantén presionado 1 segundo para cerrar la calculadora";
+    if (activeOp === btn) return "Operador activo";
+    return undefined;
+  };
 
   // Mostrar instrucciones solo la primera vez que abre calculadora (independiente de main tutorial)
   useEffect(() => {
@@ -307,7 +309,11 @@ const getAccessibilityHint = (btn) => {
                       accessibilityLabel={getAccessibilityLabel(btn)}
                       accessibilityHint={getAccessibilityHint(btn)}
                     >
-                      <Text style={textStyle} accessible={false} importantForAccessibility="no">
+                      <Text
+                        style={textStyle}
+                        accessible={false}
+                        importantForAccessibility="no"
+                      >
                         {btn}
                       </Text>
                     </TouchableOpacity>
@@ -325,7 +331,11 @@ const getAccessibilityHint = (btn) => {
                     accessibilityLabel={getAccessibilityLabel(btn)}
                     accessibilityHint={getAccessibilityHint(btn)}
                   >
-                    <Text style={textStyle}accessible={false} importantForAccessibility="no">
+                    <Text
+                      style={textStyle}
+                      accessible={false}
+                      importantForAccessibility="no"
+                    >
                       {btn}
                     </Text>
                   </TouchableOpacity>
@@ -345,50 +355,76 @@ const getAccessibilityHint = (btn) => {
           onRequestClose={() => setShowInstructions(false)}
         >
           <SafeAreaView style={styles.instructionsOverlay}>
-            <View style={styles.instructionsContainer}accessibilityViewIsModal={true}>
+            <View
+              style={styles.instructionsContainer}
+              accessibilityViewIsModal={true}
+            >
               {/* Instrucción 1: Uso normal */}
               <View style={styles.instructionCard}>
-                <View 
+                <View
                   style={styles.instructionHeader}
                   accessible={false}
                   importantForAccessibility="no-hide-descendants"
                 >
-                  <Ionicons name="calculator" size={28} color="#F31A73" accessible={false}/>
-                  <Text style={styles.instructionTitle} accessible={false}>
-                    Usa la calculadora normalmente
-                  </Text>
+                  <Ionicons
+                    name="calculator"
+                    size={28}
+                    color="#F31A73"
+                    accessible={false}
+                  />
+                  <AppText
+                    variant="h4"
+                    color="light"
+                    style={styles.instructionTitle}
+                    accessible={false}
+                  >
+                    Uso normal
+                  </AppText>
                 </View>
-                <Text 
-                  style={styles.instructionText}accessible={true}
-                  accessibilityLabel="Usa la calculadora normalmente. Realiza operaciones matemáticas como en una calculadora regular. Presiona los números, operadores y el botón igual para ver el resultado."
+                <AppText
+                  variant="body"
+                  color="light"
+                  style={styles.instructionText}
+                  accessible={true}
+                  accessibilityLabel="Uso normal: Funciona como cualquier calculadora para tus operaciones diarias."
                 >
-                  Realiza operaciones matemáticas como en una calculadora
-                  regular. Presiona los números, operadores y el botón
-                  &quot;=&quot; &quot;=&quot; ver el resultado.
-                </Text>
+                  Funciona como cualquier calculadora para tus operaciones
+                  diarias.
+                </AppText>
               </View>
 
               {/* Instrucción 2: Cerrar */}
               <View style={styles.instructionCard}>
-                <View 
+                <View
                   style={styles.instructionHeader}
                   accessible={false}
                   importantForAccessibility="no-hide-descendants"
                 >
-                  <Ionicons name="hand-left" size={28} color="#82368C" accessible={false}/>
-                  <Text style={styles.instructionTitle} accessible={false}>
-                    Para volver a la app
-                  </Text>
+                  <Ionicons
+                    name="hand-left"
+                    size={28}
+                    color="#82368C"
+                    accessible={false}
+                  />
+                  <AppText
+                    variant="h4"
+                    color="light"
+                    style={styles.instructionTitle}
+                    accessible={false}
+                  >
+                    Ocultar calculadora
+                  </AppText>
                 </View>
-                <Text 
+                <AppText
+                  variant="body"
+                  color="light"
                   style={styles.instructionText}
                   accessible={true}
-                  accessibilityLabel="Para volver a la app. Mantén presionado el botón igual durante 1 segundo y verás un patrón de vibración. Así cerrarás la calculadora y regresarás a Perla."
+                  accessibilityLabel="Para volver a la app. Mantén presionado el botón igual durante 1 segundo para regresar a Perla."
                 >
-                  Mantén presionado el botón &quot;=&quot; durante 1 segundo y
-                  verás un patrón de vibración. ¡Así cerrarás la calculadora y
-                  regresarás a Perla!
-                </Text>
+                  Mantén presionado el botón &quot;=&quot; por 1 segundo para
+                  regresar a la app principal.
+                </AppText>
               </View>
 
               {/* Botón para cerrar instrucciones */}
@@ -399,7 +435,9 @@ const getAccessibilityHint = (btn) => {
                 accessibilityRole="button"
                 accessibilityLabel="Entendido, cerrar instrucciones"
               >
-                <Text style={styles.dismissButtonText} accessible={false}>Entendido</Text>
+                <AppText variant="h4" color="light" accessible={false}>
+                  Entendido
+                </AppText>
               </TouchableOpacity>
             </View>
           </SafeAreaView>
@@ -457,9 +495,9 @@ const styles = StyleSheet.create({
     maxWidth: 400,
   },
   instructionCard: {
-    backgroundColor: "rgba(131, 54, 140, 0.1)",
+    backgroundColor: "rgba(255, 255, 255, 0.15)", // Más contraste
     borderLeftWidth: 4,
-    borderLeftColor: "#82368C",
+    borderLeftColor: "#F31A73", // Rosa brillante en vez del morado oscuro
     padding: W * 0.04,
     marginBottom: W * 0.05,
     borderRadius: 12,
@@ -470,16 +508,17 @@ const styles = StyleSheet.create({
     marginBottom: W * 0.03,
   },
   instructionTitle: {
-    color: "#ffffff",
+    color: "#ffffff", // Blanco puro
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "700", // Más grueso
     marginLeft: W * 0.03,
     flex: 1,
   },
   instructionText: {
-    color: "rgba(255,255,255,0.75)",
-    fontSize: 14,
-    lineHeight: 20,
+    color: "#ffffff", // Blanco 100% en vez de 75%
+    fontSize: 15, // Un poco más grande
+    lineHeight: 22,
+
   },
   dismissButton: {
     backgroundColor: "#F31A73",

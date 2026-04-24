@@ -3,7 +3,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import AppStack from "./navigation/AppStack";
 import { StatusBar } from "expo-status-bar";
-import { StatusBar as RNStatusBar } from "react-native"
+import { StatusBar as RNStatusBar } from "react-native";
 import { SettingsProvider } from "./context/SettingsContext";
 import { useFonts } from "expo-font";
 import { CopilotProvider } from "react-native-copilot";

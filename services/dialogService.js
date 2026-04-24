@@ -1,8 +1,8 @@
 export const DialogService = {
   dialogRef: null,
-  show: (title, message, buttons) => {
+  show: (title, message, buttons, icon) => {
     if (DialogService.dialogRef) {
-      DialogService.dialogRef.showDialog(title, message, buttons);
+      DialogService.dialogRef.showDialog(title, message, buttons, icon);
     } else {
       // Fallback for when context isn't ready
       import("react-native").then(({ Alert }) => {

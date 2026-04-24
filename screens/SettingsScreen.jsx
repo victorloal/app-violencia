@@ -9,6 +9,7 @@ import SafeLayout from "../components/Layout/SafeLayout";
 import { linkingService } from "../services/linkingService";
 import { DialogService } from "../services/dialogService";
 import AppTextInput from "../components/UI/AppTextInput";
+import Cintilla from "../assets/icons/cintilla";
 
 export default function SettingsScreen({ navigation }) {
   const {
@@ -18,9 +19,12 @@ export default function SettingsScreen({ navigation }) {
     setPhoneNumber,
     hasAccessibilityNeeds,
     setHasAccessibilityNeeds,
+    region,
+    setRegion,
   } = useContext(SettingsContext);
 
   const [tempPhoneNumber, setTempPhoneNumber] = useState(phoneNumber);
+  const [tempRegion, setTempRegion] = useState(region);
 
   const openVoiceAccessibility = () => {
     if (Platform.OS === "android") {
@@ -98,6 +102,7 @@ export default function SettingsScreen({ navigation }) {
     }
     // Guardar el número exactamente como está, sin modificar
     setPhoneNumber(tempPhoneNumber);
+    setRegion(tempRegion);
 
     DialogService.show(
       "Cambios guardados",
@@ -106,10 +111,11 @@ export default function SettingsScreen({ navigation }) {
     );
   };
 
-  const hasChanges = tempPhoneNumber !== phoneNumber;
+  const hasChanges = tempPhoneNumber !== phoneNumber || tempRegion !== region;
 
   const handleCancel = () => {
     setTempPhoneNumber(phoneNumber);
+    setTempRegion(region);
     navigation.replace("Home");
   };
 
@@ -128,6 +134,62 @@ export default function SettingsScreen({ navigation }) {
         <AppText variant="h1" accessible={false}>
           Configuración
         </AppText>
+      </View>
+
+      {/* Sección de Ubicación */}
+      <View style={styles.section} accessible={false}>
+        <View
+          style={styles.sectionHeader}
+          accessible={true}
+          accessibilityLabel="Ubicación"
+          accessibilityRole="header"
+        >
+          <View style={styles.iconWrapper} accessible={false}>
+            <Ionicons
+              name="location-outline"
+              size={22}
+              color={colors.lavender[600]}
+            />
+          </View>
+          <AppText variant="h2" style={styles.sectionTitle} accessible={false}>
+            Ubicación
+          </AppText>
+        </View>
+        <AppText
+          variant="body"
+          tone="muted"
+          style={styles.description}
+          accessible={true}
+          accessibilityLabel="Selecciona el municipio en el que te encuentras."
+          accessibilityRole="text"
+        >
+          Selecciona el municipio en el que te encuentras.
+        </AppText>
+
+        <View style={styles.decisionButtons}>
+          <Button
+            type={tempRegion === "tumaco" ? "primary" : "primaryOutline"}
+            size="flex"
+            onPress={() => setTempRegion("tumaco")}
+            accessible={true}
+            accessibilityLabel="Tumaco"
+            accessibilityRole="button"
+            accessibilityState={{ selected: tempRegion === "tumaco" }}
+          >
+            Tumaco
+          </Button>
+          <Button
+            type={tempRegion === "buenaventura" ? "primary" : "primaryOutline"}
+            size="flex"
+            onPress={() => setTempRegion("buenaventura")}
+            accessible={true}
+            accessibilityLabel="Buenaventura"
+            accessibilityRole="button"
+            accessibilityState={{ selected: tempRegion === "buenaventura" }}
+          >
+            Buenaventura
+          </Button>
+        </View>
       </View>
 
       {/* Sección de Tamaño de Letra */}
@@ -464,6 +526,12 @@ export default function SettingsScreen({ navigation }) {
         </Button>
       </View>
 
+      <Cintilla
+        width="100%"
+        height="250px"
+        preserveAspectRatio="xMidYMidMeet"
+      />
+
       {/* Botones de Guardar/Cancelar */}
       <View style={styles.fixedButtonContainer}>
         <Button
@@ -664,5 +732,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.lavender[500],
     alignSelf: "flex-start",
+  },
+  footerCintilla: {
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    alignItems: "center",
   },
 });

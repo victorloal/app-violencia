@@ -12,14 +12,16 @@ export const DialogProvider = ({ children }) => {
     title: "",
     message: "",
     buttons: [],
+    Icon: null,
   });
 
-  const showDialog = (title, message, buttons = []) => {
+  const showDialog = (title, message, buttons = [], Icon = null) => {
     setDialogConfig({
       visible: true,
       title,
       message,
       buttons,
+      Icon,
     });
   };
 
@@ -39,6 +41,7 @@ export const DialogProvider = ({ children }) => {
         title={dialogConfig.title}
         message={dialogConfig.message}
         buttons={dialogConfig.buttons}
+        Icon={dialogConfig.Icon}
         onClose={hideDialog}
       />
     </DialogContext.Provider>

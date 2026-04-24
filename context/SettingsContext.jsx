@@ -14,6 +14,7 @@ export function SettingsProvider({ children }) {
   const [phoneNumber, setPhoneNumberState] = useState("");
   const [hasAccessibilityNeeds, setHasAccessibilityNeedsState] =
     useState(false);
+  const [region, setRegionState] = useState("");
 
   // Cargar valores guardados
   useEffect(() => {
@@ -25,6 +26,7 @@ export function SettingsProvider({ children }) {
       const m = await AsyncStorage.getItem("isCamouflageOn");
       const p = await AsyncStorage.getItem("phoneNumber");
       const h = await AsyncStorage.getItem("hasAccessibilityNeeds");
+      const r = await AsyncStorage.getItem("region");
 
       if (f) setFontScaleState(Number(f));
       if (c) setContrastState(Number(c));
@@ -33,6 +35,7 @@ export function SettingsProvider({ children }) {
       if (m) setIsCamouflageOnState(m === "true");
       if (p) setPhoneNumberState(p);
       if (h) setHasAccessibilityNeedsState(h === "true");
+      if (r) setRegionState(r);
     };
 
     loadSettings();
@@ -41,7 +44,7 @@ export function SettingsProvider({ children }) {
   // Bloqueo de capturas y auto-cierre al ir a background
   useEffect(() => {
     // 1. Activar bloqueo de capturas (y ocultar en recientes de Android)
-    ScreenCapture.preventScreenCaptureAsync();
+    //ScreenCapture.preventScreenCaptureAsync();
 
     // 2. Listener de AppState para auto-cierre
     const subscription = AppState.addEventListener(
@@ -105,6 +108,11 @@ export function SettingsProvider({ children }) {
     saveSetting("hasAccessibilityNeeds", val);
   };
 
+  const setRegion = (val) => {
+    setRegionState(val);
+    saveSetting("region", val);
+  };
+
   return (
     <SettingsContext.Provider
       value={{
@@ -122,6 +130,8 @@ export function SettingsProvider({ children }) {
         setPhoneNumber,
         hasAccessibilityNeeds,
         setHasAccessibilityNeeds,
+        region,
+        setRegion,
       }}
     >
       {children}

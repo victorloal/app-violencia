@@ -5,6 +5,7 @@ import {
   FlatList,
   View,
   useWindowDimensions,
+  ScrollView,
 } from "react-native";
 import AppText from "../components/UI/AppText";
 import Button from "../components/UI/Button";
@@ -12,9 +13,10 @@ import AppSlider from "../components/UI/AppSlider";
 import SvgComponent from "../assets/icons/logo.jsx";
 import styles from "../styles";
 import { components } from "../styles/components";
-import CenteredLayout from "../components/Layout/CenteredLayout";
+import SafeLayout from "../components/Layout/SafeLayout";
 import { slideInX, animationConfig } from "../styles/animations";
 import { colors } from "../thema/colors";
+import Cintilla from "../assets/icons/cintilla";
 
 const WELCOME_MESSAGES = [
   "Este espacio es seguro y confidencial.",
@@ -55,56 +57,81 @@ export default function WelcomeScreen({ navigation, route }) {
   };
 
   return (
-    <CenteredLayout style={{ backgroundColor: "#743688" }}>
-      {/* Logo principal */}
-      <Animated.View
-        style={[screenStyles.logoContainer, slideInX(logoAnim)]}
-        accessible={true}
-        accessibilityLabel="Logo de la aplicación"
-        accessibilityRole="image"
-        accessibilityHint="Logo de la aplicación"
+    <SafeLayout style={{ backgroundColor: "#743688" }} scrollable={false}>
+      <ScrollView
+        contentContainerStyle={screenStyles.scrollContent}
+        showsVerticalScrollIndicator={false}
       >
-        <SvgComponent width={300} height={300} />
-      </Animated.View>
-
-      {/* Slider de mensajes */}
-      <Animated.View 
-        style={[screenStyles.sliderWrapper, slideInX(sliderAnim)]}
-        accessible={true}
-        accessibilityRole="text"
-        accessibilityLabel="Mensajes de bienvenida"
-      >
-        <AppSlider data={WELCOME_MESSAGES} textStyle={screenStyles.cardText} />
-      </Animated.View>
-
-      <Animated.View
-        style={[screenStyles.buttonContainer, slideInX(buttonAnim)]}
-        accessible={false}
-        importantForAccessibility="no-hide-descendants"
-      >
-        <Button
-          type="inversePrimary"
-          onPress={handlePress}
-          size="xl"
+        {/* Logo principal */}
+        <Animated.View
+          style={[screenStyles.logoContainer, slideInX(logoAnim)]}
           accessible={true}
-          accessibilityRole="button"
-          accessibilityLabel="Comenzar"
-          accessibilityHint="Avanza a la configuración inicial de la aplicación"
+          accessibilityLabel="Logo de la aplicación"
+          accessibilityRole="image"
+          accessibilityHint="Logo de la aplicación"
         >
-          Comenzar
-        </Button>
-      </Animated.View>
-    </CenteredLayout>
+          <SvgComponent width={300} height={300} />
+        </Animated.View>
+
+        {/* Slider de mensajes */}
+        <Animated.View
+          style={[screenStyles.sliderWrapper, slideInX(sliderAnim)]}
+          accessible={true}
+          accessibilityRole="text"
+          accessibilityLabel="Mensajes de bienvenida"
+        >
+          <AppSlider
+            data={WELCOME_MESSAGES}
+            textStyle={screenStyles.cardText}
+          />
+        </Animated.View>
+        <Animated.View
+          style={[screenStyles.buttonContainer, slideInX(buttonAnim)]}
+          accessible={false}
+          importantForAccessibility="no-hide-descendants"
+        >
+          <View style={screenStyles.cintillaCard}>
+            <Cintilla
+              width="100%"
+              height="220px"
+              preserveAspectRatio="xMidYMidMeet"
+            />
+          </View>
+        </Animated.View>
+        <Animated.View
+          style={[screenStyles.buttonContainer, slideInX(buttonAnim)]}
+          accessible={false}
+          importantForAccessibility="no-hide-descendants"
+        >
+          <Button
+            type="inversePrimary"
+            onPress={handlePress}
+            size="xl"
+            accessible={true}
+            accessibilityRole="button"
+            accessibilityLabel="Comenzar"
+            accessibilityHint="Avanza a la configuración inicial de la aplicación"
+          >
+            Comenzar
+          </Button>
+        </Animated.View>
+      </ScrollView>
+    </SafeLayout>
   );
 }
 
 const screenStyles = StyleSheet.create({
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: styles.spacing.xl,
+  },
   logoContainer: {
     marginBottom: styles.spacing.xl,
     alignItems: "center",
   },
   sliderWrapper: {
-    height: 180,
     width: "100%",
   },
   cardText: {
@@ -115,5 +142,12 @@ const screenStyles = StyleSheet.create({
   buttonContainer: {
     width: "90%",
     marginTop: styles.spacing.xl,
+  },
+  cintillaCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: styles.borderRadius.xl,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

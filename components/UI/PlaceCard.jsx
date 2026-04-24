@@ -65,10 +65,10 @@ const PlaceCard = ({ place }) => {
 
   const cardAccessibilityLabel = [
     place.nombre,
-    place.horario     ? `Horario: ${place.horario}`     : null,
-    place.direccion   ? `Dirección: ${place.direccion}` : null,
-    place.telefono    ? `Teléfono: ${place.telefono}`   : null,
-    place.descripcion ? place.descripcion               : null,
+    place.horario ? `Horario: ${place.horario}` : null,
+    place.direccion ? `Dirección: ${place.direccion}` : null,
+    place.telefono ? `Teléfono: ${place.telefono}` : null,
+    place.descripcion ? place.descripcion : null,
   ]
     .filter(Boolean)
     .join(". ");
@@ -76,11 +76,13 @@ const PlaceCard = ({ place }) => {
   return (
     // Contenedor raíz: invisible para TalkBack, solo layout
     <View
-      style={[styles.card, { borderLeftWidth: 4, borderLeftColor: theme.primary }]}
+      style={[
+        styles.card,
+        { borderLeftWidth: 4, borderLeftColor: theme.primary },
+      ]}
       accessible={false}
       importantForAccessibility="no"
     >
-
       {/* ── BLOQUE DE INFORMACIÓN ──*/}
       <View
         style={styles.infoBlock}
@@ -134,9 +136,13 @@ const PlaceCard = ({ place }) => {
           accessibilityElementsHidden={true}
           importantForAccessibility="no-hide-descendants"
         >
-          <DetailRow icon="time-outline"     theme={theme} text={place.horario}   />
-          <DetailRow icon="location-outline" theme={theme} text={place.direccion} />
-          <DetailRow icon="call-outline"     theme={theme} text={place.telefono}  />
+          <DetailRow icon="time-outline" theme={theme} text={place.horario} />
+          <DetailRow
+            icon="location-outline"
+            theme={theme}
+            text={place.direccion}
+          />
+          <DetailRow icon="call-outline" theme={theme} text={place.telefono} />
 
           {place.descripcion && (
             <View style={styles.descriptionContainer}>
@@ -184,7 +190,6 @@ const PlaceCard = ({ place }) => {
           Cómo llegar
         </Button>
       </View>
-
     </View>
   );
 };

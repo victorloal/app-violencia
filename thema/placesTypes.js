@@ -2,6 +2,7 @@ import SaludIcon from "../assets/icons/Salud";
 import ProteccionIcon from "../assets/icons/Protección";
 import JusticiaIcon from "../assets/icons/Justicia";
 import MPublicoIcon from "../assets/icons/ministerio_publico";
+import DuplaIcon from "../assets/icons/dupla";
 import { colors } from "../thema/colors";
 
 export const TYPE_CONFIG = {
@@ -54,8 +55,8 @@ export const TYPE_CONFIG = {
     description: "Procuraduría, Defensoría y Personería municipal",
   },
   duplas: {
-    icon: "people-outline",
-    isCustomIcon: false,
+    icon: DuplaIcon,
+    isCustomIcon: true,
     primary: colors.blue[600],
     background: colors.blue[50],
     border: colors.blue[200],

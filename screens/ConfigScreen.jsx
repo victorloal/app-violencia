@@ -9,6 +9,7 @@ import SafeLayout from "../components/Layout/SafeLayout";
 import { linkingService } from "../services/linkingService";
 import { DialogService } from "../services/dialogService";
 import AppTextInput from "../components/UI/AppTextInput";
+import Cintilla from "../assets/icons/cintilla";
 
 export default function ConfigScreen({ navigation }) {
   const {
@@ -18,9 +19,12 @@ export default function ConfigScreen({ navigation }) {
     setPhoneNumber,
     hasAccessibilityNeeds,
     setHasAccessibilityNeeds,
+    region,
+    setRegion,
   } = useContext(SettingsContext);
 
   const [tempPhoneNumber, setTempPhoneNumber] = useState(phoneNumber);
+  const [tempRegion, setTempRegion] = useState(region);
 
   const openVoiceAccessibility = () => {
     if (Platform.OS === "android") {
@@ -98,6 +102,7 @@ export default function ConfigScreen({ navigation }) {
     }
     // Guardar el número exactamente como está, sin modificar
     setPhoneNumber(tempPhoneNumber);
+    setRegion(tempRegion);
 
     DialogService.show(
       "Configuración guardada",
@@ -106,10 +111,11 @@ export default function ConfigScreen({ navigation }) {
     );
   };
 
-  const hasChanges = tempPhoneNumber !== phoneNumber;
+  const hasChanges = tempPhoneNumber !== phoneNumber || tempRegion !== region;
 
   const handleCancel = () => {
     setTempPhoneNumber(phoneNumber);
+    setTempRegion(region);
     navigation.replace("MessageConfig");
   };
 
@@ -464,6 +470,11 @@ export default function ConfigScreen({ navigation }) {
         </Button>
       </View>
 
+      <Cintilla
+        width="100%"
+        height="250px"
+        preserveAspectRatio="xMidYMidMeet"
+      />
       {/* Botones de Guardar/Cancelar */}
       <View style={styles.fixedButtonContainer}>
         <Button
@@ -664,5 +675,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.lavender[500],
     alignSelf: "flex-start",
+  },
+  footerCintilla: {
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    alignItems: "center",
   },
 });
