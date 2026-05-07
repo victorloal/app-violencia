@@ -46,7 +46,7 @@ const questions = [
     options: [
       { label: "Indígena", value: "indigena" },
       { label: "Afrodescendiente", value: "afro" },
-      { label: "Mestizo", value: "mestizo" },
+      { label: "Mestiza", value: "mestizo" },
       { label: "Otro, ¿cual?", value: "otro", hasInput: true },
     ],
     key: "etnia",
