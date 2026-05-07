@@ -492,7 +492,7 @@ const FALLBACK_DATA = {
       nombre: "Hospital San Andrés E.S.E.",
       horario: "24 horas",
       direccion: "Km 23 Inguapi del Carmen",
-      telefono: "3203757591",
+      telefono: "3184096662",
       tipo: "salud",
       descripcion: "Atención física y psicológica a la persona.",
       latitud: 1.67234769600039,
