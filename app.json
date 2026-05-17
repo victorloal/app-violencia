@@ -23,7 +23,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.victorloal.perlaapp",
+      "bundleIdentifier": "com.ogn.perla",
       "buildNumber": "1.0.0"
     },
     "android": {
@@ -32,7 +32,7 @@
         "backgroundColor": "#481e4d"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.victorloal.perlaapp",
+      "package": "com.ogn.perla",
       "versionCode": 1,
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
