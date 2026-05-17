@@ -3,7 +3,7 @@ import { Platform } from "react-native";
 
 // ── URL del backend ────────────────────────────────────────────────────────────
 // Cambia por tu IP
-const BASE_URL = "https://1swcx78z-3000.use2.devtunnels.ms/api";
+const BASE_URL = "https://observatoriogenero.udenar.edu.co/perla/api";
 export const API_URL = BASE_URL;
 
 // ── Device ID persistente y anónimo ──────────────────────────────
